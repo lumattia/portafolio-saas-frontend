@@ -13,9 +13,10 @@
       <div class="carousel-content">
         @if (currentSlide) {
           <div class="slide">
-            <ng-container
-              *ngComponentOutlet="componentMap[currentSlide.componentSelector]; inputs: { section: currentSlide }"
-            ></ng-container>
+            <app-section-renderer
+              [section]="currentSlide"
+              [isSelected]="true"
+            />
           </div>
         } @else {
           <div class="placeholder">No slides</div>
@@ -38,7 +39,7 @@
           <button
             type="button"
             class="indicator"
-            [class.active]="i === currentIndex()"
+            [class.active]="i === currentSlideIndex"
             (click)="goToSlide(i)"
           ></button>
         }

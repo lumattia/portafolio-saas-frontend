@@ -7,7 +7,9 @@ export interface SectionDto {
   isEnabled: boolean;
   isDeleted: boolean;
   parentSectionId?: string;
+  isPublished: boolean;
   subSections: SectionDto[];
+  subSectionIndex?: number;
 }
 
 export interface CreateSectionRequest {

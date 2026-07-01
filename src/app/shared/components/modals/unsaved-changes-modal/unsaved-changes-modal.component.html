@@ -1,0 +1,15 @@
+<div class="modal-overlay" (click)="onStayClick()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>{{ 'unsavedChanges.title' | translate }}</h2>
+      <button class="close-btn" (click)="onStayClick()">×</button>
+    </div>
+    <div class="modal-body">
+      <p>{{ 'unsavedChanges.message' | translate }}</p>
+    </div>
+    <div class="modal-footer">
+      <app-button variant="secondary" (click)="onLeaveClick()">{{ 'unsavedChanges.leave' | translate }}</app-button>
+      <app-button (click)="onStayClick()">{{ 'unsavedChanges.stay' | translate }}</app-button>
+    </div>
+  </div>
+</div>

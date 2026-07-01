@@ -1,9 +1,9 @@
 import { Component, inject, input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { PageEditorService } from '../../../../core/services/page-editor.service';
 import { RichTextInputComponent } from '../../../../shared/components/inputs/rich-text-input/rich-text-input.component';
 import { BackgroundImageTextSectionContent, createDefaultBackgroundImageTextContent } from './background-image-text-section.model';
 import { ImageInputComponent } from '../../../../shared/components/inputs/image-input/image-input.component';
+import { SectionDto } from '../../../../core/models/section.model';
 
 @Component({
   selector: 'app-background-image-text-section-editor',
@@ -13,21 +13,18 @@ import { ImageInputComponent } from '../../../../shared/components/inputs/image-
   styleUrls: ['./background-image-text-section-editor.component.scss'],
 })
 export class BackgroundImageTextSectionEditorComponent {
-  private readonly pageEditorService = inject(PageEditorService);
-  readonly selectedSection = this.pageEditorService.selectedSection;
+  section = input.required<SectionDto>();
 
   get content(): BackgroundImageTextSectionContent {
-    return createDefaultBackgroundImageTextContent(this.selectedSection()!.contentJson);
+    return createDefaultBackgroundImageTextContent(this.section().contentJson);
   }
 
   onContentChange(key: string, value: any): void {
-    const section = this.selectedSection();
-    if (!section) return;
     const safeValue = (value === null || value === undefined) ? '' : value;
     const updatedContent = { 
-      inputs: { ...section.contentJson.inputs, [key]: safeValue },
-      styles: section.contentJson.styles || {}
+      inputs: { ...this.section().contentJson.inputs, [key]: safeValue },
+      styles: this.section().contentJson.styles || {}
     };
-    this.pageEditorService.updateSectionContent(updatedContent);
+    this.section().contentJson = updatedContent;
   }
 }

@@ -1,8 +1,7 @@
-import { Component, inject, input, output } from '@angular/core';
+import { Component, computed, inject, input, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SectionDto } from '../../../core/models/section.model';
 import { RENDER_COMPONENT_MAP } from '../../../core/constants/component-maps';
-import { PageEditorService } from '../../../core/services/page-editor.service';
 
 @Component({
   selector: 'app-section-renderer',
@@ -12,9 +11,8 @@ import { PageEditorService } from '../../../core/services/page-editor.service';
   styleUrls: ['./section-renderer.component.scss'],
 })
 export class SectionRendererComponent {
-  private readonly pageEditorService = inject(PageEditorService);
   section = input.required<SectionDto>();
-  isSelected = input(false);
+  isSelected = input.required<boolean>();
   select = output<string>();
   
   readonly componentMap = RENDER_COMPONENT_MAP;

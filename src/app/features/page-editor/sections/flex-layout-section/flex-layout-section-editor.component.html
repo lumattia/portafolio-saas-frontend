@@ -80,7 +80,7 @@
         @for (subSection of subSections; track subSection.id) {
           <div class="sub-section-item">
             <span>{{ subSection.componentSelector }}</span>
-            <button type="button" class="remove-button" (click)="pageEditorService.setDeletedState(true)">
+            <button type="button" class="remove-button" (click)="removeSubSection(subSection)">
               Remove
             </button>
           </div>

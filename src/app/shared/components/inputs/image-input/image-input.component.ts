@@ -1,6 +1,13 @@
 import { Component, input, output, signal, ViewChild, ElementRef, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ImageInputConfig } from '../../../../core/models/editor.models';
+
+export interface ImageInputConfig {
+  maxWidth?: number;
+  maxHeight?: number;
+  maxScale?: number;
+  quality?: number;
+  aspectRatio?: number;
+}
 
 @Component({
   selector: 'app-image-input',

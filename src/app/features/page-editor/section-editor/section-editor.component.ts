@@ -1,8 +1,8 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, input, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { PageEditorService } from '../../../core/services/page-editor.service';
 import { EDITOR_COMPONENT_MAP } from '../../../core/constants/component-maps';
 import { ButtonComponent } from "../../../shared/components/button/button.component";
+import { SectionDto } from '../../../core/models/section.model';
 
 @Component({
   selector: 'app-section-editor',
@@ -12,26 +12,24 @@ import { ButtonComponent } from "../../../shared/components/button/button.compon
   styleUrls: ['./section-editor.component.scss'],
 })
 export class SectionEditorComponent {
-  private readonly pageEditorService = inject(PageEditorService);
-
-  readonly selectedSection = this.pageEditorService.selectedSection;
-
+  section = input.required<SectionDto>();
+  onClose = output<void>();
+  onSetDeleteState = output<boolean>();
   readonly editorMap = EDITOR_COMPONENT_MAP;
 
   get componentSelector(): string {
-    return this.selectedSection()!.componentSelector;
+    return this.section().componentSelector;
   }
   get isDeleted() {
-    return this.selectedSection()!.isDeleted;
+    return this.section().isDeleted;
   }
 
   close(): void {
-    this.pageEditorService.deselectSection();
+    this.onClose.emit();
   }
   
 
-  onSetDeletedState(event: Event, isDelete: boolean): void {
-    event.stopPropagation();
-    this.pageEditorService.setDeletedState(isDelete);
+  setDeletedState(isDelete: boolean): void {
+    this.onSetDeleteState.emit(isDelete);
   }
 }

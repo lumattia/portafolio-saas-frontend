@@ -1,23 +1,25 @@
-import { Component, inject, signal, computed, OnInit } from '@angular/core';
+import { Component, inject, signal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { PageEditorService } from '../../../core/services/page-editor.service';
 import { SectionTemplateService } from '../../../core/services/section-template.service';
-import {
-  SectionTemplateDto,
-} from '../../../core/models/section-template.model';
+import { SectionTemplateDto } from '../../../core/models/section-template.model';
 import { IdName, PagedList } from '../../../core/models/common.models';
+import { SectionDto } from '../../../core/models/section.model'; // Asegura la ruta de tu Dto
 import { SelectInputComponent } from '../../../shared/components/inputs/select-input/select-input.component';
+import { switchMap, take } from 'rxjs/operators';
+import { TextInputComponent } from "../../../shared/components/inputs/text-input/text-input.component";
 
 @Component({
   selector: 'app-template-selector',
   standalone: true,
-  imports: [CommonModule, SelectInputComponent],
+  imports: [CommonModule, SelectInputComponent, TextInputComponent],
   templateUrl: './template-selector.component.html',
   styleUrls: ['./template-selector.component.scss'],
 })
 export class TemplateSelectorComponent implements OnInit {
-  private readonly pageEditorService = inject(PageEditorService);
   private readonly sectionTemplateService = inject(SectionTemplateService);
+
+  close!: (result?: SectionDto) => void;
+  dismiss!: (reason?: any) => void;
 
   readonly searchQuery = signal('');
   readonly selectedCategory = signal<number|null>(null);
@@ -26,33 +28,27 @@ export class TemplateSelectorComponent implements OnInit {
 
   readonly templates = signal<PagedList<SectionTemplateDto> | null>(null);
   readonly isLoading = signal(false);
-
   readonly categoryOptions = signal<IdName[]>([]);
 
   ngOnInit(): void {
     this.loadTemplates();
     this.loadCategoryOption();
   }
-  loadCategoryOption(): void{
+
+  loadCategoryOption(): void {
     this.sectionTemplateService.getCategoryTags().subscribe({
-      next: (data) => {
-        this.categoryOptions.set(data);
-      },
-      error: (err) => {
-        console.error('Failed to load category options', err);
-      }
+      next: (data) => this.categoryOptions.set(data),
+      error: (err) => console.error('Failed to load category options', err)
     });
   }
+
   loadTemplates(): void {
     this.isLoading.set(true);
     this.sectionTemplateService
       .getAll(
         {
           name: this.searchQuery() || undefined,
-          categoryTags:
-            this.selectedCategory() !== null
-              ? this.selectedCategory()?.toString()
-              : undefined,
+          categoryTags: this.selectedCategory() !== null ? this.selectedCategory()?.toString() : undefined,
         },
         {
           pageIndex: this.currentPage(),
@@ -65,9 +61,7 @@ export class TemplateSelectorComponent implements OnInit {
           this.templates.set(data);
           this.isLoading.set(false);
         },
-        error: () => {
-          this.isLoading.set(false);
-        },
+        error: () => this.isLoading.set(false),
       });
   }
 
@@ -97,10 +91,17 @@ export class TemplateSelectorComponent implements OnInit {
   }
 
   selectTemplate(template: SectionTemplateDto): void {
-    this.pageEditorService.addSection(template.id);
-  }
-
-  close(): void {
-    this.pageEditorService.closeTemplateSelector();
+    const newSection: SectionDto = {
+      id: crypto.randomUUID(),
+      sectionTemplateId: template.id,
+      componentSelector: template.componentSelector,
+      contentJson: template.defaultContentJson,
+      order: 0,
+      isEnabled: true,
+      isDeleted: false,
+      isPublished: false,
+      subSections: []
+    };
+    this.close(newSection);
   }
 }

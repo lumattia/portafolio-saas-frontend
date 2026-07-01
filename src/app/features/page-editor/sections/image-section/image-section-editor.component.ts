@@ -1,8 +1,8 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { PageEditorService } from '../../../../core/services/page-editor.service';
 import { createDefaultImageSectionContent, ImageSectionContent } from './image-section.model';
 import { ImageInputComponent } from '../../../../shared/components/inputs/image-input/image-input.component';
+import { SectionDto } from '../../../../core/models/section.model';
 
 @Component({
   selector: 'app-image-section-editor',
@@ -12,20 +12,17 @@ import { ImageInputComponent } from '../../../../shared/components/inputs/image-
   styleUrls: ['./image-section-editor.component.scss'],
 })
 export class ImageSectionEditorComponent {
-  private readonly pageEditorService = inject(PageEditorService);
-  readonly selectedSection = this.pageEditorService.selectedSection;
+  section = input.required<SectionDto>();
 
   get content(): ImageSectionContent {
-    return createDefaultImageSectionContent(this.selectedSection()!.contentJson);
+    return createDefaultImageSectionContent(this.section()!.contentJson);
   }
 
   onContentChange(value: string | null): void {
-    const section = this.selectedSection();
-    if (!section) return;
     const updatedContent = { 
       inputs: { image: value ?? '' },
-      styles: section.contentJson.styles || {}
+      styles: this.section()!.contentJson.styles || {}
     };
-    this.pageEditorService.updateSectionContent(updatedContent);
+    this.section().contentJson = updatedContent;
   }
 }

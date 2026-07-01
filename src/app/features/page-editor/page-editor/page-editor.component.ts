@@ -1,32 +1,38 @@
-import { Component, inject, computed, input, signal, OnInit } from '@angular/core';
+import { Component, inject, computed, input, signal, OnInit, AfterViewInit, ViewChild } from '@angular/core';
 import { CommonModule, Location } from '@angular/common';
-import { PageEditorService } from '../../../core/services/page-editor.service';
+import { ViewContainerRef } from '@angular/core';
 import { PageService } from '../../../core/services/page.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SectionRendererComponent } from '../section-renderer/section-renderer.component';
-import { TemplateSelectorComponent } from '../template-selector/template-selector.component';
 import { SectionEditorComponent } from '../section-editor/section-editor.component';
 import { SectionTreeComponent } from '../section-tree/section-tree.component';
 import { PageDetailDto, PageRequest } from '../../../core/models/page.model';
 import { SectionDto } from '../../../core/models/section.model';
+import { ModalService } from '../../../core/services/modal.service';
+import { TemplateSelectorComponent } from '../template-selector/template-selector.component';
+import { SidenavService } from '../../../core/services/sidenav.service';
+import { GenericErrorModalComponent } from '../../../shared/components/modals/generic-error-modal/generic-error-modal.component';
+import { ConfirmModalComponent } from '../../../shared/components/modals/confirm-modal/confirm-modal.component';
 
 @Component({
   selector: 'app-page-editor',
   standalone: true,
-  imports: [CommonModule, SectionRendererComponent, TemplateSelectorComponent, SectionEditorComponent, SectionTreeComponent],
+  imports: [CommonModule, SectionRendererComponent, SectionEditorComponent, SectionTreeComponent],
   templateUrl: './page-editor.component.html',
   styleUrls: ['./page-editor.component.scss'],
 })
 export class PageEditorComponent implements OnInit {
-  private readonly pageEditorService = inject(PageEditorService);
   private readonly pageService = inject(PageService);
   private readonly route = inject(ActivatedRoute);
   private readonly location = inject(Location);
+  private readonly sidenavService = inject(SidenavService);
+  private readonly modalService = inject(ModalService);
 
-  readonly editorState = this.pageEditorService.editorState;
-  readonly sections = computed(() => this.editorState().sections.sort((a, b) => a.order - b.order));
-  readonly isTemplateSelectorOpen = computed(() => this.editorState().isTemplateSelectorOpen);
-  readonly isEditorOpen = computed(() => this.editorState().isEditorOpen);
+  @ViewChild('modalContainer', { read: ViewContainerRef }) modalContainer!: ViewContainerRef;
+
+  sections = signal<SectionDto[]>([]);
+  isEditorOpen = signal<boolean>(false)
+  selectedSection: SectionDto | null = null;
   readonly expandedSections = computed(() => new Set<string>());
 
   readonly pageTitle = signal<string>('');
@@ -37,7 +43,7 @@ export class PageEditorComponent implements OnInit {
   readonly loading = signal(true);
 
   ngOnInit(): void {
-    this.loadPage()
+    this.loadPage();
   }
 
   private loadPage(): void {
@@ -56,7 +62,7 @@ export class PageEditorComponent implements OnInit {
         this.internalPageId.set(detail.id);
         this.pageIsDeleted.set(detail.isDeleted);
         this.pageNotFound.set(false);
-        this.pageEditorService.loadSections(detail.sections);
+        this.sections.set(detail.sections);
         this.loading.set(false);
       },
       error: (err: any) => {
@@ -105,24 +111,28 @@ export class PageEditorComponent implements OnInit {
   }
 
   openTemplateSelector(): void {
-    this.pageEditorService.openTemplateSelector();
+    var sidenavRef = this.sidenavService.open(TemplateSelectorComponent);
+    sidenavRef.result.then((res) => {
+      if (res.confirmed && res.data) {
+        let newSection = res.data as SectionDto;
+        newSection.order=this.sections().length;
+        this.sections.update((sections) => [...sections, newSection])
+      };
+    });
   }
 
   selectSection(section: SectionDto): void {
-    this.pageEditorService.selectSection(section);
-  }
-
-  closeTemplateSelector(): void {
-    this.pageEditorService.closeTemplateSelector();
+    this.selectedSection = section;
   }
 
   closeEditor(): void {
-    this.pageEditorService.deselectSection();
+    this.selectedSection = null;
   }
 
   savePage(): void {
     this.loading.set(true)
-    const sections = this.pageEditorService.getSectionsForSave();
+    
+    const sections: SectionDto[] = this.getSectionsForSave();
     const id = this.internalPageId();
 
     if (!id) return;
@@ -140,7 +150,7 @@ export class PageEditorComponent implements OnInit {
         this.internalPageId.set(detail.id);
         this.pageIsDeleted.set(detail.isDeleted);
         this.pageNotFound.set(false);
-        this.pageEditorService.loadSections(detail.sections);
+        this.sections.set(detail.sections);
         this.loading.set(false);
       },
       error: (err: any) => this.loading.set(false)
@@ -149,7 +159,7 @@ export class PageEditorComponent implements OnInit {
 
   publishPage(): void {
     this.loading.set(true)
-    const sections = this.pageEditorService.getSectionsForSave();
+    const sections = this.getSectionsForSave();
     const id = this.internalPageId();
 
     if (!id) return;
@@ -169,5 +179,38 @@ export class PageEditorComponent implements OnInit {
       },
       error: (err: any) => this.loading.set(false)
     });
+  }
+  setDeletedState(isDelete: boolean): void {
+    const section = this.selectedSection;
+    if (!section) return;
+    if (section.isPublished) {
+      section.isDeleted = isDelete;
+    this.selectedSection = null;
+    }else{
+      const modalRef = this.modalService.open(ConfirmModalComponent, {
+        title: 'Elimnar',
+        message: 'No es una sección publicada, esa acción eliminar la seccion permanentemente y no podrá ser deshecha.'
+      });
+      modalRef.result.then((res) => {
+        if (res.confirmed) {
+          this.sections.update(sections => sections.filter(s => s.id !== section.id));
+          this.selectedSection = null;
+        }
+      })
+    }
+  }
+  getSectionsForSave(): SectionDto[]{
+    return this.sections().map((s) => ({
+      id: s.id,
+      sectionTemplateId: s.sectionTemplateId,
+      componentSelector: "", // used on get, not for save
+      contentJson: s.contentJson,
+      order: s.order,
+      isEnabled: s.isEnabled,
+      isDeleted: s.isDeleted,
+      isPublished: s.isPublished,
+      parentSectionId: s.parentSectionId,
+      subSections: s.subSections,
+    }));
   }
 }

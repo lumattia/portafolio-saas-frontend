@@ -25,10 +25,11 @@ export class PublishedSectionRendererComponent {
       id: crypto.randomUUID(),
       sectionTemplateId: '',
       componentSelector: publishedSection.componentSelector,
-      contentJson: JSON.parse(publishedSection.contentJson),
+      contentJson: publishedSection.contentJson,
       order: publishedSection.order,
       isEnabled: true,
       isDeleted: false,
+      isPublished: true,
       subSections: publishedSection.subSections.map(ps => this.convertToSectionDto(ps))
     };
   }

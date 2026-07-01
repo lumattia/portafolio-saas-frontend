@@ -1,0 +1,13 @@
+<section class="modal" (click)="onCancel()">
+  <div class="dialog" (click)="$event.stopPropagation()">
+    <div class="dialog-header">
+      <h3>{{ translatedTitle }}</h3>
+      <button class="close-btn" (click)="onCancel()">×</button>
+    </div>
+    <p>{{ translatedMessage }}</p>
+    <div class="modal-actions">
+      <app-button (click)="onCancel()">{{ 'confirmModal.cancel' | translate }}</app-button>
+      <app-button variant="danger" (click)="onConfirm()">{{ 'confirmModal.confirm' | translate }}</app-button>
+    </div>
+  </div>
+</section>

@@ -1,9 +1,10 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { PageEditorService } from '../../../../core/services/page-editor.service';
 import { createDefaultFlexLayoutSectionContent, FlexLayoutSectionContent } from './flex-layout-section.model';
 import { SectionDto } from '../../../../core/models/section.model';
+import { SidenavService } from '../../../../core/services/sidenav.service';
+import { TemplateSelectorComponent } from '../../template-selector/template-selector.component';
 
 @Component({
   selector: 'app-flex-layout-section-editor',
@@ -13,31 +14,37 @@ import { SectionDto } from '../../../../core/models/section.model';
   styleUrls: ['./flex-layout-section-editor.component.scss'],
 })
 export class FlexLayoutSectionEditorComponent {
-  readonly pageEditorService = inject(PageEditorService);
-  readonly selectedSection = this.pageEditorService.selectedSection;
+  section = input.required<SectionDto>();
+  private readonly sidenavService = inject(SidenavService);
 
   get content(): FlexLayoutSectionContent {
-    return createDefaultFlexLayoutSectionContent(this.selectedSection()!.contentJson);
+    return createDefaultFlexLayoutSectionContent(this.section()!.contentJson);
   }
 
   get subSections(): SectionDto[] {
-    const section = this.selectedSection();
-    return section?.subSections || [];
+    return this.section().subSections || [];
   }
 
   onContentChange(key: string, value: any): void {
-    const section = this.selectedSection();
-    if (!section) return;
     const updatedContent = { 
       inputs: { ...this.content.inputs, [key]: value },
       styles: this.content.styles || {}
     };
-    this.pageEditorService.updateSectionContent(updatedContent);
+    this.section().contentJson = updatedContent;
   }
 
   addSubSection(): void {
-    const section = this.selectedSection();
-    if (!section) return;
-    this.pageEditorService.openTemplateSelector(section.id);
+    var sidenavRef = this.sidenavService.open(TemplateSelectorComponent);
+    sidenavRef.result.then((res) => {
+      if (res.confirmed && res.data) this.section().subSections?.push(res.data as SectionDto);
+    });
+  }
+
+  removeSubSection(subSection: SectionDto): void {
+    if (subSection.isPublished) {
+      subSection.isDeleted = true;
+    }else{
+      subSection.subSections = subSection.subSections.filter(s => s.id !== subSection.id);
+    }
   }
 }

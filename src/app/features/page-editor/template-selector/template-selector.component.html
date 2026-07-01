@@ -1,16 +1,14 @@
 <div class="template-selector">
   <div class="header">
     <h2>Add Section</h2>
-    <button type="button" class="close-button" (click)="close()">&times;</button>
+    <button type="button" class="close-button" (click)="dismiss('backdrop')">&times;</button>
   </div>
 
   <div class="filters">
-    <input
-      type="text"
-      class="search-input"
-      placeholder="Search templates..."
+    <app-text-input
+      [placeholderKey]="'Search templates...'"
       [value]="searchQuery()"
-      (input)="onSearch($any($event.target).value)"
+      (valueChange)="onSearch($event)"
     />
     <app-select-input
       [options]="categoryOptions()"
