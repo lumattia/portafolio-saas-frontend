@@ -1,0 +1,49 @@
+<div class="layout">
+  <header class="header">
+    <div class="header-left">
+      @if (auth.isAuthenticated()) {
+        <app-button variant="icon" (click)="toggleSidenav()" title="Menu" class="mobile-only">
+          <app-icon name="menu" size="md" />
+        </app-button>
+      }
+      <a routerLink="/" class="brand">Portfolio</a>
+    </div>
+    <nav class="nav">
+      <app-theme-toggle />
+      @if (auth.isAuthenticated()) {
+        <app-button variant="icon" (click)="toggleViewMode()" title="{{viewModeService.isAdminMode()?'Ver Snapshot':'Editar'}}">
+          <app-icon name="eye" size="md" />
+        </app-button>
+        <div class="user-menu" (mouseenter)="showUserMenu.set(true)" (mouseleave)="showUserMenu.set(false)">
+          <span class="user-name">{{ auth.user()?.email }}</span>
+          @if (showUserMenu()) {
+            <div class="user-dropdown">
+              <a (click)="logout()">Salir</a>
+            </div>
+          }
+        </div>
+      } @else {
+        <a routerLink="/login" routerLinkActive="active">Entrar</a>
+      }
+    </nav>
+  </header>
+  
+  <div class="main-content">
+    <aside class="sidebar desktop-only">
+      <app-menu-management [isReadOnly]="!viewModeService.isAdminMode() && !auth.isTenantOwner()" />
+    </aside>
+    <main class="content" [class.with-sidebar]="menuService.menus().length > 0">
+      <router-outlet />
+    </main>
+  </div>
+
+  @if (showSidenav()) {
+    <div class="sidenav-overlay mobile-only" (click)="toggleSidenav()"></div>
+    <aside class="sidenav mobile-only">
+      <div class="sidenav-header">
+        <app-button variant="icon" (click)="toggleSidenav()">×</app-button>
+      </div>
+      <app-menu-management [isReadOnly]="!viewModeService.isAdminMode() && !auth.isTenantOwner()" />
+    </aside>
+  }
+</div>

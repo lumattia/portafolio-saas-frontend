@@ -1,0 +1,10 @@
+<div
+  class="section-renderer"
+  [class.selected]="isSelected()"
+  [class.deleted]="isDeleted"
+  (click)="select.emit(section().id)"
+>
+  <ng-container
+    *ngComponentOutlet="componentMap[componentSelector]; inputs: { section: section() }"
+  ></ng-container>
+</div>

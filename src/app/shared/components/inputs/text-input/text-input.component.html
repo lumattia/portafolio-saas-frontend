@@ -1,0 +1,26 @@
+<div class="text-input-wrapper">
+  @if (labelKey) {
+  <label class="text-input-label">
+    {{ labelKey | translate }}
+    @if (!readonly && isRequired) {
+      <span class="required-mark">*</span>
+    }
+  </label>
+}
+  <input
+    [type]="type"
+    [formControl]="control!"
+    [placeholder]="placeholderKey ? (placeholderKey | translate) : ''"
+    [attr.disabled]="disabled"
+    [readonly]="readonly"
+    class="text-input-field"
+    [class.error]="shouldShowError"
+    [class.dirty]="isDirty"
+    (change)="onValueChange($event)"
+  />
+  @if (shouldShowError && errorMessage) {
+    <span class="text-input-error">
+      {{ errorMessage.key | translate: errorMessage.params }}
+    </span>
+  }
+</div>

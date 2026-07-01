@@ -1,0 +1,34 @@
+<div class="section-tree">
+  @for (section of sections(); track section.id) {
+    <div class="tree-node">
+      <div 
+        class="tree-node-header"
+        [class.selected]="section"
+        [class.has-children]="hasSubSections(section)"
+        (click)="selectSection.emit(section)"
+      >
+        @if (hasSubSections(section)) {
+          <span 
+            class="expand-icon"
+            [class.expanded]="isExpanded(section.id)"
+            (click)="$event.stopPropagation(); toggleExpand(section.id)"
+          >
+            {{ isExpanded(section.id) ? '▼' : '▶' }}
+          </span>
+        }
+        <span class="section-name">{{ getSectionDisplayName(section) }}</span>
+      </div>
+
+      @if (hasSubSections(section) && isExpanded(section.id)) {
+        <div class="tree-node-children">
+          <app-section-tree
+            [sections]="section.subSections"
+            [selectedSection]="selectedSection()"
+            [expandedSections]="expandedSections()"
+            (selectSection)="selectSection.emit($event)"
+          ></app-section-tree>
+        </div>
+      }
+    </div>
+  }
+</div>

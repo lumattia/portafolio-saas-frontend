@@ -1,0 +1,38 @@
+<div class="color-input-wrapper">
+  @if (labelKey) {
+  <label class="color-input-label">
+    {{ labelKey | translate }}
+    @if (!readonly && isRequired) {
+      <span class="required-mark">*</span>
+    }
+  </label>
+}
+  <div class="color-input-container">
+    <input
+      type="color"
+      [formControl]="control!"
+      [attr.disabled]="disabled"
+      [readonly]="readonly"
+      class="color-input-field"
+      [class.error]="shouldShowError"
+      [class.dirty]="isDirty"
+      (change)="onValueChange($event)"
+    />
+    <input
+      type="text"
+      [formControl]="control!"
+      [attr.disabled]="disabled"
+      [readonly]="readonly"
+      class="color-text-field"
+      [class.error]="shouldShowError"
+      [class.dirty]="isDirty"
+      placeholder="#000000"
+      (change)="onValueChange($event)"
+    />
+  </div>
+  @if (shouldShowError && errorMessage) {
+    <span class="color-input-error">
+      {{ errorMessage.key | translate: errorMessage.params }}
+    </span>
+  }
+</div>

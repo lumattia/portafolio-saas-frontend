@@ -1,0 +1,36 @@
+.section-renderer {
+  position: relative;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  background-color: white;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
+  box-sizing: border-box;
+
+  &:hover {
+    border-color: #d1d5db;
+  }
+
+  &.selected {
+    border-color: #6366f1;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+  }
+
+  &.deleted {
+    background-color: #fef3c7;
+    border-color: #fbbf24;
+    opacity: 0.7;
+
+    ::ng-deep * {
+      opacity: 0.7;
+    }
+  }
+
+  ::ng-deep * {
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+}

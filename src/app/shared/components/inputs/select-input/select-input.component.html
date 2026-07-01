@@ -1,0 +1,80 @@
+<div class="select-input-wrapper">
+  @if (labelKey) {
+  <label class="select-input-label">
+    {{ labelKey | translate }}
+    @if (!readonly && isRequired) {
+      <span class="required-mark">*</span>
+    }
+  </label>
+}
+
+  <div class="select-dropdown-container">
+    <!-- Trigger -->
+    <div
+      class="select-trigger"
+      [class.disabled]="disabled"
+      [class.readonly]="readonly"
+      [class.error]="shouldShowError"
+      [class.dirty]="isDirty"
+      (click)="toggleDropdown()"
+    >
+      <span class="select-trigger-text">
+        @if (selectedOptionName) {
+          {{ selectedOptionName | translate }}
+        } @else {
+          <span class="select-placeholder">
+            {{ placeholderKey ? (placeholderKey | translate) : 'shared.selectInput.placeholder' | translate }}
+          </span>
+        }
+      </span>
+      @if (showClearButton && hasValue) {
+        <button
+          class="select-clear-btn"
+          (click)="clearSelection($event)"
+          type="button"
+        >
+          ×
+        </button>
+      }
+      <span class="select-arrow">▼</span>
+    </div>
+
+    <!-- Dropdown -->
+    @if (isDropdownOpen()) {
+      <div class="select-dropdown">
+        @if (showSearch) {
+        <!-- Search Input -->
+        <input
+          type="text"
+          class="select-search"
+          [placeholder]="'shared.selectInput.search' | translate"
+          (input)="onSearchInput($event)"
+          (click)="$event.stopPropagation()"
+        />
+        }
+
+        <!-- Options List -->
+        <ul class="select-options">
+          @for (option of filteredOptions(); track option.id) {
+            <li
+              class="select-option"
+              [class.selected]="control?.value === option.id"
+              (click)="selectOption(option)"
+            >
+              @if (option.flag) {
+                {{ option.flag }}
+              }
+              {{ option.name | translate }}
+            </li>
+          }
+        </ul>
+      </div>
+    }
+  </div>
+
+  @if (shouldShowError && errorMessage) {
+    <span class="select-input-error">
+      {{ errorMessage.key | translate: errorMessage.params }}
+    </span>
+  }
+</div>

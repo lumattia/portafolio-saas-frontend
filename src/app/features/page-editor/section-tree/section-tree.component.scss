@@ -1,0 +1,43 @@
+.section-tree {
+  .tree-node {
+    margin-left: 16px;
+    
+    .tree-node-header {
+      display: flex;
+      align-items: center;
+      padding: 8px 12px;
+      cursor: pointer;
+      border-radius: 4px;
+      transition: background-color 0.2s;
+      
+      &:hover {
+        background-color: rgba(99, 102, 241, 0.1);
+      }
+      
+      &.selected {
+        background-color: rgba(99, 102, 241, 0.2);
+        font-weight: 500;
+      }
+      
+      .expand-icon {
+        margin-right: 8px;
+        font-size: 10px;
+        color: #64748b;
+        cursor: pointer;
+        
+        &:hover {
+          color: #6366f1;
+        }
+      }
+      
+      .section-name {
+        flex: 1;
+      }
+    }
+    
+    .tree-node-children {
+      margin-left: 12px;
+      border-left: 1px solid #e2e8f0;
+    }
+  }
+}

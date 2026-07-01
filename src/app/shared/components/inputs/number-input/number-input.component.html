@@ -1,0 +1,30 @@
+<div class="number-input-wrapper">
+  @if (labelKey) {
+  <label class="number-input-label">
+    {{ labelKey | translate }}
+    @if (!readonly && isRequired) {
+      <span class="required-mark">*</span>
+    }
+  </label>
+}
+  <div class="number-input-container">
+    <input
+      type="number"
+      [formControl]="control!"
+      [placeholder]="placeholderKey ? (placeholderKey | translate) : ''"
+      [attr.disabled]="disabled"
+      [readonly]="readonly"
+      [step]="step"
+      class="number-input-field"
+      [class.error]="shouldShowError"
+      [class.dirty]="isDirty"
+      (change)="onValueChange($event)"
+    />
+    @if (unit) {
+      <span class="number-input-unit">{{ unit }}</span>
+    }
+  </div>
+  @if (shouldShowError && errorMessage) {
+    <span class="number-input-error"> {{ errorMessage.key | translate: errorMessage.params }} </span>
+  }
+</div>

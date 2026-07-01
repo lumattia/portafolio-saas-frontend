@@ -1,0 +1,12 @@
+<div class="rich-text-section-editor">
+  @if (content && content.inputs) {
+    <div class="field-group">
+      <label>Text</label>
+      <app-rich-text-input
+        [value]="content.inputs.text"
+        (valueChange)="onContentChange($event)"
+        placeholder="Enter text..."
+      />
+    </div>
+  }
+</div>

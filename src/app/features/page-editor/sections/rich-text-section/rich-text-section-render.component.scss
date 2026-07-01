@@ -1,0 +1,18 @@
+.rich-text-section-render {
+  flex-grow: 1;
+  width: 100%;
+  min-height: 1rem;
+}
+
+.section-content {
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
+.rich-text-content {
+
+  ::ng-deep ul,
+  ::ng-deep ol {
+    padding-left: 20px;
+  }
+}

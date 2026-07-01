@@ -1,0 +1,16 @@
+{
+  "validation": {
+    "required": "Este campo es obligatorio",
+    "minLength": "Mínimo {{minLength}} caracteres",
+    "maxLength": "Máximo {{maxLength}} caracteres",
+    "pattern": "Formato inválido",
+    "email": "Email inválido",
+    "invalid": "Valor inválido"
+  },
+  "shared": {
+    "selectInput": {
+      "placeholder": "Seleccionar...",
+      "search": "Buscar..."
+    }
+  }
+}

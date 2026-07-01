@@ -1,0 +1,71 @@
+<div class="carousel-section-editor">
+  @if (!hasSlides()) {
+    <!-- No slides yet - show add slide button -->
+    <div class="no-slides-state">
+      <h3>No slides added</h3>
+      <p>Click the button below to add your first slide</p>
+      <button type="button" class="choose-template-button" (click)="addSlide()">
+        Add First Slide
+      </button>
+    </div>
+  } @else {
+    <!-- Has slides - show slide editor -->
+    @if (selectedSection()) {
+      <div class="carousel-editor">
+        <div class="slide-selector">
+          <div class="slide-tabs">
+            @for (slide of subSections; track slide.id; let i = $index) {
+              <button
+                type="button"
+                class="slide-tab"
+                [class.active]="i === currentSlideIndex()"
+                (click)="setCurrentSlideIndex(i)"
+              >
+                Slide {{ i + 1 }}
+              </button>
+            }
+          </div>
+          <div class="slide-actions">
+            <button type="button" class="action-button" (click)="addSlide()" title="Add slide">
+              +
+            </button>
+            @if (currentSlide()) {
+              <button type="button" class="action-button" (click)="duplicateSlide()" title="Duplicate slide">
+                &#10003;&#10003;
+              </button>
+              <button type="button" class="action-button danger" (click)="removeSlide()" title="Remove slide">
+                &#10005;
+              </button>
+              <button
+                type="button"
+                class="action-button"
+                (click)="moveSlide('up')"
+                [disabled]="currentSlideIndex() === 0"
+                title="Move up"
+              >
+                &#8593;
+              </button>
+              <button
+                type="button"
+                class="action-button"
+                (click)="moveSlide('down')"
+                [disabled]="currentSlideIndex() === subSections.length - 1"
+                title="Move down"
+              >
+                &#8595;
+              </button>
+            }
+          </div>
+        </div>
+
+        @if (currentSlide()) {
+          <div class="slide-editor">
+            <ng-container
+              *ngComponentOutlet="componentMap[currentSlide().componentSelector]"
+            ></ng-container>
+          </div>
+        }
+      </div>
+    }
+  }
+</div>

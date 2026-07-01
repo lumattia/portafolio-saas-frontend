@@ -1,0 +1,29 @@
+.image-text-section-render{
+    flex-grow: 1;
+}
+.text-container {
+    overflow: auto;
+}
+
+.section-image {
+    max-width: 60% !important;
+    height: auto;
+    object-fit: cover;
+}
+
+.rich-text-content {
+    overflow-wrap: break-word;
+    word-break: break-word;
+}
+.image-text-section-render.top-left .section-image,
+.image-text-section-render:not(.top-right) .section-image {
+    float: left;
+    margin-right: 16px;
+    margin-left: 0;
+}
+.image-text-section-render.top-right .section-image {
+    float: right;
+    margin-left: 16px;
+    margin-right: 0;
+}
+

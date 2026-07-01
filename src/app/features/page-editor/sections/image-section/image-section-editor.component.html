@@ -1,0 +1,12 @@
+<div class="image-section-editor">
+  @if (content && content.inputs) {
+    <div class="field-group">
+      <label>Image</label>
+      <app-image-input
+        [value]="content.inputs.image"
+        (valueChange)="onContentChange($event)"
+        [config]="{ maxWidth: 1920, maxHeight: 1080, quality: 0.8 }"
+      />
+    </div>
+  }
+</div>

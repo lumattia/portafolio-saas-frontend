@@ -1,0 +1,28 @@
+.rich-text-input-container {
+  width: 100%;
+
+  ::ng-deep .ql-container {
+    font-family: inherit;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-top: none;
+    border-radius: 0 0 4px 4px;
+    min-height: 200px;
+  }
+
+  ::ng-deep .ql-toolbar {
+    border: 1px solid #ddd;
+    border-radius: 4px 4px 0 0;
+    background-color: #f9f9f9;
+  }
+
+  ::ng-deep .ql-editor {
+    min-height: 200px;
+    padding: 12px;
+  }
+
+  ::ng-deep .ql-editor.ql-blank::before {
+    color: #999;
+    font-style: normal;
+  }
+}

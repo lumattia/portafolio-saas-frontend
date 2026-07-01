@@ -1,0 +1,20 @@
+@if (loading()) {
+  <div class="loading-container">
+    <p>Loading...</p>
+  </div>
+} @else if (error()) {
+  <div class="error-container">
+    <p>{{ error() }}</p>
+  </div>
+} @else if (pageContent()) {
+  <div class="portfolio-container">
+    <main class="page-content">
+      <h1 class="page-title">{{ pageContent()!.title }}</h1>
+      @for (section of pageContent()!.sections; track section.componentSelector; let i = $index) {
+         <app-published-section-renderer
+          [section]="section"
+        />
+      }
+    </main>
+  </div>
+}

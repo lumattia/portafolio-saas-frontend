@@ -1,0 +1,17 @@
+<div class="image-upload">
+  <p class="label">{{ label() }}</p>
+  <p class="hint">{{ hint() }}</p>
+
+  @if (displayUrl(); as src) {
+    <img class="preview" [src]="src" alt="Vista previa" />
+  }
+
+  <label class="picker">
+    <input type="file" accept="image/*" (change)="onFileSelected($event)" [disabled]="uploading()" />
+    <span>{{ uploading() ? 'Subiendo imagen…' : 'Toca para elegir una foto' }}</span>
+  </label>
+
+  @if (error()) {
+    <p class="error">{{ error() }}</p>
+  }
+</div>

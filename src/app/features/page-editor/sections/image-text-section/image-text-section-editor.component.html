@@ -1,0 +1,38 @@
+<div class="image-text-section-editor">
+  @if (content && content.inputs) {
+    <div class="field-group">
+      <label>Image</label>
+      <app-image-input
+        [value]="content.inputs.image"
+        (valueChange)="onContentChange('image', $event)"
+        [config]="{ maxWidth: 1920, maxHeight: 1080, quality: 0.8 }"
+      />
+    </div>
+    <div class="field-group">
+      <label>Text</label>
+      <app-rich-text-input
+        [value]="content.inputs.text"
+        (valueChange)="onContentChange('text', $event)"
+        placeholder="Enter text..."
+      />
+    </div>
+    <div class="field-group">
+      <button type="button" class="style-toggle" (click)="toggleStylePanel()">
+        Style {{ showStylePanel() ? '&#9662;' : '&#9656;' }}
+      </button>
+      @if (showStylePanel()) {
+        <div class="style-panel">
+          <label>Image Position</label>
+          <select
+            [ngModel]="content.styles.imagePosition"
+            (ngModelChange)="onContentChange('imagePosition', $event, 'styles')"
+            class="style-select"
+          >
+            <option value="top-left">Top Left</option>
+            <option value="top-right">Top Right</option>
+          </select>
+        </div>
+      }
+    </div>
+  }
+</div>

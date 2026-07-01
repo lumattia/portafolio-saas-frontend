@@ -1,0 +1,60 @@
+.checkbox-input-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.checkbox-input-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  user-select: none;
+}
+
+.checkbox-input-label input:disabled {
+  cursor: not-allowed;
+}
+
+.checkbox-input-label input[readonly] {
+  cursor: default;
+}
+
+.checkbox-input-field {
+  width: 1rem;
+  height: 1rem;
+  cursor: pointer;
+}
+
+.checkbox-input-field:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.checkbox-input-field[readonly] {
+  cursor: default;
+}
+
+.checkbox-text {
+  font-size: 0.875rem;
+  color: var(--text);
+}
+
+.required-mark {
+  color: var(--error);
+  margin-left: 0.125rem;
+}
+
+.checkbox-input-error {
+  font-size: 0.75rem;
+  color: var(--error);
+  margin-left: 1.5rem;
+}
+
+.checkbox-input-field.error {
+  border-color: var(--error);
+}
+
+.checkbox-input-field.dirty {
+  border-color: var(--primary);
+}

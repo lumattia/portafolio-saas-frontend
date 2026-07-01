@@ -1,0 +1,84 @@
+@if (loading()) {
+  <div class="loading-container">
+    <p>Loading...</p>
+  </div>
+} @else if (pageNotFound()) {
+  <div class="create-page-prompt">
+    <p>Esta página no existe. ¿Deseas crear la página con el slug '{{ pageSlug() }}'?</p>
+    <button (click)="createPage()">Crear Página</button>
+  </div>
+}@else{
+  <div class="page-editor">
+    <!-- Header with page metadata and Save/Publish buttons -->
+    <div class="page-header">
+      <div class="page-info">
+        <h1 class="page-title">{{ pageTitle() }}</h1>
+        @if (pageIsDeleted()) {
+          <div class="soft-delete-warning">
+            <p>⚠️ Esta página está marcada para eliminación</p>
+            <button (click)="undoDelete()" class="undo-button">Deshacer / Recrear</button>
+          </div>
+        }
+      </div>
+      <div class="action-buttons">
+        <button type="button" class="btn btn-secondary" (click)="savePage()">
+          Save
+        </button>
+        <button type="button" class="btn btn-primary" (click)="publishPage()">
+          Publish
+        </button>
+      </div>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="main-content">
+      <div class="sections-container">
+        @for (section of sections(); track section.id) {
+          <app-section-renderer
+            [section]="section"
+            [isSelected]="editorState().selectedSection?.id === section.id"
+            (select)="selectSection(section)"
+          />
+        } @empty {
+          <div class="empty-state">
+            <h2>No sections yet</h2>
+            <p>Click the button below to add your first section</p>
+          </div>
+        }
+      </div>
+
+      <!-- Add Section Button -->
+      <div class="add-section-container">
+        <button type="button" class="add-section-button" (click)="openTemplateSelector()">
+          <span class="plus-icon">+</span>
+          <span class="button-text">Add Section</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Left Sidenav - Template Selector -->
+    @if (isTemplateSelectorOpen()) {
+      <div class="sidenav-right-overlay" (click)="closeTemplateSelector()"></div>
+      <div class="sidenav-right">
+        <app-template-selector />
+      </div>
+    } @else if(isEditorOpen()) {
+      <div class="sidenav-right-overlay" (click)="closeEditor()"></div>
+      <div class="sidenav-right">
+        <!-- Section Tree Navigation -->
+        <div class="section-tree-container">
+          <h3>Section Hierarchy</h3>
+          <app-section-tree
+            [sections]="sections()"
+            [selectedSection]="editorState().selectedSection"
+            [expandedSections]="expandedSections()"
+            (selectSection)="selectSection($event)"
+          ></app-section-tree>
+        </div>
+
+        <!-- Section Editor -->
+        <app-section-editor />
+      </div>
+    }
+  </div>
+}

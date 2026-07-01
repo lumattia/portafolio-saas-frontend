@@ -1,0 +1,25 @@
+<div class="checkbox-input-wrapper">
+  <label class="checkbox-input-label">
+    <input
+      type="checkbox"
+      [checked]="control!.value"
+      [disabled]="disabled || readonly"
+      [attr.readonly]="readonly"
+      class="checkbox-input-field"
+      [class.error]="shouldShowError"
+      [class.dirty]="isDirty"
+      (change)="onValueChange($event)"
+    />
+    <span class="checkbox-text">
+      {{ labelKey | translate }}
+      @if (!readonly && isRequired) {
+        <span class="required-mark">*</span>
+      }
+    </span>
+  </label>
+  @if (shouldShowError && errorMessage) {
+    <span class="checkbox-input-error">
+      {{ errorMessage.key | translate: errorMessage.params }}
+    </span>
+  }
+</div>

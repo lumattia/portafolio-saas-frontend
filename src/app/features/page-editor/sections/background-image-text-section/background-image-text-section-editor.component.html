@@ -1,0 +1,20 @@
+<div class="background-image-text-section-editor">
+  @if (content && content.inputs) {
+    <div class="field-group">
+      <label>Background Image</label>
+      <app-image-input
+        [value]="content.inputs.backgroundImage"
+        (valueChange)="onContentChange('backgroundImage', $event)"
+        [config]="{ maxWidth: 1920, maxHeight: 1080, quality: 0.8 }"
+      />
+    </div>
+    <div class="field-group">
+      <label>Text</label>
+      <app-rich-text-input
+        [value]="content.inputs.text"
+        (valueChange)="onContentChange('text', $event)"
+        placeholder="Enter text..."
+      />
+    </div>
+  }
+</div>

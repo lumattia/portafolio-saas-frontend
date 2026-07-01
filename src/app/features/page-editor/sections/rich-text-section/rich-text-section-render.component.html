@@ -1,0 +1,9 @@
+<div class="rich-text-section-render">
+  <div class="section-content">
+    @if (content.inputs.text) {
+      <div class="rich-text-content" [innerHTML]="safeHtml"></div>
+    } @else {
+      <div class="placeholder">No text content</div>
+    }
+  </div>
+</div>

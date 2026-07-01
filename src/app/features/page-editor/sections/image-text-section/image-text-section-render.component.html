@@ -1,0 +1,14 @@
+<div class="image-text-section-render" [class]="positionClass">
+  <div class="section-content">
+    <div class="text-container">
+      @if (content.inputs.image) {
+        <img [src]="content.inputs.image" alt="Section image" class="section-image" />
+      }
+      @if (content.inputs.text) {
+        <div class="rich-text-content" [innerHTML]="safeHtml"></div>
+      } @else {
+        <div class="placeholder">No text content</div>
+      }
+    </div>
+  </div>
+</div>

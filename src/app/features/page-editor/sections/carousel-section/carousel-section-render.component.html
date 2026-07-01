@@ -1,0 +1,50 @@
+<div class="carousel-section-render">
+  @if (slides.length > 0) {
+    <div class="carousel-container">
+      <button
+        type="button"
+        class="nav-button prev"
+        (click)="previousSlide()"
+        [disabled]="slides.length === 1"
+      >
+        &#10094;
+      </button>
+
+      <div class="carousel-content">
+        @if (currentSlide) {
+          <div class="slide">
+            <ng-container
+              *ngComponentOutlet="componentMap[currentSlide.componentSelector]; inputs: { section: currentSlide }"
+            ></ng-container>
+          </div>
+        } @else {
+          <div class="placeholder">No slides</div>
+        }
+      </div>
+
+      <button
+        type="button"
+        class="nav-button next"
+        (click)="nextSlide()"
+        [disabled]="slides.length === 1"
+      >
+        &#10095;
+      </button>
+    </div>
+
+    @if (slides.length > 1) {
+      <div class="carousel-indicators">
+        @for (slide of slides; track slide.id; let i = $index) {
+          <button
+            type="button"
+            class="indicator"
+            [class.active]="i === currentIndex()"
+            (click)="goToSlide(i)"
+          ></button>
+        }
+      </div>
+    }
+  } @else {
+    <div class="placeholder">No slides added</div>
+  }
+</div>

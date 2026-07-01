@@ -1,0 +1,31 @@
+<div class="card">
+  <a routerLink="/admin" class="back">← Volver</a>
+  <h1>Crear cuenta para otro usuario</h1>
+  <p class="hint">Solo para administradores. El dominio será su dirección web (ej: maria.localhost).</p>
+
+  <form [formGroup]="form" (ngSubmit)="submit()">
+    <label>
+      Email del usuario
+      <input type="email" formControlName="email" placeholder="maria@ejemplo.com" />
+    </label>
+    <label>
+      Contraseña inicial
+      <input type="password" formControlName="password" />
+    </label>
+    <label>
+      Su dominio web
+      <input type="text" formControlName="configuredDomain" placeholder="maria.localhost" />
+    </label>
+
+    @if (message()) {
+      <p class="success">{{ message() }}</p>
+    }
+    @if (error()) {
+      <p class="error">{{ error() }}</p>
+    }
+
+    <app-button type="submit" [disabled]="loading() || form.invalid">
+      {{ loading() ? 'Creando…' : 'Crear cuenta' }}
+    </app-button>
+  </form>
+</div>

@@ -1,0 +1,99 @@
+<div class="menu-management">
+  @if (loading()) {
+    <div class="loading">Loading menus...</div>
+  } @else {
+    <nav class="menu-list">
+      @for (menu of menus(); track menu.id; let index = $index) {
+        <a 
+          class="menu-item"
+          [class.draggable]="!isReadOnly()"
+          [class.readonly]="isReadOnly()"
+          draggable="{{ !isReadOnly() }}"
+          (dragstart)="onDragStart($event, index)"
+          (dragover)="onDragOver($event)"
+          (drop)="onDrop($event, index)"
+          [attr.href]="menu.isExternal ? menu.externalUrl : '/' + menu.pageSlug"
+        >
+          <div class="drag-handle" *ngIf="!isReadOnly()">
+            <app-icon name="drag-handle" size="sm" />
+          </div>
+          <span class="menu-text">{{ menu.text }}</span>
+          @if (!isReadOnly()) {
+            <span class="menu-slug">
+              @if (menu.isExternal) {
+                ({{ menu.externalUrl }})
+              } @else {
+                ({{ menu.pageSlug }})
+              }
+            </span>
+          }
+          @if (!isReadOnly()) {
+            <div class="menu-actions">
+              <app-button variant="icon" size="sm" (click)="editMenuItem(menu); $event.preventDefault()">
+                <app-icon name="edit" size="sm" />
+              </app-button>
+              <app-button variant="icon" size="sm" (click)="deleteMenuItem(menu.id); $event.preventDefault()">
+                <app-icon name="delete" size="sm" />
+              </app-button>
+            </div>
+          }
+        </a>
+      }
+    </nav>
+
+    @if (!isReadOnly()) {
+      <div class="add-section">
+        <app-button variant="primary" (click)="openAddModal()">Add Menu Item</app-button>
+      </div>
+      
+      <div class="save-order-section">
+        @if (hasOrderChanged()) {
+          <app-button variant="primary" (click)="saveOrder()">Save Order</app-button>
+          <app-button variant="secondary" (click)="resetOrder()">Cancel</app-button>
+        }
+      </div>
+    }
+  }
+
+  @if (showAddModal()) {
+    <div class="modal-overlay" (click)="closeAddModal()">
+      <div class="modal" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <h3>{{ isEditing() ? 'Edit' : 'Add' }} Menu Item</h3>
+          <app-button variant="icon" (click)="closeAddModal()">×</app-button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label>Text</label>
+            <input type="text" [(ngModel)]="newItemText" placeholder="Menu item text">
+          </div>
+          <div class="form-group">
+            <label>
+              <input type="checkbox" [(ngModel)]="newItemIsExternal" (change)="toggleIsExternal()">
+              External Link
+            </label>
+          </div>
+          @if (newItemIsExternal()) {
+            <div class="form-group">
+              <label>External URL</label>
+              <input type="text" [(ngModel)]="newItemExternalUrl" placeholder="https://example.com">
+            </div>
+          } @else {
+            <div class="form-group">
+              <label>Page Slug</label>
+              <input type="text" [(ngModel)]="newItemPageSlug" placeholder="Page slug">
+            </div>
+          }
+        </div>
+        <div class="modal-footer">
+          @if (isEditing()) {
+            <app-button variant="primary" (click)="updateMenuItem()">Update</app-button>
+            <app-button variant="secondary" (click)="cancelEdit()">Cancel</app-button>
+          } @else {
+            <app-button variant="primary" (click)="addMenuItem()">Add Item</app-button>
+          }
+        </div>
+      </div>
+    </div>
+  }
+</div>

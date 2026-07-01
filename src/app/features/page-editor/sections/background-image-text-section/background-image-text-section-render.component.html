@@ -1,0 +1,11 @@
+<div class="background-image-text-section-render" [ngStyle]="backgroundStyle">
+  <div class="overlay">
+    <div class="section-content">
+      @if (content.inputs.text) {
+        <div class="rich-text-content" [innerHTML]="safeHtml"></div>
+      } @else {
+        <div class="placeholder">No text content</div>
+      }
+    </div>
+  </div>
+</div>
