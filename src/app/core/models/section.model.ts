@@ -12,12 +12,12 @@ export interface SectionDto {
   subSectionIndex?: number;
 }
 
-export interface CreateSectionRequest {
+export interface SectionRequest {
+  id: string;
   sectionTemplateId: string;
-}
-
-export interface UpdateSectionRequest {
-  content: string;
+  contentJson: any;
   order: number;
   isEnabled: boolean;
+  isDeleted: boolean;
+  parentSectionId?: string;
 }

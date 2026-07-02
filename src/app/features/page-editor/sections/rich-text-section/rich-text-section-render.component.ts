@@ -1,8 +1,8 @@
-import { Component, input, inject, computed, signal } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { createDefaultRichTextSectionContent, RichTextSectionContent } from './rich-text-section.model';
-import { SectionDto } from '../../../../core/models/section.model';
+import { BaseSectionRendererComponent } from '../base-section-renderer.component';
 
 @Component({
   selector: 'app-rich-text-section-render',
@@ -11,8 +11,7 @@ import { SectionDto } from '../../../../core/models/section.model';
   templateUrl: './rich-text-section-render.component.html',
   styleUrls: ['./rich-text-section-render.component.scss'],
 })
-export class RichTextSectionRenderComponent {
-  section = input.required<SectionDto>();
+export class RichTextSectionRenderComponent extends BaseSectionRendererComponent{
   private readonly sanitizer = inject(DomSanitizer);
   
   get content(): RichTextSectionContent {

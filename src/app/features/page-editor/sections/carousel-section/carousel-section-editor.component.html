@@ -1,10 +1,10 @@
 <div class="carousel-section-editor">
-  @if (!hasSlides) {
+  @if (!hasSubSection) {
     <!-- No slides yet - show add slide button -->
     <div class="no-slides-state">
       <h3>No slides added</h3>
       <p>Click the button below to add your first slide</p>
-      <button type="button" class="choose-template-button" (click)="addSlide()">
+      <button type="button" class="choose-template-button" (click)="addSubSection()">
         Add First Slide
       </button>
     </div>
@@ -16,7 +16,7 @@
             <button
               type="button"
               class="slide-tab"
-              [class.active]="i === currentSlideIndex"
+              [class.active]="i === currentSubSectionIndex"
               (click)="setCurrentSlideIndex(i)"
             >
               Slide {{ i + 1 }}
@@ -24,21 +24,21 @@
           }
         </div>
         <div class="slide-actions">
-          <button type="button" class="action-button" (click)="addSlide()" title="Add slide">
+          <button type="button" class="action-button" (click)="addSubSection()" title="Add slide">
             +
           </button>
-          @if (currentSlide) {
-            <button type="button" class="action-button" (click)="duplicateSlide()" title="Duplicate slide">
+          @if (currentSubSection) {
+            <button type="button" class="action-button" (click)="duplicateSubSection()" title="Duplicate slide">
               &#10003;&#10003;
             </button>
-            <button type="button" class="action-button danger" (click)="removeSlide()" title="Remove slide">
+            <button type="button" class="action-button danger" (click)="removeSubSection(currentSubSection)" title="Remove slide">
               &#10005;
             </button>
             <button
               type="button"
               class="action-button"
               (click)="moveSlide('up')"
-              [disabled]="currentSlideIndex === 0"
+              [disabled]="currentSubSectionIndex === 0"
               title="Move up"
             >
               &#8593;
@@ -47,22 +47,32 @@
               type="button"
               class="action-button"
               (click)="moveSlide('down')"
-              [disabled]="currentSlideIndex === subSections.length - 1"
+              [disabled]="currentSubSectionIndex === subSections.length - 1"
               title="Move down"
             >
               &#8595;
             </button>
-          }
+          } 
         </div>
       </div>
 
-      @if (currentSlide) {
+      @if (currentSubSection) {
         <div class="slide-editor">
           <ng-container
-            *ngComponentOutlet="componentMap[currentSlide.componentSelector]; inputs: { section: currentSlide }"
+            *ngComponentOutlet="componentMap[currentSubSection.componentSelector]; inputs: { section: currentSubSection }"
           ></ng-container>
         </div>
-      }
+      }@else {
+             <div class="field-group">
+      <label>Image</label>
+      <app-number-input
+        [value]="content.styles.height"
+        (valueChange)="onContentChange('styles.height', $event)"
+        [min]="0"
+        [max]="1000"
+      />
+    </div>
+          }
     </div>
   }
 </div>

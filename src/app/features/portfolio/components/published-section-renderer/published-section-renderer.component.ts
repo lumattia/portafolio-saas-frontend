@@ -13,24 +13,5 @@ import { RENDER_COMPONENT_MAP } from '../../../../core/constants/component-maps'
 })
 export class PublishedSectionRendererComponent {
   section = input.required<PublishedSnapshotSectionDto>();
-
   readonly componentMap = RENDER_COMPONENT_MAP;
-
-  get sectionDto(): SectionDto {
-    return this.convertToSectionDto(this.section());
-  }
-
-  private convertToSectionDto(publishedSection: PublishedSnapshotSectionDto): SectionDto {
-    return {
-      id: crypto.randomUUID(),
-      sectionTemplateId: '',
-      componentSelector: publishedSection.componentSelector,
-      contentJson: publishedSection.contentJson,
-      order: publishedSection.order,
-      isEnabled: true,
-      isDeleted: false,
-      isPublished: true,
-      subSections: publishedSection.subSections.map(ps => this.convertToSectionDto(ps))
-    };
-  }
 }

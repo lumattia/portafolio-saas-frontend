@@ -1,8 +1,8 @@
-import { Component, input, inject, computed } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { createDefaultImageTextSectionContent, ImageTextSectionContent } from './image-text-section.model';
-import { SectionDto } from '../../../../core/models/section.model';
+import { BaseSectionRendererComponent } from '../base-section-renderer.component';
 
 @Component({
   selector: 'app-image-text-section-render',
@@ -11,8 +11,7 @@ import { SectionDto } from '../../../../core/models/section.model';
   templateUrl: './image-text-section-render.component.html',
   styleUrls: ['./image-text-section-render.component.scss'],
 })
-export class ImageTextSectionRenderComponent {
-  section = input.required<SectionDto>();
+export class ImageTextSectionRenderComponent  extends BaseSectionRendererComponent{
   private readonly sanitizer = inject(DomSanitizer);
   
   get content(): ImageTextSectionContent {

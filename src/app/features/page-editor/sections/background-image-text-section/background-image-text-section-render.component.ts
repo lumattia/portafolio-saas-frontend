@@ -2,7 +2,7 @@ import { Component, input, inject, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { BackgroundImageTextSectionContent, createDefaultBackgroundImageTextContent } from './background-image-text-section.model';
-import { SectionDto } from '../../../../core/models/section.model';
+import { BaseSectionRendererComponent } from '../base-section-renderer.component';
 
 @Component({
   selector: 'app-background-image-text-section-render',
@@ -11,9 +11,7 @@ import { SectionDto } from '../../../../core/models/section.model';
   templateUrl: './background-image-text-section-render.component.html',
   styleUrls: ['./background-image-text-section-render.component.scss'],
 })
-export class BackgroundImageTextSectionRenderComponent {
-  section = input.required<SectionDto>();
-  
+export class BackgroundImageTextSectionRenderComponent extends BaseSectionRendererComponent {
   get content(): BackgroundImageTextSectionContent {
     return createDefaultBackgroundImageTextContent(this.section().contentJson);
   }

@@ -11,7 +11,6 @@ import { SectionDto } from '../../../core/models/section.model';
 import { ModalService } from '../../../core/services/modal.service';
 import { TemplateSelectorComponent } from '../template-selector/template-selector.component';
 import { SidenavService } from '../../../core/services/sidenav.service';
-import { GenericErrorModalComponent } from '../../../shared/components/modals/generic-error-modal/generic-error-modal.component';
 import { ConfirmModalComponent } from '../../../shared/components/modals/confirm-modal/confirm-modal.component';
 
 @Component({
@@ -173,7 +172,16 @@ export class PageEditorComponent implements OnInit {
     }).subscribe({
       next: () => {
         this.pageService.publish(id).subscribe({
-          next: () => this.loading.set(false),
+          next: (detail) => {
+            this.location.replaceState(`${detail.slug}`);
+            this.pageSlug.set(detail.slug);
+            this.pageTitle.set(detail.title);
+            this.internalPageId.set(detail.id);
+            this.pageIsDeleted.set(detail.isDeleted);
+            this.pageNotFound.set(false);
+            this.sections.set(detail.sections);
+            this.loading.set(false);
+          },
           error: (err: any) => this.loading.set(false)
         });
       },
@@ -200,17 +208,37 @@ export class PageEditorComponent implements OnInit {
     }
   }
   getSectionsForSave(): SectionDto[]{
-    return this.sections().map((s) => ({
-      id: s.id,
-      sectionTemplateId: s.sectionTemplateId,
-      componentSelector: "", // used on get, not for save
-      contentJson: s.contentJson,
-      order: s.order,
-      isEnabled: s.isEnabled,
-      isDeleted: s.isDeleted,
-      isPublished: s.isPublished,
-      parentSectionId: s.parentSectionId,
-      subSections: s.subSections,
-    }));
+   const result: SectionDto[] = [];
+
+  // Función recursiva interna para recorrer todos los niveles
+  const flatten = (sections: SectionDto[]) => {
+    for (const s of sections) {
+      // Mapeamos el objeto para el guardado (excluyendo lo innecesario)
+      const dto: SectionDto = {
+        id: s.id,
+        sectionTemplateId: s.sectionTemplateId,
+        componentSelector: "",
+        contentJson: s.contentJson,
+        order: s.order,
+        isEnabled: s.isEnabled,
+        isDeleted: s.isDeleted,
+        isPublished: s.isPublished,
+        parentSectionId: s.parentSectionId,
+        subSections: [], // Ponemos [] porque estamos aplanando
+      };
+
+      result.push(dto);
+
+      // Si tiene hijos, llamamos a la función recursivamente
+      if (s.subSections && s.subSections.length > 0) {
+        flatten(s.subSections);
+      }
+    }
+  };
+
+  // Ejecutamos con tus secciones raíz
+  flatten(this.sections());
+  
+  return result;
   }
 }

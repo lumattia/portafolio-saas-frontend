@@ -1,11 +1,10 @@
-<div class="carousel-section-render">
-  @if (slides.length > 0) {
-    <div class="carousel-container">
+<div class="carousel-section-render" [style.height]="content.styles.height + 'px'">
+  @if (subSections.length > 0) {
       <button
         type="button"
-        class="nav-button prev"
+        class="nav-button prev interactive-element"
         (click)="previousSlide()"
-        [disabled]="slides.length === 1"
+        [disabled]="subSections.length === 1"
       >
         &#10094;
       </button>
@@ -25,18 +24,17 @@
 
       <button
         type="button"
-        class="nav-button next"
+        class="nav-button next interactive-element"
         (click)="nextSlide()"
-        [disabled]="slides.length === 1"
+        [disabled]="subSections.length === 1"
       >
         &#10095;
       </button>
-    </div>
-
-    @if (slides.length > 1) {
-      <div class="carousel-indicators">
-        @for (slide of slides; track slide.id; let i = $index) {
-          <button
+      
+      @if (subSections.length > 1) {
+        <div class="carousel-indicators interactive-element">
+          @for (slide of subSections; track slide.id; let i = $index) {
+            <button
             type="button"
             class="indicator"
             [class.active]="i === currentSlideIndex"

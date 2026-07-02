@@ -1,4 +1,8 @@
 .published-section-renderer {
   // Read-only styling - no borders, no hover effects
   pointer-events: none;
+  .interactive-element {
+    pointer-events: auto;
+    cursor: pointer; // Importante para que el usuario sepa que es clicable
+  }
 }

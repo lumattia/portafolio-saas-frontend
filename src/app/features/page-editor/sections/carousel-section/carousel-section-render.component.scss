@@ -7,16 +7,11 @@
 .carousel-section-render {
   flex-grow: 1;
   width: 100%;
-  min-height: 300px;
   background-color: #f9fafb;
   border-radius: 4px;
   overflow: hidden;
   position: relative;
-}
-
-.carousel-container {
   display: flex;
-  min-height: 300px;
 }
 
 .carousel-content {
@@ -108,10 +103,12 @@
 
   &.prev {
     left: 10px;
+    pointer-events: all;
   }
 
   &.next {
     right: 10px;
+    pointer-events: all;
   }
 }
 
@@ -146,6 +143,7 @@
 
 .placeholder {
   text-align: center;
+  align-self: center;
   width: 100%;
   padding: 40px;
 }

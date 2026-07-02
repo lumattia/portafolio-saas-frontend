@@ -1,5 +1,5 @@
 <div class="published-section-renderer">
   <ng-container
-    *ngComponentOutlet="componentMap[sectionDto.componentSelector]; inputs: { section: sectionDto }"
+    *ngComponentOutlet="componentMap[section().componentSelector]; inputs: { section: section() }"
   ></ng-container>
 </div>

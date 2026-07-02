@@ -1,4 +1,4 @@
-import { SectionDto } from './section.model';
+import { SectionDto, SectionRequest } from './section.model';
 
 export interface PageDto {
   id: string;
@@ -20,5 +20,5 @@ export interface PageRequest {
   title: string;
   slug: string;
   metaDescription: string;
-  sections?: SectionDto[];
+  sections?: SectionRequest[];
 }

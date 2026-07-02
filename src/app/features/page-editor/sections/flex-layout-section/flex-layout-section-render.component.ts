@@ -1,8 +1,8 @@
-import { Component, computed, input } from '@angular/core';
+import { Component, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { createDefaultFlexLayoutSectionContent, FlexLayoutSectionContent } from './flex-layout-section.model';
-import { SectionDto } from '../../../../core/models/section.model';
 import { RENDER_COMPONENT_MAP } from '../../../../core/constants/component-maps';
+import { BaseContainerRendererComponent } from '../base-container-renderer.component';
 
 @Component({
   selector: 'app-flex-layout-section-render',
@@ -11,12 +11,7 @@ import { RENDER_COMPONENT_MAP } from '../../../../core/constants/component-maps'
   templateUrl: './flex-layout-section-render.component.html',
   styleUrls: ['./flex-layout-section-render.component.scss'],
 })
-export class FlexLayoutSectionRenderComponent {
-  section = input.required<SectionDto>();
-  subSections = computed(() => this.section().subSections || []);
-
-  readonly componentMap = RENDER_COMPONENT_MAP;
- 
+export class FlexLayoutSectionRenderComponent  extends BaseContainerRendererComponent{
   get content(): FlexLayoutSectionContent {
     return createDefaultFlexLayoutSectionContent(this.section()!.contentJson);
   }

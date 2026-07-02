@@ -6,7 +6,7 @@
     <select 
       id="direction" 
       [(ngModel)]="content.styles.direction" 
-      (ngModelChange)="onContentChange('direction', $event)"
+      (ngModelChange)="onContentChange('styles.direction', $event)"
     >
       <option value="row">Row (Horizontal)</option>
       <option value="column">Column (Vertical)</option>
@@ -19,7 +19,7 @@
       type="number" 
       id="gap" 
       [(ngModel)]="content.styles.gap" 
-      (ngModelChange)="onContentChange('gap', $event)"
+      (ngModelChange)="onContentChange('styles.gap', $event)"
       min="0"
       step="1"
     >
@@ -30,7 +30,7 @@
     <select 
       id="justifyContent" 
       [(ngModel)]="content.styles.justifyContent" 
-      (ngModelChange)="onContentChange('justifyContent', $event)"
+      (ngModelChange)="onContentChange('styles.justifyContent', $event)"
     >
       <option value="flex-start">Flex Start</option>
       <option value="center">Center</option>
@@ -46,7 +46,7 @@
     <select 
       id="alignItems" 
       [(ngModel)]="content.styles.alignItems" 
-      (ngModelChange)="onContentChange('alignItems', $event)"
+      (ngModelChange)="onContentChange('styles.alignItems', $event)"
     >
       <option value="flex-start">Flex Start</option>
       <option value="center">Center</option>
@@ -60,7 +60,7 @@
     <select 
       id="wrap" 
       [(ngModel)]="content.styles.wrap" 
-      (ngModelChange)="onContentChange('wrap', $event)"
+      (ngModelChange)="onContentChange('styles.wrap', $event)"
     >
       <option value="nowrap">No Wrap</option>
       <option value="wrap">Wrap</option>
