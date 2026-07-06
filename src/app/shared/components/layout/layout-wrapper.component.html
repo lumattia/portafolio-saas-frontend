@@ -1,0 +1,7 @@
+@if (viewMode === 'snapshot') {
+  <app-public-layout />
+} @else if (viewMode === 'admin') {
+  <app-admin-layout />
+} @else {
+  <div class="loading">Loading...</div>
+}

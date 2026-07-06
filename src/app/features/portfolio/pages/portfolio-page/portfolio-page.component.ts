@@ -1,9 +1,10 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 import { PublishedService } from '../../../../core/services/published.service';
 import { PublishedSnapshotPageDto } from '../../../../core/models/published-snapshot.model';
 import { PublishedSectionRendererComponent } from '../../components/published-section-renderer/published-section-renderer.component';
 import { Location } from '@angular/common';
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-portfolio-page',
@@ -16,13 +17,19 @@ import { Location } from '@angular/common';
 export class PortfolioPageComponent implements OnInit {
   private readonly publishedService = inject(PublishedService);
   private readonly route = inject(ActivatedRoute);
-private readonly location = inject(Location);
+  private readonly router = inject(Router);
+  private readonly location = inject(Location);
   readonly loading = signal(true);
   readonly error = signal<string | null>(null);
   readonly pageContent = signal<PublishedSnapshotPageDto | null>(null);
 
   ngOnInit(): void {
     this.loadPublishedContent();
+    this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd)
+    ).subscribe(() => {
+      this.loadPublishedContent();
+    });
   }
 
   private loadPublishedContent(): void {
@@ -31,7 +38,6 @@ private readonly location = inject(Location);
       next: (snapshot) => {
         this.pageContent.set(snapshot);
         this.location.replaceState(`${snapshot.slug}`);
-
         this.loading.set(false);
       },
       error: (err) => {

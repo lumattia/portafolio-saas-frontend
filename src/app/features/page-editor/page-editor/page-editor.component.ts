@@ -2,7 +2,7 @@ import { Component, inject, computed, input, signal, OnInit, AfterViewInit, View
 import { CommonModule, Location } from '@angular/common';
 import { ViewContainerRef } from '@angular/core';
 import { PageService } from '../../../core/services/page.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 import { SectionRendererComponent } from '../section-renderer/section-renderer.component';
 import { SectionEditorComponent } from '../section-editor/section-editor.component';
 import { SectionTreeComponent } from '../section-tree/section-tree.component';
@@ -12,6 +12,7 @@ import { ModalService } from '../../../core/services/modal.service';
 import { TemplateSelectorComponent } from '../template-selector/template-selector.component';
 import { SidenavService } from '../../../core/services/sidenav.service';
 import { ConfirmModalComponent } from '../../../shared/components/modals/confirm-modal/confirm-modal.component';
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-page-editor',
@@ -23,6 +24,7 @@ import { ConfirmModalComponent } from '../../../shared/components/modals/confirm
 export class PageEditorComponent implements OnInit {
   private readonly pageService = inject(PageService);
   private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
   private readonly location = inject(Location);
   private readonly sidenavService = inject(SidenavService);
   private readonly modalService = inject(ModalService);
@@ -43,6 +45,11 @@ export class PageEditorComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadPage();
+    this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd)
+    ).subscribe(() => {
+      this.loadPage();
+    });
   }
 
   private loadPage(): void {
@@ -156,38 +163,6 @@ export class PageEditorComponent implements OnInit {
     });
   }
 
-  publishPage(): void {
-    this.loading.set(true)
-    const sections = this.getSectionsForSave();
-    const id = this.internalPageId();
-
-    if (!id) return;
-
-    // First save with sections, then publish
-    this.pageService.update(id, {
-      title: this.pageTitle(),
-      slug: this.pageSlug(),
-      metaDescription: '',
-      sections: sections
-    }).subscribe({
-      next: () => {
-        this.pageService.publish(id).subscribe({
-          next: (detail) => {
-            this.location.replaceState(`${detail.slug}`);
-            this.pageSlug.set(detail.slug);
-            this.pageTitle.set(detail.title);
-            this.internalPageId.set(detail.id);
-            this.pageIsDeleted.set(detail.isDeleted);
-            this.pageNotFound.set(false);
-            this.sections.set(detail.sections);
-            this.loading.set(false);
-          },
-          error: (err: any) => this.loading.set(false)
-        });
-      },
-      error: (err: any) => this.loading.set(false)
-    });
-  }
   setDeletedState(isDelete: boolean): void {
     const section = this.selectedSection;
     if (!section) return;

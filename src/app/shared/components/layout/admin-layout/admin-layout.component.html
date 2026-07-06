@@ -1,0 +1,66 @@
+<div class="layout">
+  <header class="header">
+    <div class="header-left">
+      <app-button variant="icon" (click)="toggleSidenav()" title="Menu" class="mobile-only">
+        <app-icon name="menu" size="md" />
+      </app-button>
+      <a routerLink="/" class="brand">Portfolio</a>
+    </div>
+    <nav class="nav">
+      <app-theme-toggle />
+      <app-button 
+        variant="icon" 
+        (click)="toggleViewMode()" 
+        title="{{viewModeService.isAdminMode()?'Ver Snapshot':'Editar'}}">
+        <app-icon name="eye" size="md" />
+      </app-button>
+      <app-button 
+        variant="primary" 
+        (click)="publishSite()" 
+        [disabled]="isPublishing()">
+        @if (isPublishing()) {
+          Publicando...
+        } @else {
+          Publicar Sitio
+        }
+      </app-button>
+      <div class="user-menu" (mouseenter)="showUserMenu.set(true)" (mouseleave)="showUserMenu.set(false)">
+        <span class="user-name">{{ auth.user()?.email }}</span>
+        @if (showUserMenu()) {
+          <div class="user-dropdown">
+            <a (click)="logout()">Salir</a>
+          </div>
+        }
+      </div>
+    </nav>
+  </header>
+
+  @if (publishMessage()) {
+    <div class="publish-message {{ publishMessage()!.type }}">
+      {{ publishMessage()!.text }}
+    </div>
+  }
+  
+  <div class="main-content">
+    <aside class="sidebar desktop-only">
+      <app-sidebar-menu-editor />
+    </aside>
+    <main class="content">
+      <app-page-editor />
+    </main>
+  </div>
+
+  <div class="footer-section">
+    <app-footer-menu-editor />
+  </div>
+
+  @if (showSidenav()) {
+    <div class="sidenav-overlay mobile-only" (click)="toggleSidenav()"></div>
+    <aside class="sidenav mobile-only">
+      <div class="sidenav-header">
+        <app-button variant="icon" (click)="toggleSidenav()">×</app-button>
+      </div>
+      <app-sidebar-menu-editor />
+    </aside>
+  }
+</div>

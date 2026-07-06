@@ -1,0 +1,92 @@
+<div class="layout">
+  <header class="header">
+    <div class="header-left">
+      <button type="button" class="menu-button" (click)="toggleSidenav()" title="Menu">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+      </button>
+      <a routerLink="/" class="brand">Portfolio</a>
+    </div>
+    <nav class="nav">
+      <app-theme-toggle />
+      @if (auth.isAuthenticated()) {
+        <app-button variant="secondary" size="sm" (click)="toggleViewMode()">
+          {{ viewModeService.isAdminMode() ? 'View Snapshot' : 'Edit Mode' }}
+        </app-button>
+        <div class="user-menu-container">
+          <app-button variant="icon" size="sm" (click)="toggleUserMenu()">
+            <app-icon name="user" size="sm" />
+          </app-button>
+          @if (showUserMenu()) {
+            <div class="user-menu">
+              <app-button block (click)="logout()">Logout</app-button>
+            </div>
+          }
+        </div>
+      } @else {
+        <a routerLink="/login">
+          <app-button variant="primary" size="sm">Login</app-button>
+        </a>
+      }
+    </nav>
+  </header>
+  
+  <div class="main-content">
+    <aside class="sidebar desktop-only">
+      @if (sidebarMenu()) {
+        <nav class="sidebar-nav">
+          @for (item of sidebarMenu()!.menuItems; track $index) {
+              <a 
+                [href]="item.url" 
+                (click)="handleMenuLinkClick($event, item.url)"
+                class="nav-link">
+                {{ item.text }}
+              </a>
+          }
+        </nav>
+      }
+    </aside>
+    <main class="content" [class.with-sidebar]="true">
+      <app-portfolio-page />
+    </main>
+  </div>
+
+  @if (footerMenu()) {
+    <footer class="footer">
+      <nav class="footer-nav">
+        @for (item of footerMenu()!.menuItems; track $index) {
+          <a 
+            [href]="item.url" 
+            (click)="handleMenuLinkClick($event, item.url)"
+            class="footer-link">
+            {{ item.text }}
+          </a>
+        }
+      </nav>
+    </footer>
+  }
+
+  @if (showSidenav()) {
+    <div class="sidenav-overlay mobile-only" (click)="toggleSidenav()"></div>
+    <aside class="sidenav mobile-only">
+      <div class="sidenav-header">
+        <button type="button" class="close-button" (click)="toggleSidenav()">×</button>
+      </div>
+      @if (sidebarMenu()) {
+        <nav class="sidenav-nav">
+          @for (item of sidebarMenu()!.menuItems; track $index) {
+            <a 
+              [href]="item.url" 
+              (click)="handleMenuLinkClick($event, item.url); toggleSidenav()"
+              class="nav-link">
+              {{ item.text }}
+            </a>
+          }
+        </nav>
+      }
+    </aside>
+  }
+</div>

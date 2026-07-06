@@ -29,11 +29,11 @@ export class PageService {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 
-  publish(id: string): Observable<PageDetailDto> {
-    return this.http.post<PageDetailDto>(`${this.apiUrl}/${id}/publish`, {});
-  }
-
+  
   undoDelete(id: string): Observable<PageDto> {
     return this.http.post<PageDto>(`${this.apiUrl}/${id}/undo-delete`, {});
+  }
+  publish(): Observable<PageDetailDto> {
+    return this.http.post<PageDetailDto>(`${this.apiUrl}/publish`, {});
   }
 }

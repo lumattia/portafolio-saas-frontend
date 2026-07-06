@@ -1,0 +1,59 @@
+<div class="footer-menu-editor">
+  <h2>Footer Menu</h2>
+  
+  @if (loading()) {
+    <div class="loading">Loading...</div>
+  } @else {
+    <div class="menu-grid">
+      @for (item of menu()?.menuItems || []; track item.id) {
+        <div class="menu-item">
+          <div class="menu-item-content">
+            <span class="menu-text">{{ item.text }}</span>
+            @if (item.url) {
+              <span class="menu-url">({{ item.url }})</span>
+            }
+          </div>
+          <div class="menu-actions">
+            <app-button variant="icon" size="sm" (click)="openEditModal(item)">
+              <app-icon name="edit" size="sm" />
+            </app-button>
+            <app-button variant="icon" size="sm" (click)="deleteItem(item.id)">
+              <app-icon name="delete" size="sm" />
+            </app-button>
+          </div>
+        </div>
+      }
+    </div>
+    
+    <div class="add-section">
+      <app-button variant="primary" (click)="openAddModal()">Add Menu Item</app-button>
+    </div>
+  }
+  
+  @if (showAddModal()) {
+    <div class="modal-overlay" (click)="closeModal()">
+      <div class="modal" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <h3>{{ editingItem() ? 'Edit' : 'Add' }} Menu Item</h3>
+          <app-button variant="icon" (click)="closeModal()">×</app-button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label>Text</label>
+            <input type="text" [(ngModel)]="newItemText" placeholder="Menu item text">
+          </div>
+          <div class="form-group">
+            <label>URL (optional)</label>
+            <input type="text" [(ngModel)]="newItemUrl" placeholder="https://example.com or /page-slug">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <app-button variant="primary" (click)="saveItem()">
+            {{ editingItem() ? 'Update' : 'Add' }}
+          </app-button>
+          <app-button variant="secondary" (click)="closeModal()">Cancel</app-button>
+        </div>
+      </div>
+    </div>
+  }
+</div>
