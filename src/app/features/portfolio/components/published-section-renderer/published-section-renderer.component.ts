@@ -1,8 +1,7 @@
 import { Component, input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { PublishedSnapshotSectionDto } from '../../../../core/models/published-snapshot.model';
-import { SectionDto } from '../../../../core/models/section.model';
 import { RENDER_COMPONENT_MAP } from '../../../../core/constants/component-maps';
+import { SectionRenderer } from '../../../../core/models/page.model';
 
 @Component({
   selector: 'app-published-section-renderer',
@@ -12,6 +11,6 @@ import { RENDER_COMPONENT_MAP } from '../../../../core/constants/component-maps'
   styleUrls: ['./published-section-renderer.component.scss'],
 })
 export class PublishedSectionRendererComponent {
-  section = input.required<PublishedSnapshotSectionDto>();
+  section = input.required<SectionRenderer>();
   readonly componentMap = RENDER_COMPONENT_MAP;
 }

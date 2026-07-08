@@ -7,7 +7,6 @@ import {
   SectionTemplateFilterRequest,
 } from '../models/section-template.model';
 import { IdName, PagedList, PagedParameters } from '../models/common.models';
-import { MenuItem } from '../models/menu.model';
 
 @Injectable({ providedIn: 'root' })
 export class SectionTemplateService {

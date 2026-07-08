@@ -1,28 +1,24 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { PageDetailDto, PageDto, PageRequest } from '../models/page.model';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
+import { PageRenderer, PageRequest } from '../models/page.model';
 
 @Injectable({ providedIn: 'root' })
 export class PageService {
   private readonly http = inject(HttpClient);
   private readonly apiUrl = `${environment.apiUrl}/admin/pages`;
-
-  getAll(): Observable<PageDto[]> {
-    return this.http.get<PageDto[]>(this.apiUrl);
+  
+  getByIdentifier(identifier?: string): Observable<PageRenderer> {
+    return this.http.get<PageRenderer>(`${this.apiUrl}/${identifier}`);
   }
 
-  getByIdentifier(identifier?: string): Observable<PageDetailDto> {
-    return this.http.get<PageDetailDto>(`${this.apiUrl}/${identifier}`);
+  create(request: PageRequest): Observable<PageRenderer> {
+    return this.http.post<PageRenderer>(this.apiUrl, request);
   }
 
-  create(request: PageRequest): Observable<PageDto> {
-    return this.http.post<PageDto>(this.apiUrl, request);
-  }
-
-  update(id: string, request: PageRequest): Observable<PageDetailDto> {
-    return this.http.put<PageDetailDto>(`${this.apiUrl}/${id}`, request);
+  update(id: string, request: PageRequest): Observable<PageRenderer> {
+    return this.http.put<PageRenderer>(`${this.apiUrl}/${id}`, request);
   }
 
   delete(id: string): Observable<void> {
@@ -30,10 +26,10 @@ export class PageService {
   }
 
   
-  undoDelete(id: string): Observable<PageDto> {
-    return this.http.post<PageDto>(`${this.apiUrl}/${id}/undo-delete`, {});
+  undoDelete(id: string): Observable<PageRenderer> {
+    return this.http.post<PageRenderer>(`${this.apiUrl}/${id}/undo-delete`, {});
   }
-  publish(): Observable<PageDetailDto> {
-    return this.http.post<PageDetailDto>(`${this.apiUrl}/publish`, {});
+  publish(): Observable<PageRenderer> {
+    return this.http.post<PageRenderer>(`${this.apiUrl}/publish`, {});
   }
 }

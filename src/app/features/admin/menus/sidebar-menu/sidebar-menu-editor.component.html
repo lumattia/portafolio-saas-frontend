@@ -1,16 +1,25 @@
-<div class="footer-menu-editor">
-  <h2>Footer Menu</h2>
+<div class="sidebar-menu-editor">
+  <h2>Sidebar Menu</h2>
   
   @if (loading()) {
     <div class="loading">Loading...</div>
   } @else {
-    <div class="menu-grid">
-      @for (item of menu()?.menuItems || []; track item.id) {
-        <div class="menu-item">
+    <nav class="menu-list">
+      @for (item of menu()?.menuItems || []; track item.id; let index = $index) {
+        <div 
+          class="menu-item"
+          [class.dragging]="draggedIndex() === index"
+          draggable="true"
+          (dragstart)="onDragStart($event, index)"
+          (dragover)="onDragOver($event)"
+          (drop)="onDrop($event, index)">
+          <div class="drag-handle">
+            <app-icon name="drag-handle" size="sm" />
+          </div>
           <div class="menu-item-content">
             <span class="menu-text">{{ item.text }}</span>
             @if (item.url) {
-              <span class="menu-url">({{ item.url }})</span>
+              <span class="menu-url" [title]="item.url">({{ truncateUrl(item.url) }})</span>
             }
           </div>
           <div class="menu-actions">
@@ -23,7 +32,7 @@
           </div>
         </div>
       }
-    </div>
+    </nav>
     
     <div class="add-section">
       <app-button variant="primary" (click)="openAddModal()">Add Menu Item</app-button>

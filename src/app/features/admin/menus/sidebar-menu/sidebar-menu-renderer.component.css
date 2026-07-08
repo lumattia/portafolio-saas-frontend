@@ -1,0 +1,99 @@
+.sidebar-menu-renderer {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.menu-item {
+  text-decoration: none;
+  color: inherit;
+  padding: 8px 12px;
+  border-radius: 4px;
+  transition: background-color 0.2s, color 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+}
+
+.menu-item:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.menu-item-content {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+}
+
+.menu-item-text {
+  flex: 1;
+}
+
+.menu-item-expand-icon {
+  transition: transform 0.2s;
+  font-size: 12px;
+}
+
+.menu-item-expand-icon.expanded {
+  transform: rotate(90deg);
+}
+
+.submenu-container {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-left: 16px;
+  margin-top: 4px;
+  border-left: 2px solid rgba(0, 0, 0, 0.1);
+}
+
+.submenu-item {
+  text-decoration: none;
+  color: inherit;
+  padding: 6px 12px;
+  border-radius: 4px;
+  transition: background-color 0.2s, color 0.2s;
+  display: block;
+}
+
+.submenu-item:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+/* Estilos personalizados que se pueden aplicar vía la propiedad style */
+.menu-item.primary,
+.submenu-item.primary {
+  font-weight: 600;
+  color: var(--primary-color, #007bff);
+}
+
+.menu-item.secondary,
+.submenu-item.secondary {
+  color: var(--text-secondary-color, #666);
+}
+
+.menu-item.outline,
+.submenu-item.outline {
+  border: 1px solid currentColor;
+  text-align: center;
+}
+
+.menu-item.filled,
+.submenu-item.filled {
+  background-color: var(--primary-color, #007bff);
+  color: white;
+  text-align: center;
+}
+
+.menu-item.filled:hover,
+.submenu-item.filled:hover {
+  opacity: 0.9;
+}
+
+.menu-item.compact,
+.submenu-item.compact {
+  padding: 4px 8px;
+  font-size: 14px;
+}

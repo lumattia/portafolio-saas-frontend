@@ -1,10 +1,10 @@
-import { Component, inject, signal, OnInit } from '@angular/core';
+import { Component, inject, signal, model } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { MenuService } from '../../../core/services/menu.service';
-import { MenuDto, MenuRequest, MenuItem, MenuType } from '../../../core/models/menu.model';
-import { ButtonComponent } from '../../../shared/components/button/button.component';
-import { IconComponent } from '../../../shared/components/icon/icon.component';
+import { ButtonComponent } from '../../../../shared/components/button/button.component';
+import { IconComponent } from '../../../../shared/components/icon/icon.component';
+import { MenuService } from '../../../../core/services/menu.service';
+import { MenuItemRenderer, MenuItemRequest, MenuRenderer, MenuRequest, MenuType } from '../../../../core/models/menu.model';
 
 @Component({
   selector: 'app-sidebar-menu-editor',
@@ -13,49 +13,32 @@ import { IconComponent } from '../../../shared/components/icon/icon.component';
   templateUrl: './sidebar-menu-editor.component.html',
   styleUrls: ['./sidebar-menu-editor.component.scss']
 })
-export class SidebarMenuEditorComponent implements OnInit {
+export class SidebarMenuEditorComponent {
   private readonly menuService = inject(MenuService);
   
-  readonly menu = signal<MenuDto | null>(null);
+  readonly menu = model<MenuRenderer>();
   readonly loading = signal(false);
   readonly showAddModal = signal(false);
-  readonly editingItem = signal<MenuItem | null>(null);
+  readonly editingItem = signal<MenuItemRenderer | null>(null);
   readonly draggedIndex = signal<number | null>(null);
+  readonly expandedItems = signal<Set<string>>(new Set());
   
   readonly newItemText = signal('');
   readonly newItemUrl = signal('');
+  readonly newItemStyle = signal('');
+  readonly newItemParentId = signal<string | undefined>(undefined);
   
-  ngOnInit(): void {
-    this.loadMenu();
-  }
-  
-  private loadMenu(): void {
-    this.loading.set(true);
-    this.menuService.getMenu(MenuType.Sidebar).subscribe({
-      next: (menu: MenuDto | null) => {
-        if (menu) {
-          this.menu.set(menu);
-        } else {
-          this.menu.set({ type: MenuType.Sidebar, menuItems: [] });
-        }
-        this.loading.set(false);
-      },
-      error: (err: any) => {
-        console.error('Failed to load sidebar menu', err);
-        this.loading.set(false);
-      }
-    });
-  }
-  
-  openAddModal(): void {
+  openAddModal(parentId: string | undefined = undefined): void {
     this.resetForm();
+    this.newItemParentId.set(parentId);
     this.editingItem.set(null);
     this.showAddModal.set(true);
   }
   
-  openEditModal(item: MenuItem): void {
+  openEditModal(item: MenuItemRenderer): void {
     this.newItemText.set(item.text);
     this.newItemUrl.set(item.url || '');
+    this.newItemParentId.set(item.parentMenuItemId ?? undefined);
     this.editingItem.set(item);
     this.showAddModal.set(true);
   }
@@ -87,7 +70,7 @@ export class SidebarMenuEditorComponent implements OnInit {
     const [draggedItem] = items.splice(dragIndex, 1);
     items.splice(dropIndex, 0, draggedItem);
     
-    this.menu.update(m => m ? { ...m, menuItems: items } : null);
+    this.menu.update(m => ({ ...m!, menuItems: items }));
     this.draggedIndex.set(null);
     this.saveMenu();
   }
@@ -97,29 +80,16 @@ export class SidebarMenuEditorComponent implements OnInit {
     if (!currentMenu) return;
     
     const editingItem = this.editingItem();
-    let processedUrl = this.newItemUrl()?.trim() || undefined;
 
-    if (processedUrl && (processedUrl.startsWith('http://') || processedUrl.startsWith('https://'))) {
-      try {
-        const parsedUrl = new URL(processedUrl);
-        const currentHost = window.location.host; // Captura subdominios o dominios personalizados
-
-        // Si el dominio coincide con el que está navegando el usuario, extraemos el path relativo
-        if (parsedUrl.host === currentHost) {
-          processedUrl = parsedUrl.pathname + parsedUrl.search + parsedUrl.hash;
-        }
-      } catch (e) {
-        console.error('URL no válida, se guardará como string plano:', e);
-      }
-    }
-    const newItem: MenuItem = {
+    const newItem: MenuItemRenderer = {
       id: editingItem?.id || crypto.randomUUID(),
       text: this.newItemText(),
-      url: processedUrl,
-      order: editingItem?.order ?? currentMenu.menuItems.length
+      url: this.newItemUrl() || '',
+      parentMenuItemId: this.newItemParentId() || undefined,
+      subMenuItems: editingItem?.subMenuItems || []
     };
     
-    let updatedMenuItems: MenuItem[];
+    let updatedMenuItems: MenuItemRenderer[];
     
     if (editingItem) {
       updatedMenuItems = currentMenu.menuItems.map(item => 
@@ -129,10 +99,10 @@ export class SidebarMenuEditorComponent implements OnInit {
       updatedMenuItems = [...currentMenu.menuItems, newItem];
     }
     
-    const updatedMenu: MenuDto = {
+    const updatedMenu: MenuRenderer = {
       id: currentMenu.id,
       type: currentMenu.type,
-      menuItems: updatedMenuItems
+      menuItems: updatedMenuItems,
     };
     
     this.saveMenu(updatedMenu);
@@ -146,28 +116,24 @@ export class SidebarMenuEditorComponent implements OnInit {
     if (!currentMenu) return;
     
     const updatedMenuItems = currentMenu.menuItems.filter(item => item.id !== itemId);
-    const updatedMenu: MenuDto = {
+    const updatedMenu: MenuRenderer = {
       id: currentMenu.id,
       type: currentMenu.type,
-      menuItems: updatedMenuItems
+      menuItems: updatedMenuItems,
     };
     
     this.saveMenu(updatedMenu);
   }
-  
-  private saveMenu(menu?: MenuDto): void {
+
+  private saveMenu(menu?: MenuRenderer): void {
     const menuToSave = menu || this.menu();
     if (!menuToSave) return;
+    const menuItems: MenuItemRequest[] = this.getMenuItemsForSave(menuToSave.menuItems);
     
     const request: MenuRequest = {
       id: menuToSave.id,
       type: menuToSave.type,
-      menuItems: menuToSave.menuItems.map(item => ({
-        id: item.id,
-        text: item.text,
-        url: item.url || '',
-        order: item.order
-      }))
+      menuItems: menuItems,
     };
     
     if (menuToSave.id) {
@@ -181,9 +147,8 @@ export class SidebarMenuEditorComponent implements OnInit {
       });
     } else {
       this.menuService.create(request).subscribe({
-        next: () => {
-          if(!this.menu()?.id)this.loadMenu()
-          else this.menu.set(menuToSave);
+        next: (menu) => {
+          this.menu.set(menu);
         },
         error: (err: any) => {
           console.error('Failed to create menu', err);
@@ -191,10 +156,62 @@ export class SidebarMenuEditorComponent implements OnInit {
       });
     }
   }
+   getMenuItemsForSave(menuItems: MenuItemRenderer[]): MenuItemRequest[]{
+    const result: MenuItemRequest[] = [];
   
+    const flatten = (sections: MenuItemRenderer[]) => {
+      for (const s of sections) {
+        const dto: MenuItemRequest = {
+          id: s.id,
+          text: s.text,
+          url: s.url,
+          parentMenuItemId: s.parentMenuItemId,
+        };
+        result.push(dto);
+        if (s.subMenuItems && s.subMenuItems.length > 0) {
+          flatten(s.subMenuItems);
+        }
+      }
+    };
+  
+    // Ejecutamos con tus secciones raíz
+    flatten(menuItems);
+    
+    return result;
+    }
   private resetForm(): void {
     this.newItemText.set('');
     this.newItemUrl.set('');
+    this.newItemStyle.set('');
+    this.newItemParentId.set(undefined);
     this.editingItem.set(null);
+  }
+
+  truncateUrl(url: string): string {
+    if (!url) return '';
+    if (url.length <= 30) return url;
+    return url.substring(0, 27) + '...';
+  }
+  
+  toggleExpand(itemId: string): void {
+    const current = new Set(this.expandedItems());
+    if (current.has(itemId)) {
+      current.delete(itemId);
+    } else {
+      current.add(itemId);
+    }
+    this.expandedItems.set(current);
+  }
+  
+  addChildItem(parentItem: MenuItemRenderer): void {
+    this.openAddModal(parentItem.id);
+  }
+  
+  getRootItems(): MenuItemRenderer[] {
+    return this.menu()?.menuItems.filter(item => !item.parentMenuItemId) || [];
+  }
+  
+  getChildren(parentId: string): MenuItemRenderer[] {
+    return this.menu()?.menuItems.filter(item => item.parentMenuItemId === parentId) || [];
   }
 }

@@ -1,10 +1,10 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 import { PublishedService } from '../../../../core/services/published.service';
-import { PublishedSnapshotPageDto } from '../../../../core/models/published-snapshot.model';
-import { PublishedSectionRendererComponent } from '../../components/published-section-renderer/published-section-renderer.component';
 import { Location } from '@angular/common';
 import { filter } from 'rxjs/operators';
+import { PublishedSectionRendererComponent } from '../../components/published-section-renderer/published-section-renderer.component';
+import { PageRenderer } from '../../../../core/models/page.model';
 
 @Component({
   selector: 'app-portfolio-page',
@@ -21,7 +21,7 @@ export class PortfolioPageComponent implements OnInit {
   private readonly location = inject(Location);
   readonly loading = signal(true);
   readonly error = signal<string | null>(null);
-  readonly pageContent = signal<PublishedSnapshotPageDto | null>(null);
+  readonly pageContent = signal<PageRenderer | null>(null);
 
   ngOnInit(): void {
     this.loadPublishedContent();

@@ -7,16 +7,18 @@ import { PublishedService } from '../../../../core/services/published.service';
 import { ThemeService } from '../../../../core/services/theme.service';
 import { ViewModeService } from '../../../../core/services/view-mode.service';
 import { ThemeConfig } from '../../../../core/models/theme-config.model';
-import { MenuDto, MenuType, MenuSnapshotDto } from '../../../../core/models/menu.model';
 import { ThemeToggleComponent } from '../../theme-toggle/theme-toggle.component';
 import { PortfolioPageComponent } from '../../../../features/portfolio/pages/portfolio-page/portfolio-page.component';
 import { ButtonComponent } from '../../button/button.component';
 import { IconComponent } from '../../icon/icon.component';
+import { SidebarMenuRendererComponent } from '../../../../features/admin/menus/sidebar-menu/sidebar-menu-renderer.component';
+import { FooterMenuRendererComponent } from '../../../../features/admin/menus/footer-menu/footer-menu-renderer.component';
+import { MenuRenderer, MenuType } from '../../../../core/models/menu.model';
 
 @Component({
   selector: 'app-public-layout',
   standalone: true,
-  imports: [RouterLink, CommonModule, ThemeToggleComponent, PortfolioPageComponent, ButtonComponent, IconComponent],
+  imports: [RouterLink, CommonModule, ThemeToggleComponent, PortfolioPageComponent, ButtonComponent, IconComponent, SidebarMenuRendererComponent, FooterMenuRendererComponent],
   templateUrl: './public-layout.component.html',
   styleUrls: ['./public-layout.component.css']
 })
@@ -29,8 +31,8 @@ export class PublicLayoutComponent implements OnInit {
   private readonly router = inject(Router);
   
   readonly theme = signal<ThemeConfig | null>(null);
-  readonly sidebarMenu = signal<MenuSnapshotDto | null>(null);
-  readonly footerMenu = signal<MenuSnapshotDto | null>(null);
+  readonly sidebarMenu = signal<MenuRenderer | null>(null);
+  readonly footerMenu = signal<MenuRenderer | null>(null);
   readonly showSidenav = signal(false);
   readonly showUserMenu = signal(false);
 
@@ -66,11 +68,12 @@ export class PublicLayoutComponent implements OnInit {
 
   private loadSidebarMenu(): void {
     this.publishedService.getMenu(MenuType.Sidebar).subscribe({
-      next: (menu: MenuSnapshotDto) => {
+      next: (menu: MenuRenderer) => {
         if (menu == null) {
           return;
         }
-        this.sidebarMenu.set(menu);
+        const parsedMenu = menu;
+        this.sidebarMenu.set(parsedMenu);
         console.log(this.sidebarMenu())
       },
       error: (err: any) => {
@@ -81,11 +84,12 @@ export class PublicLayoutComponent implements OnInit {
 
   private loadFooterMenu(): void {
     this.publishedService.getMenu(MenuType.Footer).subscribe({
-      next: (menu: MenuSnapshotDto) => {
+      next: (menu: MenuRenderer) => {
         if (menu == null) {
           return;
         }
-        this.footerMenu.set(menu);
+        const parsedMenu = menu;
+        this.footerMenu.set(parsedMenu);
       },
       error: (err: any) => {
         console.error('Failed to load footer menu', err);

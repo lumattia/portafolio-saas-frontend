@@ -3,10 +3,9 @@ import { CommonModule } from '@angular/common';
 import { SectionTemplateService } from '../../../core/services/section-template.service';
 import { SectionTemplateDto } from '../../../core/models/section-template.model';
 import { IdName, PagedList } from '../../../core/models/common.models';
-import { SectionDto } from '../../../core/models/section.model'; // Asegura la ruta de tu Dto
 import { SelectInputComponent } from '../../../shared/components/inputs/select-input/select-input.component';
-import { switchMap, take } from 'rxjs/operators';
 import { TextInputComponent } from "../../../shared/components/inputs/text-input/text-input.component";
+import { SectionRenderer } from '../../../core/models/page.model';
 
 @Component({
   selector: 'app-template-selector',
@@ -18,7 +17,7 @@ import { TextInputComponent } from "../../../shared/components/inputs/text-input
 export class TemplateSelectorComponent implements OnInit {
   private readonly sectionTemplateService = inject(SectionTemplateService);
 
-  close!: (result?: SectionDto) => void;
+  close!: (result?: SectionRenderer) => void;
   dismiss!: (reason?: any) => void;
 
   readonly searchQuery = signal('');
@@ -91,12 +90,11 @@ export class TemplateSelectorComponent implements OnInit {
   }
 
   selectTemplate(template: SectionTemplateDto): void {
-    const newSection: SectionDto = {
+    const newSection: SectionRenderer = {
       id: crypto.randomUUID(),
       sectionTemplateId: template.id,
       componentSelector: template.componentSelector,
       contentJson: template.defaultContentJson,
-      order: 0,
       isEnabled: true,
       isDeleted: false,
       isPublished: false,

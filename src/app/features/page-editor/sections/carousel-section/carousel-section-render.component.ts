@@ -1,10 +1,9 @@
 import { Component, computed, inject, input, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CarouselSectionContent, createDefaultCarouselSectionContent } from './carousel-section.model';
-import { SectionDto } from '../../../../core/models/section.model';
-import { RENDER_COMPONENT_MAP } from '../../../../core/constants/component-maps';
 import { SectionRendererComponent } from '../../section-renderer/section-renderer.component';
 import { BaseContainerRendererComponent } from '../base-container-renderer.component';
+import { SectionRenderer } from '../../../../core/models/page.model';
 
 @Component({
   selector: 'app-carousel-section-render',
@@ -26,7 +25,7 @@ export class CarouselSectionRenderComponent extends BaseContainerRendererCompone
     }
     this.section().subSectionIndex = index;
   }
-  get currentSlide(): SectionDto | null {
+  get currentSlide(): SectionRenderer | null {
     return this.subSections[this.currentSlideIndex] || null;
   }
 

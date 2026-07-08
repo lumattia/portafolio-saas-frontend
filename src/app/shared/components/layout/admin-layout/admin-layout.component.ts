@@ -7,18 +7,19 @@ import { MenuService } from '../../../../core/services/menu.service';
 import { ViewModeService } from '../../../../core/services/view-mode.service';
 import { SiteService } from '../../../../core/services/site.service';
 import { ThemeConfig } from '../../../../core/models/theme-config.model';
-import { MenuDto, MenuType } from '../../../../core/models/menu.model';
+import { MenuRenderer, MenuType } from '../../../../core/models/menu.model';
 import { ThemeToggleComponent } from '../../theme-toggle/theme-toggle.component';
-import { SidebarMenuEditorComponent } from '../../../../features/admin/sidebar-menu-editor/sidebar-menu-editor.component';
-import { FooterMenuEditorComponent } from '../../../../features/admin/footer-menu-editor/footer-menu-editor.component';
 import { PageEditorComponent } from '../../../../features/page-editor/page-editor/page-editor.component';
 import { ButtonComponent } from '../../button/button.component';
 import { IconComponent } from '../../icon/icon.component';
+import { SidebarMenuRendererComponent } from "../../../../features/admin/menus/sidebar-menu/sidebar-menu-renderer.component";
+import { FooterMenuRendererComponent } from "../../../../features/admin/menus/footer-menu/footer-menu-renderer.component";
+import { SidebarMenuEditorComponent } from '../../../../features/admin/menus/sidebar-menu/sidebar-menu-editor.component';
 
 @Component({
   selector: 'app-admin-layout',
   standalone: true,
-  imports: [RouterLink, CommonModule, ThemeToggleComponent, SidebarMenuEditorComponent, FooterMenuEditorComponent, PageEditorComponent, ButtonComponent, IconComponent],
+  imports: [RouterLink, CommonModule, ThemeToggleComponent, SidebarMenuEditorComponent, PageEditorComponent, ButtonComponent, IconComponent, SidebarMenuRendererComponent, FooterMenuRendererComponent],
   templateUrl: './admin-layout.component.html',
   styleUrls: ['./admin-layout.component.css']
 })
@@ -32,7 +33,8 @@ export class AdminLayoutComponent implements OnInit {
   readonly MenuType = MenuType;
   
   readonly theme = signal<ThemeConfig | null>(null);
-  readonly sidebarMenu = signal<MenuDto | null>(null);
+  readonly sidebarMenu = signal<MenuRenderer | null>(null);
+  readonly footerMenu = signal<MenuRenderer | null>(null);
   readonly showSidenav = signal(false);
   readonly showUserMenu = signal(false);
   readonly isPublishing = signal(false);
@@ -42,6 +44,7 @@ export class AdminLayoutComponent implements OnInit {
     this.auth.getMe();
     this.loadTheme();
     this.loadSidebarMenu();
+    this.loadFooterMenu();
   }
 
   private loadTheme(): void {
@@ -70,7 +73,7 @@ export class AdminLayoutComponent implements OnInit {
 
   private loadSidebarMenu(): void {
     this.menuService.getMenu(MenuType.Sidebar).subscribe({
-      next: (menu: MenuDto | null) => {
+      next: (menu: MenuRenderer | null) => {
         this.sidebarMenu.set(menu);
       },
       error: (err: any) => {
@@ -78,7 +81,16 @@ export class AdminLayoutComponent implements OnInit {
       }
     });
   }
-
+private loadFooterMenu(): void {
+    this.menuService.getMenu(MenuType.Footer).subscribe({
+      next: (menu: MenuRenderer | null) => {
+        this.footerMenu.set(menu);
+      },
+      error: (err: any) => {
+        console.error('Failed to load footer menu', err);
+      }
+    });
+  }
   toggleSidenav(): void {
     this.showSidenav.update(v => !v);
   }

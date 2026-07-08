@@ -1,6 +1,6 @@
 import { Component, input, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { SectionDto } from '../../../core/models/section.model';
+import { SectionRenderer } from '../../../core/models/page.model';
 
 @Component({
   selector: 'app-section-tree',
@@ -10,9 +10,9 @@ import { SectionDto } from '../../../core/models/section.model';
   styleUrls: ['./section-tree.component.scss'],
 })
 export class SectionTreeComponent {
-  sections = input.required<SectionDto[]>();
-  selectedSection = input<SectionDto | null>(null);
-  selectSection = output<SectionDto>();
+  sections = input.required<SectionRenderer[]>();
+  selectedSection = input<SectionRenderer | null>(null);
+  selectSection = output<SectionRenderer>();
 
   expandedSections = input<Set<string>>(new Set<string>());
 
@@ -31,11 +31,11 @@ export class SectionTreeComponent {
     return this.expandedSections().has(sectionId);
   }
 
-  hasSubSections(section: SectionDto): boolean {
+  hasSubSections(section: SectionRenderer): boolean {
     return section.subSections && section.subSections.length > 0;
   }
 
-  getSectionDisplayName(section: SectionDto): string {
+  getSectionDisplayName(section: SectionRenderer): string {
     // This would ideally come from the template name
     return `Section ${section.id.substring(0, 8)}`;
   }

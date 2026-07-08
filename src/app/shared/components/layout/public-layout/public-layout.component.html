@@ -37,16 +37,7 @@
   <div class="main-content">
     <aside class="sidebar desktop-only">
       @if (sidebarMenu()) {
-        <nav class="sidebar-nav">
-          @for (item of sidebarMenu()!.menuItems; track $index) {
-              <a 
-                [href]="item.url" 
-                (click)="handleMenuLinkClick($event, item.url)"
-                class="nav-link">
-                {{ item.text }}
-              </a>
-          }
-        </nav>
+        <app-sidebar-menu-renderer [menu]="sidebarMenu()" />
       }
     </aside>
     <main class="content" [class.with-sidebar]="true">
@@ -56,16 +47,7 @@
 
   @if (footerMenu()) {
     <footer class="footer">
-      <nav class="footer-nav">
-        @for (item of footerMenu()!.menuItems; track $index) {
-          <a 
-            [href]="item.url" 
-            (click)="handleMenuLinkClick($event, item.url)"
-            class="footer-link">
-            {{ item.text }}
-          </a>
-        }
-      </nav>
+      <app-footer-menu-renderer [menu]="footerMenu()" />
     </footer>
   }
 
@@ -76,16 +58,7 @@
         <button type="button" class="close-button" (click)="toggleSidenav()">×</button>
       </div>
       @if (sidebarMenu()) {
-        <nav class="sidenav-nav">
-          @for (item of sidebarMenu()!.menuItems; track $index) {
-            <a 
-              [href]="item.url" 
-              (click)="handleMenuLinkClick($event, item.url); toggleSidenav()"
-              class="nav-link">
-              {{ item.text }}
-            </a>
-          }
-        </nav>
+        <app-sidebar-menu-renderer [menu]="sidebarMenu()" />
       }
     </aside>
   }

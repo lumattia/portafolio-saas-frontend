@@ -127,4 +127,42 @@
     gap: 0.5rem;
     justify-content: flex-end;
   }
+
+  /* New styles for collapsible sections */
+  .collapsible-section {
+    margin-top: 1rem;
+    border: 1px solid rgba(0,0,0,0.1);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .collapsible-toggle {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    width: 100%;
+    padding: 0.75rem;
+    background: var(--surface-color);
+    border: none;
+    cursor: pointer;
+    text-align: left;
+    font-weight: 500;
+  }
+
+  .collapsible-content {
+    padding: 1rem;
+    border-top: 1px solid rgba(0,0,0,0.1);
+  }
+
+  .column-config-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .column-config-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
 }

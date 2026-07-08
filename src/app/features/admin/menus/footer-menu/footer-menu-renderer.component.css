@@ -1,0 +1,110 @@
+.footer-menu-renderer {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 16px;
+  width: 100%;
+}
+
+.menu-column {
+  grid-column: span var(--column-span, 3);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.column-title {
+  margin: 0 0 8px 0;
+  font-size: 1.1em;
+  font-weight: 600;
+  color: inherit;
+}
+
+.menu-item-wrapper {
+  position: relative;
+}
+
+.menu-item {
+  text-decoration: none;
+  color: inherit;
+  padding: 8px 12px;
+  border-radius: 4px;
+  transition: background-color 0.2s, color 0.2s;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+
+.menu-item:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.dropdown-arrow {
+  font-size: 10px;
+  transition: transform 0.2s;
+}
+
+.menu-item-wrapper:hover .dropdown-arrow {
+  transform: rotate(180deg);
+}
+
+.submenu-dropdown {
+  position: absolute;
+  bottom: 100%;
+  left: 0;
+  background: var(--surface-color, #fff);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  min-width: 200px;
+  padding: 8px 0;
+  z-index: 1000;
+  margin-bottom: 4px;
+}
+
+.submenu-item {
+  text-decoration: none;
+  color: inherit;
+  padding: 8px 16px;
+  display: block;
+  transition: background-color 0.2s;
+}
+
+.submenu-item:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+/* Estilos personalizados que se pueden aplicar vía la propiedad style */
+.menu-item.primary,
+.submenu-item.primary {
+  font-weight: 600;
+  color: var(--primary-color, #007bff);
+}
+
+.menu-item.secondary,
+.submenu-item.secondary {
+  color: var(--text-secondary-color, #666);
+}
+
+.menu-item.outline,
+.submenu-item.outline {
+  border: 1px solid currentColor;
+}
+
+.menu-item.filled,
+.submenu-item.filled {
+  background-color: var(--primary-color, #007bff);
+  color: white;
+}
+
+.menu-item.filled:hover,
+.submenu-item.filled:hover {
+  opacity: 0.9;
+}
+
+.menu-item.compact,
+.submenu-item.compact {
+  padding: 4px 8px;
+  font-size: 14px;
+}

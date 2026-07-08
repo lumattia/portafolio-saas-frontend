@@ -1,8 +1,8 @@
 import { Directive, input } from '@angular/core';
-import { SectionDto } from '../../../core/models/section.model';
+import { SectionRenderer } from '../../../core/models/page.model';
 
 @Directive()
 export abstract class BaseSectionRendererComponent {
-  section = input.required<SectionDto>();
+  section = input.required<SectionRenderer>();
   abstract get content(): any;
 }

@@ -1,9 +1,9 @@
 import { Directive, input } from '@angular/core';
-import { SectionDto } from '../../../core/models/section.model';
+import { SectionRenderer } from '../../../core/models/page.model';
 
 @Directive()
 export abstract class BaseSectionEditorComponent {
-  section = input.required<SectionDto>();
+  section = input.required<SectionRenderer>();
   abstract get content(): any;
   onContentChange(path: string, value: any): void {
     const keys = path.split('.');

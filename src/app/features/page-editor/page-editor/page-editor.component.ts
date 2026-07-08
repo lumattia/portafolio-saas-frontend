@@ -6,8 +6,7 @@ import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 import { SectionRendererComponent } from '../section-renderer/section-renderer.component';
 import { SectionEditorComponent } from '../section-editor/section-editor.component';
 import { SectionTreeComponent } from '../section-tree/section-tree.component';
-import { PageDetailDto, PageRequest } from '../../../core/models/page.model';
-import { SectionDto } from '../../../core/models/section.model';
+import { PageRenderer, PageRequest, SectionRenderer, SectionRequest } from '../../../core/models/page.model';
 import { ModalService } from '../../../core/services/modal.service';
 import { TemplateSelectorComponent } from '../template-selector/template-selector.component';
 import { SidenavService } from '../../../core/services/sidenav.service';
@@ -31,9 +30,9 @@ export class PageEditorComponent implements OnInit {
 
   @ViewChild('modalContainer', { read: ViewContainerRef }) modalContainer!: ViewContainerRef;
 
-  sections = signal<SectionDto[]>([]);
+  sections = signal<SectionRenderer[]>([]);
   isEditorOpen = signal<boolean>(false)
-  selectedSection: SectionDto | null = null;
+  selectedSection: SectionRenderer | null = null;
   readonly expandedSections = computed(() => new Set<string>());
 
   readonly pageTitle = signal<string>('');
@@ -55,7 +54,7 @@ export class PageEditorComponent implements OnInit {
   private loadPage(): void {
     const slug = this.route.snapshot.url.join('/');
     this.pageService.getByIdentifier(slug).subscribe({
-      next: (detail: PageDetailDto) => {
+      next: (detail: PageRenderer) => {
         if (detail === null) {
           this.pageNotFound.set(true);
           this.pageSlug.set(slug);
@@ -120,14 +119,13 @@ export class PageEditorComponent implements OnInit {
     var sidenavRef = this.sidenavService.open(TemplateSelectorComponent);
     sidenavRef.result.then((res) => {
       if (res.confirmed && res.data) {
-        let newSection = res.data as SectionDto;
-        newSection.order=this.sections().length;
+        let newSection = res.data as SectionRenderer;
         this.sections.update((sections) => [...sections, newSection])
       };
     });
   }
 
-  selectSection(section: SectionDto): void {
+  selectSection(section: SectionRenderer): void {
     this.selectedSection = section;
   }
 
@@ -138,7 +136,7 @@ export class PageEditorComponent implements OnInit {
   savePage(): void {
     this.loading.set(true)
     
-    const sections: SectionDto[] = this.getSectionsForSave();
+    const sections: SectionRequest[] = this.getSectionsForSave();
     const id = this.internalPageId();
 
     if (!id) return;
@@ -182,24 +180,20 @@ export class PageEditorComponent implements OnInit {
       })
     }
   }
-  getSectionsForSave(): SectionDto[]{
-   const result: SectionDto[] = [];
+  getSectionsForSave(): SectionRequest[]{
+   const result: SectionRequest[] = [];
 
   // Función recursiva interna para recorrer todos los niveles
-  const flatten = (sections: SectionDto[]) => {
+  const flatten = (sections: SectionRenderer[]) => {
     for (const s of sections) {
       // Mapeamos el objeto para el guardado (excluyendo lo innecesario)
-      const dto: SectionDto = {
+      const dto: SectionRequest = {
         id: s.id,
-        sectionTemplateId: s.sectionTemplateId,
-        componentSelector: "",
+        sectionTemplateId: s.sectionTemplateId ?? '',
         contentJson: s.contentJson,
-        order: s.order,
         isEnabled: s.isEnabled,
         isDeleted: s.isDeleted,
-        isPublished: s.isPublished,
         parentSectionId: s.parentSectionId,
-        subSections: [], // Ponemos [] porque estamos aplanando
       };
 
       result.push(dto);

@@ -1,0 +1,50 @@
+@if (menu()?.menuItems) {
+  <nav class="footer-menu-renderer">
+    @for (item of menu()!.menuItems; track item.id) {
+      <div 
+        class="menu-item-wrapper"
+        (mouseenter)="setHover(item.id)"
+        (mouseleave)="setHover(null)">
+        @if (item.url) {
+          <a 
+            [href]="item.url" 
+            (click)="handleMenuLinkClick($event, item.url)"
+            class="menu-item">
+            {{ item.text }}
+            @if (item.subMenuItems.length > 0) {
+              <span class="dropdown-arrow">▼</span>
+            }
+          </a>
+        } @else {
+          <div 
+            class="menu-item">
+            {{ item.text }}
+            @if (item.subMenuItems.length > 0) {
+              <span class="dropdown-arrow">▼</span>
+            }
+          </div>
+        }
+        
+        @if (item.subMenuItems.length > 0 && hoveredItem() === item.id) {
+          <div class="submenu-dropdown">
+            @for (child of item.subMenuItems; track child.id) {
+              @if (child.url) {
+                <a 
+                  [href]="child.url" 
+                  (click)="handleMenuLinkClick($event, child.url)"
+                  class="submenu-item">
+                  {{ child.text }}
+                </a>
+              } @else {
+                <div 
+                  class="submenu-item">
+                  {{ child.text }}
+                </div>
+              }
+            }
+          </div>
+        }
+      </div>
+    }
+  </nav>
+}

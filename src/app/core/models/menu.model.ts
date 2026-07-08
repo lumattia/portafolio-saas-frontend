@@ -2,33 +2,28 @@ export enum MenuType {
   Sidebar = 'Sidebar',
   Footer = 'Footer',
 }
-
-export interface MenuItem {
-  id: string;
-  text: string;
-  url?: string;
-  order: number;
-}
-
-export interface MenuItemRequest {
-  id?: string;
-  text: string;
-  url?: string;
-}
-
 export interface MenuRequest {
   id?: string;
   type: MenuType;
   menuItems: MenuItemRequest[];
 }
 
-export interface MenuDto {
+export interface MenuItemRequest {
   id?: string;
-  type: MenuType;
-  menuItems: MenuItem[];
+  text: string;
+  url?: string;
+  parentMenuItemId?: string;
 }
 
-export interface MenuSnapshotDto {
+export interface MenuRenderer {
+  id?: string;
   type: MenuType;
-  menuItems: any;
+  menuItems: MenuItemRenderer[];
+}
+export interface MenuItemRenderer {
+  id: string;
+  text: string;
+  url: string;
+  parentMenuItemId?: string;
+  subMenuItems: MenuItemRenderer[];
 }

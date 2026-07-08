@@ -43,7 +43,7 @@
   
   <div class="main-content">
     <aside class="sidebar desktop-only">
-      <app-sidebar-menu-editor />
+      <app-sidebar-menu-renderer [menu]="sidebarMenu()" />
     </aside>
     <main class="content">
       <app-page-editor />
@@ -51,7 +51,7 @@
   </div>
 
   <div class="footer-section">
-    <app-footer-menu-editor />
+    <app-footer-menu-renderer [menu]="footerMenu()"/>
   </div>
 
   @if (showSidenav()) {

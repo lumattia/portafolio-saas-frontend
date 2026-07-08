@@ -1,9 +1,9 @@
 import { Directive, inject } from '@angular/core';
 import { SidenavService } from '../../../core/services/sidenav.service';
 import { TemplateSelectorComponent } from '../template-selector/template-selector.component';
-import { SectionDto } from '../../../core/models/section.model';
 import { EDITOR_COMPONENT_MAP } from '../../../core/constants/component-maps';
 import { BaseSectionEditorComponent } from './base-section-editor.component';
+import { SectionRenderer } from '../../../core/models/page.model';
 
 @Directive()
 export abstract class BaseContainerEditorComponent extends BaseSectionEditorComponent {
@@ -26,15 +26,14 @@ export abstract class BaseContainerEditorComponent extends BaseSectionEditorComp
     }
     this.section().subSectionIndex = index;
   }
-  get currentSubSection(): SectionDto | null {
+  get currentSubSection(): SectionRenderer | null {
     return this.subSections[this.currentSubSectionIndex] || null;
   }
   addSubSection(): void {
     var sidenavRef = this.sidenavService.open(TemplateSelectorComponent);
     sidenavRef.result.then((res) => {
       if (res.confirmed && res.data) {
-        let newSection = res.data as SectionDto;
-        newSection.order = this.subSections.length;
+        let newSection = res.data as SectionRenderer;
         newSection.parentSectionId = this.section().id;
         this.section().subSections?.push(newSection)
         this.currentSubSectionIndex = this.subSections.length - 1;
@@ -42,7 +41,7 @@ export abstract class BaseContainerEditorComponent extends BaseSectionEditorComp
     });
   }
 
-  removeSubSection(subSection: SectionDto): void { 
+  removeSubSection(subSection: SectionRenderer): void { 
     if (subSection.isPublished) {
       subSection.isDeleted = true;
     }else{
