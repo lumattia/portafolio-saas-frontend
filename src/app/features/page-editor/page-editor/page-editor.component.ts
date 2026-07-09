@@ -189,7 +189,7 @@ export class PageEditorComponent implements OnInit {
       // Mapeamos el objeto para el guardado (excluyendo lo innecesario)
       const dto: SectionRequest = {
         id: s.id,
-        sectionTemplateId: s.sectionTemplateId ?? '',
+        sectionTemplateId: s.sectionTemplateId ?? undefined,
         contentJson: s.contentJson,
         isEnabled: s.isEnabled,
         isDeleted: s.isDeleted,

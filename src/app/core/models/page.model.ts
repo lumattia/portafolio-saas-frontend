@@ -8,7 +8,7 @@ export interface PageRequest {
 
 export interface SectionRequest {
   id: string;
-  sectionTemplateId: string;
+  sectionTemplateId?: string;
   contentJson: any;
   isEnabled: boolean;
   isDeleted: boolean;
