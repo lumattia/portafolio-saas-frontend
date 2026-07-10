@@ -19,5 +19,6 @@ export class SidenavService extends DynamicOverlayService {
     container.style.pointerEvents = 'none';
     container.style.display = 'flex';
     container.style.justifyContent = 'flex-end';
+    container.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
   }
 }

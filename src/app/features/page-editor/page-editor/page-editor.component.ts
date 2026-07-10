@@ -5,18 +5,18 @@ import { PageService } from '../../../core/services/page.service';
 import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 import { SectionRendererComponent } from '../section-renderer/section-renderer.component';
 import { SectionEditorComponent } from '../section-editor/section-editor.component';
-import { SectionTreeComponent } from '../section-tree/section-tree.component';
 import { PageRenderer, PageRequest, SectionRenderer, SectionRequest } from '../../../core/models/page.model';
 import { ModalService } from '../../../core/services/modal.service';
 import { TemplateSelectorComponent } from '../template-selector/template-selector.component';
 import { SidenavService } from '../../../core/services/sidenav.service';
 import { ConfirmModalComponent } from '../../../shared/components/modals/confirm-modal/confirm-modal.component';
 import { filter } from 'rxjs/operators';
+import { OverlayRef } from '../../../core/services/dynamic-overlay.service';
 
 @Component({
   selector: 'app-page-editor',
   standalone: true,
-  imports: [CommonModule, SectionRendererComponent, SectionEditorComponent, SectionTreeComponent],
+  imports: [CommonModule, SectionRendererComponent],
   templateUrl: './page-editor.component.html',
   styleUrls: ['./page-editor.component.scss'],
 })
@@ -28,11 +28,9 @@ export class PageEditorComponent implements OnInit {
   private readonly sidenavService = inject(SidenavService);
   private readonly modalService = inject(ModalService);
 
-  @ViewChild('modalContainer', { read: ViewContainerRef }) modalContainer!: ViewContainerRef;
-
   sections = signal<SectionRenderer[]>([]);
-  isEditorOpen = signal<boolean>(false)
   selectedSection: SectionRenderer | null = null;
+  editorSidenavRef: OverlayRef<SectionEditorComponent> | null = null;
   readonly expandedSections = computed(() => new Set<string>());
 
   readonly pageTitle = signal<string>('');
@@ -127,10 +125,13 @@ export class PageEditorComponent implements OnInit {
 
   selectSection(section: SectionRenderer): void {
     this.selectedSection = section;
-  }
-
-  closeEditor(): void {
-    this.selectedSection = null;
+    this.editorSidenavRef = this.sidenavService.open(SectionEditorComponent, {
+      section: section,
+      onSetDeleteState: (isDelete: boolean) => this.setDeletedState(isDelete)
+    });
+    this.editorSidenavRef.result.then(() => {
+      this.selectedSection = null;
+    });
   }
 
   savePage(): void {
@@ -166,16 +167,16 @@ export class PageEditorComponent implements OnInit {
     if (!section) return;
     if (section.isPublished) {
       section.isDeleted = isDelete;
-    this.selectedSection = null;
+    this.editorSidenavRef?.close()
     }else{
       const modalRef = this.modalService.open(ConfirmModalComponent, {
         title: 'Elimnar',
-        message: 'No es una sección publicada, esa acción eliminar la seccion permanentemente y no podrá ser deshecha.'
+        message: 'Esta sección aún no ha sido publicada. Al eliminarla y guardar, se borrará definitivamente y no podrá recuperarse. ¿Deseas continuar?'
       });
       modalRef.result.then((res) => {
         if (res.confirmed) {
           this.sections.update(sections => sections.filter(s => s.id !== section.id));
-          this.selectedSection = null;
+          this.editorSidenavRef?.close()
         }
       })
     }
@@ -183,10 +184,8 @@ export class PageEditorComponent implements OnInit {
   getSectionsForSave(): SectionRequest[]{
    const result: SectionRequest[] = [];
 
-  // Función recursiva interna para recorrer todos los niveles
   const flatten = (sections: SectionRenderer[]) => {
     for (const s of sections) {
-      // Mapeamos el objeto para el guardado (excluyendo lo innecesario)
       const dto: SectionRequest = {
         id: s.id,
         sectionTemplateId: s.sectionTemplateId ?? undefined,
@@ -198,7 +197,6 @@ export class PageEditorComponent implements OnInit {
 
       result.push(dto);
 
-      // Si tiene hijos, llamamos a la función recursivamente
       if (s.subSections && s.subSections.length > 0) {
         flatten(s.subSections);
       }

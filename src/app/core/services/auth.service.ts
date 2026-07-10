@@ -21,6 +21,7 @@ export class AuthService {
   }
 
   logout(): void {
+    this.userSignal.set(null)
     localStorage.removeItem('access_token');
     localStorage.removeItem('user');
     localStorage.removeItem('viewMode');

@@ -12,24 +12,17 @@ import { SectionRenderer } from '../../../core/models/page.model';
   styleUrls: ['./section-editor.component.scss'],
 })
 export class SectionEditorComponent {
-  section = input.required<SectionRenderer>();
-  onClose = output<void>();
-  onSetDeleteState = output<boolean>();
+  close!: () => void;
+  dismiss!: (reason?: any) => void;
+
+  section : SectionRenderer = {} as SectionRenderer;
+  onSetDeleteState!: (isDelete: boolean) => void;
   readonly editorMap = EDITOR_COMPONENT_MAP;
 
   get componentSelector(): string {
-    return this.section().componentSelector;
+    return this.section.componentSelector;
   }
   get isDeleted() {
-    return this.section().isDeleted;
-  }
-
-  close(): void {
-    this.onClose.emit();
-  }
-  
-
-  setDeletedState(isDelete: boolean): void {
-    this.onSetDeleteState.emit(isDelete);
+    return this.section.isDeleted;
   }
 }

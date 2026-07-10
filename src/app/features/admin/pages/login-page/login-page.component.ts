@@ -3,6 +3,7 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../../core/services/auth.service';
 import { ButtonComponent } from '../../../../shared/components/button/button.component';
+import { ViewModeService } from '../../../../core/services/view-mode.service';
 
 @Component({
   selector: 'app-login-page',
@@ -14,6 +15,7 @@ import { ButtonComponent } from '../../../../shared/components/button/button.com
 export class LoginPageComponent {
   private readonly fb = inject(FormBuilder);
   private readonly auth = inject(AuthService);
+  private readonly viewMode = inject(ViewModeService);
   private readonly router = inject(Router);
 
   readonly error = signal<string | null>(null);
@@ -33,7 +35,7 @@ export class LoginPageComponent {
     this.auth.login(email, password).subscribe({
       next: () => {
         this.loading.set(false);
-        this.router.navigate(['/']);
+        this.viewMode.setViewMode('admin');
       },
       error: () => {
         this.loading.set(false);

@@ -52,28 +52,5 @@
         </button>
       </div>
     </div>
-
-    <!-- Left Sidenav - Section Editor -->
-    @if(selectedSection) {
-      <div class="sidenav-right-overlay" (click)="closeEditor()"></div>
-      <div class="sidenav-right">
-        <!-- Section Tree Navigation -->
-        <div class="section-tree-container">
-          <h3>Section Hierarchy</h3>
-          <app-section-tree
-            [sections]="sections()"
-            [selectedSection]="selectedSection"
-            [expandedSections]="expandedSections()"
-            (selectSection)="selectSection($event)"
-          ></app-section-tree>
-        </div>
-
-        <!-- Section Editor -->
-        <app-section-editor 
-            [section]="selectedSection!"
-            (onClose)="closeEditor()"
-            (onSetDeleteState)="setDeletedState($event)"/>
-      </div>
-    }
   </div>
 }

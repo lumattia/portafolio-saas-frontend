@@ -25,43 +25,40 @@ export abstract class DynamicOverlayService {
     protected appRef: ApplicationRef, 
     protected injector: EnvironmentInjector,
     private containerId: string
-  ) {
-    this.createContainer(this.containerId);
-  }
+  ) {  }
 
   protected abstract configureContainerStyles(container: HTMLElement): void;
 
-  private createContainer(id: string): void {
+  private ensureContainer(): HTMLElement {
     if (!this.container) {
-      this.container = document.getElementById(id);
-      if (!this.container) {
-        this.container = document.createElement('div');
-        this.container.id = id;
-        this.configureContainerStyles(this.container);
-        document.body.appendChild(this.container);
-      }
+      this.container = document.createElement('div');
+      this.container.id = this.containerId;
+      this.configureContainerStyles(this.container);
+      document.body.appendChild(this.container);
     }
+    return this.container;
   }
 
   open<T>(componentType: Type<T>, config: OverlayConfig = {}): OverlayRef<T> {
+    const container = this.ensureContainer();
     const componentRef = createComponent(componentType, {
       environmentInjector: this.injector
     });
     
     const element = (componentRef.hostView as any).rootNodes[0] as HTMLElement;
-    this.container!.appendChild(element);
+    container!.appendChild(element);
     this.appRef.attachView(componentRef.hostView);
     
     const instance = componentRef.instance as any;
   
     for (const key in config) {
       if (config.hasOwnProperty(key)) {
-        componentRef.setInput(key, config[key]);
+        instance[key] = config[key];
       }
     }
     
-    if (this.container) {
-      this.container.style.pointerEvents = 'auto';
+    if (container) {
+      container.style.pointerEvents = 'auto';
     }
     
     let resolveFn: (value: any) => void;
@@ -119,6 +116,10 @@ export abstract class DynamicOverlayService {
 
     componentRef.destroy();
     this.activeOverlays.delete(componentRef);
+    if (this.activeOverlays.size === 0 && this.container) {
+      document.body.removeChild(this.container);
+      this.container = null;
+    }
   }
 
   closeAll(): void {
