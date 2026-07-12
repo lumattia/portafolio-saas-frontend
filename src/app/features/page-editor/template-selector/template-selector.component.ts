@@ -5,12 +5,14 @@ import { SectionTemplateDto } from '../../../core/models/section-template.model'
 import { IdName, PagedList } from '../../../core/models/common.models';
 import { SelectInputComponent } from '../../../shared/components/inputs/select-input/select-input.component';
 import { TextInputComponent } from "../../../shared/components/inputs/text-input/text-input.component";
+import { ButtonComponent } from "../../../shared/components/button/button.component";
+import { IconComponent } from "../../../shared/components/icon/icon.component";
 import { SectionRenderer } from '../../../core/models/page.model';
 
 @Component({
   selector: 'app-template-selector',
   standalone: true,
-  imports: [CommonModule, SelectInputComponent, TextInputComponent],
+  imports: [CommonModule, SelectInputComponent, TextInputComponent, ButtonComponent, IconComponent],
   templateUrl: './template-selector.component.html',
   styleUrls: ['./template-selector.component.scss'],
 })

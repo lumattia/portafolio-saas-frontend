@@ -9,7 +9,7 @@
     <div class="preview-container">
       <img [src]="previewUrl()" alt="Preview" class="preview-image" />
       <button type="button" class="remove-button" (click)="onRemoveImage()">
-        <span>&times;</span>
+        <app-icon name="close" size="sm" />
       </button>
     </div>
   } @else {

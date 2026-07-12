@@ -1,5 +1,6 @@
 import { Component, input, output, signal, ViewChild, ElementRef, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { IconComponent } from '../../icon/icon.component';
 
 export interface ImageInputConfig {
   maxWidth?: number;
@@ -12,7 +13,7 @@ export interface ImageInputConfig {
 @Component({
   selector: 'app-image-input',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, IconComponent],
   templateUrl: './image-input.component.html',
   styleUrls: ['./image-input.component.scss'],
 })

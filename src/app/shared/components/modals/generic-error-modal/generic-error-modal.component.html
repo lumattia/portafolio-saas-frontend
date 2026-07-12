@@ -2,7 +2,9 @@
   <div class="modal-content" [class]="'type-' + type">
     <div class="modal-header">
       <h2>{{ title | translate }}</h2>
-      <button class="close-btn" (click)="close?.()">&times;</button>
+      <app-button variant="icon" (click)="close?.()">
+        <app-icon name="close" size="md" />
+      </app-button>
     </div>
     <div class="modal-body">
       <p class="error-message">{{ message | translate:translateParams }}</p>

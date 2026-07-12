@@ -1,9 +1,6 @@
 <div class="layout">
   <header class="header">
     <div class="header-left">
-      <app-button variant="icon" (click)="toggleSidenav()" title="Menu" class="mobile-only">
-        <app-icon name="menu" size="md" />
-      </app-button>
       <a routerLink="/" class="brand">Portfolio</a>
     </div>
     <nav class="nav">
@@ -43,6 +40,11 @@
   
   <div class="main-content">
     <aside class="sidebar desktop-only">
+      <div class="sidebar-header">
+        <app-button variant="icon" (click)="openSidebarMenuEditor()" title="Editar menú lateral">
+          <app-icon name="edit" size="sm" />
+        </app-button>
+      </div>
       <app-sidebar-menu-renderer [menu]="sidebarMenu()" />
     </aside>
     <main class="content">
@@ -51,16 +53,11 @@
   </div>
 
   <div class="footer-section">
+    <div class="footer-header">
+      <app-button variant="icon" (click)="openFooterMenuEditor()" title="Editar menú footer">
+        <app-icon name="edit" size="sm" />
+      </app-button>
+    </div>
     <app-footer-menu-renderer [menu]="footerMenu()"/>
   </div>
-
-  @if (showSidenav()) {
-    <div class="sidenav-overlay mobile-only" (click)="toggleSidenav()"></div>
-    <aside class="sidenav mobile-only">
-      <div class="sidenav-header">
-        <app-button variant="icon" (click)="toggleSidenav()">×</app-button>
-      </div>
-      <app-sidebar-menu-editor />
-    </aside>
-  }
 </div>

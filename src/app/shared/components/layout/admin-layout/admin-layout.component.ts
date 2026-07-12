@@ -6,6 +6,7 @@ import { ThemeService } from '../../../../core/services/theme.service';
 import { MenuService } from '../../../../core/services/menu.service';
 import { ViewModeService } from '../../../../core/services/view-mode.service';
 import { SiteService } from '../../../../core/services/site.service';
+import { SidenavService } from '../../../../core/services/sidenav.service';
 import { ThemeConfig } from '../../../../core/models/theme-config.model';
 import { MenuRenderer, MenuType } from '../../../../core/models/menu.model';
 import { ThemeToggleComponent } from '../../theme-toggle/theme-toggle.component';
@@ -14,12 +15,12 @@ import { ButtonComponent } from '../../button/button.component';
 import { IconComponent } from '../../icon/icon.component';
 import { SidebarMenuRendererComponent } from "../../../../features/admin/menus/sidebar-menu/sidebar-menu-renderer.component";
 import { FooterMenuRendererComponent } from "../../../../features/admin/menus/footer-menu/footer-menu-renderer.component";
-import { SidebarMenuEditorComponent } from '../../../../features/admin/menus/sidebar-menu/sidebar-menu-editor.component';
+import { MenuEditorComponent } from '../../../../features/admin/menus/menu-editor/menu-editor.component';
 
 @Component({
   selector: 'app-admin-layout',
   standalone: true,
-  imports: [RouterLink, CommonModule, ThemeToggleComponent, SidebarMenuEditorComponent, PageEditorComponent, ButtonComponent, IconComponent, SidebarMenuRendererComponent, FooterMenuRendererComponent],
+  imports: [RouterLink, CommonModule, ThemeToggleComponent, PageEditorComponent, ButtonComponent, IconComponent, SidebarMenuRendererComponent, FooterMenuRendererComponent],
   templateUrl: './admin-layout.component.html',
   styleUrls: ['./admin-layout.component.css']
 })
@@ -30,12 +31,12 @@ export class AdminLayoutComponent implements OnInit {
   readonly viewModeService = inject(ViewModeService);
   readonly menuService = inject(MenuService);
   readonly siteService = inject(SiteService);
+  readonly sidenavService = inject(SidenavService);
   readonly MenuType = MenuType;
   
   readonly theme = signal<ThemeConfig | null>(null);
   readonly sidebarMenu = signal<MenuRenderer | null>(null);
   readonly footerMenu = signal<MenuRenderer | null>(null);
-  readonly showSidenav = signal(false);
   readonly showUserMenu = signal(false);
   readonly isPublishing = signal(false);
   readonly publishMessage = signal<{ type: 'success' | 'error'; text: string } | null>(null);
@@ -91,9 +92,6 @@ private loadFooterMenu(): void {
       }
     });
   }
-  toggleSidenav(): void {
-    this.showSidenav.update(v => !v);
-  }
 
   toggleUserMenu(): void {
     this.showUserMenu.update(v => !v);
@@ -133,6 +131,46 @@ private loadFooterMenu(): void {
         this.publishMessage.set({ type: 'error', text: 'Error al publicar el sitio' });
         console.error('Failed to publish site', err);
       }
+    });
+  }
+
+  openSidebarMenuEditor(): void {
+    let menu = this.sidebarMenu();
+    
+    if (!menu) {
+      menu = {
+        id: '',
+        type: MenuType.Sidebar,
+        menuItems: []
+      };
+    }
+    
+    const sidenavRef = this.sidenavService.open(MenuEditorComponent, {
+      menu: menu
+    });
+    
+    sidenavRef.result.then(() => {
+      this.loadSidebarMenu();
+    });
+  }
+
+  openFooterMenuEditor(): void {
+    let menu = this.footerMenu();
+    
+    if (!menu) {
+      menu = {
+        id: '',
+        type: MenuType.Footer,
+        menuItems: []
+      };
+    }
+    
+    const sidenavRef = this.sidenavService.open(MenuEditorComponent, {
+      menu: menu
+    });
+    
+    sidenavRef.result.then(() => {
+      this.loadFooterMenu();
     });
   }
 }

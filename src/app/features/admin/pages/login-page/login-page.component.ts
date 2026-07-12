@@ -36,6 +36,7 @@ export class LoginPageComponent {
       next: () => {
         this.loading.set(false);
         this.viewMode.setViewMode('admin');
+        this.router.navigate(['/']);
       },
       error: () => {
         this.loading.set(false);

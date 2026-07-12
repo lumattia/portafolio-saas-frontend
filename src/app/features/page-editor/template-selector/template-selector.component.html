@@ -1,7 +1,9 @@
 <div class="template-selector">
   <div class="header">
     <h2>Add Section</h2>
-    <button type="button" class="close-button" (click)="dismiss('backdrop')">&times;</button>
+    <app-button variant="icon" (click)="dismiss('backdrop')">
+      <app-icon name="close" size="md" />
+    </app-button>
   </div>
 
   <div class="filters">

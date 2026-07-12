@@ -1,11 +1,21 @@
 <div class="footer-menu-editor">
-  <h2>Footer Menu</h2>
+  <div class="editor-header">
+    <h2>Footer Menu</h2>
+    <div class="header-actions">
+      <app-button variant="primary" (click)="saveMenu()" [disabled]="!hasUnsavedChanges()">
+        Guardar
+      </app-button>
+      <app-button variant="icon" (click)="attemptClose()" title="Cerrar">
+        <app-icon name="close" size="md" />
+      </app-button>
+    </div>
+  </div>
   
   @if (loading()) {
     <div class="loading">Loading...</div>
   } @else {
     <div class="menu-grid">
-      @for (item of menu()?.menuItems || []; track item.id) {
+      @for (item of menu.menuItems || []; track item.id) {
         <div class="menu-item">
           <div class="menu-item-content">
             <span class="menu-text">{{ item.text }}</span>
@@ -31,7 +41,7 @@
   }
   
   @if (showAddModal()) {
-    <div class="modal-overlay" (click)="closeModal()">
+    <div class="modal-overlay" (mousedown)="handleOverlayMouseDown($event)" (mouseup)="handleOverlayMouseUp($event)" (click)="handleOverlayClick($event)">
       <div class="modal" (click)="$event.stopPropagation()">
         <div class="modal-header">
           <h3>{{ editingItem() ? 'Edit' : 'Add' }} Menu Item</h3>
