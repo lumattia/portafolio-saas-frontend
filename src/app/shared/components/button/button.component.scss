@@ -28,6 +28,11 @@ button {
     transform: translateY(0);
   }
 
+  &.active {
+    background: var(--success, #16a34a) !important;
+    color: white !important;
+  }
+
   // Sizes
   &.sm {
     padding: 0.375rem 0.75rem;

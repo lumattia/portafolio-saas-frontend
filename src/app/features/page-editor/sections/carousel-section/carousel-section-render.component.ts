@@ -1,4 +1,4 @@
-import { Component, computed, inject, input, signal } from '@angular/core';
+import { Component, computed, forwardRef, inject, input, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CarouselSectionContent, createDefaultCarouselSectionContent } from './carousel-section.model';
 import { SectionRendererComponent } from '../../section-renderer/section-renderer.component';
@@ -8,7 +8,7 @@ import { SectionRenderer } from '../../../../core/models/page.model';
 @Component({
   selector: 'app-carousel-section-render',
   standalone: true,
-  imports: [CommonModule, SectionRendererComponent],
+  imports: [CommonModule, forwardRef(() => SectionRendererComponent)],
   templateUrl: './carousel-section-render.component.html',
   styleUrls: ['./carousel-section-render.component.scss'],
 })

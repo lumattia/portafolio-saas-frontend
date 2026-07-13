@@ -56,29 +56,9 @@
 }
 
 .slide-tab {
-  padding: 8px 16px;
-  border: 1px solid #d1d5db;
-  background-color: #fff;
-  border-radius: 6px;
-  font-size: 13px;
-  cursor: pointer;
-  white-space: nowrap;
-  transition: all 0.2s ease;
-
-  &:hover {
-    border-color: #9ca3af;
-  }
-
   &.active {
-    background-color: #6366f1;
-    color: #fff;
-    border-color: #6366f1;
+    background-color: var(--success);
   }
-}
-
-.slide-actions {
-  display: flex;
-  gap: 8px;
 }
 
 .action-button {

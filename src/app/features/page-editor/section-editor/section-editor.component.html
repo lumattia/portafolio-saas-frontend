@@ -8,16 +8,7 @@
 
   <div class="editor-content">
       <ng-container
-        *ngComponentOutlet="editorMap[componentSelector]; inputs: { section: section }"
+         *ngComponentOutlet="editorMap[componentSelector]; inputs: { section: section, onDelete: onSetDeleteState}"
       ></ng-container>
-    <!-- Delete/Undo button -->
-  @if (isDeleted) {
-    <app-button [variant]="'success'" (click)="onSetDeleteState(false)">↩ Deshacer
-    </app-button>
-  } @else {
-    <app-button [variant]="'danger'" (click)="onSetDeleteState(true)">
-      🗑 Eliminar
-    </app-button>
-  }
   </div>
 </div>

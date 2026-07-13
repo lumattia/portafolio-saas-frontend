@@ -35,4 +35,7 @@
       }
     </div>
   }
+  <app-button variant="danger" size="sm" (click)="deleteSection()">
+    @if (section().isDeleted) { Undo } @else { Delete Section }
+  </app-button>
 </div>

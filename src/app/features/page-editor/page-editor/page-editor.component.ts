@@ -127,7 +127,7 @@ export class PageEditorComponent implements OnInit {
     this.selectedSection = section;
     this.editorSidenavRef = this.sidenavService.open(SectionEditorComponent, {
       section: section,
-      onSetDeleteState: (isDelete: boolean) => this.setDeletedState(isDelete)
+      onSetDeleteState: () => this.setDeletedState()
     });
     this.editorSidenavRef.result.then(() => {
       this.selectedSection = null;
@@ -162,11 +162,12 @@ export class PageEditorComponent implements OnInit {
     });
   }
 
-  setDeletedState(isDelete: boolean): void {
+  setDeletedState(): void {
+    console.log("!")
     const section = this.selectedSection;
     if (!section) return;
     if (section.isPublished) {
-      section.isDeleted = isDelete;
+      section.isDeleted = !section.isDeleted;
     this.editorSidenavRef?.close()
     }else{
       const modalRef = this.modalService.open(ConfirmModalComponent, {

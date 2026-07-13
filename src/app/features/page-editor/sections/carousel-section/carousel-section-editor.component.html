@@ -4,75 +4,56 @@
     <div class="no-slides-state">
       <h3>No slides added</h3>
       <p>Click the button below to add your first slide</p>
-      <button type="button" class="choose-template-button" (click)="addSubSection()">
+      <app-button type="button" class="choose-template-button" (click)="addSubSection()">
         Add First Slide
-      </button>
+      </app-button>
     </div>
   } @else {
     <div class="carousel-editor">
       <div class="slide-selector">
         <div class="slide-tabs">
           @for (slide of subSections; track slide.id; let i = $index) {
-            <button
+            <app-button
               type="button"
+              size="sm"
               class="slide-tab"
-              [class.active]="i === currentSubSectionIndex"
+              [active]="i === currentSubSectionIndex"
               (click)="setCurrentSlideIndex(i)"
             >
               Slide {{ i + 1 }}
-            </button>
+            </app-button>
           }
-        </div>
-        <div class="slide-actions">
-          <button type="button" class="action-button" (click)="addSubSection()" title="Add slide">
-            +
-          </button>
+          <app-button size="sm" type="button" (click)="addSubSection()" title="Add slide">
+            Add slide
+          </app-button>
           @if (currentSubSection) {
-            <button type="button" class="action-button" (click)="duplicateSubSection()" title="Duplicate slide">
-              &#10003;&#10003;
-            </button>
-            <button type="button" class="action-button danger" (click)="removeSubSection(currentSubSection)" title="Remove slide">
-              &#10005;
-            </button>
-            <button
-              type="button"
-              class="action-button"
-              (click)="moveSlide('up')"
-              [disabled]="currentSubSectionIndex === 0"
-              title="Move up"
-            >
-              &#8593;
-            </button>
-            <button
-              type="button"
-              class="action-button"
-              (click)="moveSlide('down')"
-              [disabled]="currentSubSectionIndex === subSections.length - 1"
-              title="Move down"
-            >
-              &#8595;
-            </button>
-          } 
+            <app-button size="sm" variant="danger" type="button" (click)="removeSubSection(currentSubSection)" title="Delete slide">
+              Delete
+            </app-button>
+          }
         </div>
       </div>
 
       @if (currentSubSection) {
         <div class="slide-editor">
           <ng-container
-            *ngComponentOutlet="componentMap[currentSubSection.componentSelector]; inputs: { section: currentSubSection }"
+            *ngComponentOutlet="componentMap[currentSubSection.componentSelector]; inputs: { section: currentSubSection, onDelete: removeSubSection.bind(this, currentSubSection)}"
           ></ng-container>
         </div>
       }@else {
-             <div class="field-group">
-      <label>Image</label>
-      <app-number-input
-        [value]="content.styles.height"
-        (valueChange)="onContentChange('styles.height', $event)"
-        [min]="0"
-        [max]="1000"
-      />
-    </div>
-          }
+      <div class="field-group">
+        <label>Height</label>
+        <app-number-input
+          [value]="content.styles.height"
+          (valueChange)="onContentChange('styles.height', $event)"
+          [min]="0"
+          [max]="1000"
+        />
+      </div>
+      }
     </div>
   }
+  <app-button variant="danger" size="sm" (click)="deleteSection()">
+    @if (section().isDeleted) { Undo } @else { Delete Section }
+  </app-button>
 </div>

@@ -13,10 +13,11 @@ export class ButtonComponent {
   readonly size = input<'sm' | 'md' | 'lg'>('md');
   readonly disabled = input(false);
   readonly type = input<'button' | 'submit' | 'reset'>('button');
+  readonly active = input(false);
   readonly click = output<MouseEvent>();
 
   getClasses(): string {
-    return `${this.variant()} ${this.size()}`;
+    return `${this.variant()} ${this.size()} ${this.active() ? 'active' : ''}`;
   }
 
   handleClick(event: MouseEvent): void {

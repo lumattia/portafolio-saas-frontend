@@ -1,10 +1,16 @@
-import { Directive, input } from '@angular/core';
+import { Directive, input, output } from '@angular/core';
 import { SectionRenderer } from '../../../core/models/page.model';
 
 @Directive()
 export abstract class BaseSectionEditorComponent {
   section = input.required<SectionRenderer>();
+  onDelete = input<() => void>();
   abstract get content(): any;
+  
+  deleteSection(): void {
+    this.onDelete()?.(); 
+  }
+  
   onContentChange(path: string, value: any): void {
     const keys = path.split('.');
     

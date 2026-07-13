@@ -30,7 +30,7 @@ export class TemplateSelectorComponent implements OnInit {
   readonly templates = signal<PagedList<SectionTemplateDto> | null>(null);
   readonly isLoading = signal(false);
   readonly categoryOptions = signal<IdName[]>([]);
-
+  parentSectionId: string|undefined = undefined;
   ngOnInit(): void {
     this.loadTemplates();
     this.loadCategoryOption();
@@ -100,6 +100,7 @@ export class TemplateSelectorComponent implements OnInit {
       isEnabled: true,
       isDeleted: false,
       isPublished: false,
+      parentSectionId: this.parentSectionId,
       subSections: []
     };
     this.close(newSection);

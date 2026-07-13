@@ -20,5 +20,12 @@ export class SidenavService extends DynamicOverlayService {
     container.style.display = 'flex';
     container.style.justifyContent = 'flex-end';
     container.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
+    
+    // Add click handler to close on backdrop click
+    container.addEventListener('click', (event: Event) => {
+      if (event.target === container) {
+        this.closeAll();
+      }
+    });
   }
 }

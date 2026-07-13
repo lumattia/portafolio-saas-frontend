@@ -2,12 +2,13 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { createDefaultImageSectionContent, ImageSectionContent } from './image-section.model';
 import { ImageInputComponent } from '../../../../shared/components/inputs/image-input/image-input.component';
+import { ButtonComponent } from '../../../../shared/components/button/button.component';
 import { BaseSectionEditorComponent } from '../base-section-editor.component';
 
 @Component({
   selector: 'app-image-section-editor',
   standalone: true,
-  imports: [CommonModule, ImageInputComponent],
+  imports: [CommonModule, ImageInputComponent, ButtonComponent],
   templateUrl: './image-section-editor.component.html',
   styleUrls: ['./image-section-editor.component.scss'],
 })

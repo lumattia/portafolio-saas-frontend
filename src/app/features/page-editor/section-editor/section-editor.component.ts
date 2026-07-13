@@ -17,7 +17,7 @@ export class SectionEditorComponent {
   dismiss!: (reason?: any) => void;
 
   section : SectionRenderer = {} as SectionRenderer;
-  onSetDeleteState!: (isDelete: boolean) => void;
+  onSetDeleteState!: () => void;
   readonly editorMap = EDITOR_COMPONENT_MAP;
 
   get componentSelector(): string {

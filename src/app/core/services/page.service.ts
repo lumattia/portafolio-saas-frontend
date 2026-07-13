@@ -25,11 +25,7 @@ export class PageService {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 
-  
   undoDelete(id: string): Observable<PageRenderer> {
     return this.http.post<PageRenderer>(`${this.apiUrl}/${id}/undo-delete`, {});
-  }
-  publish(): Observable<PageRenderer> {
-    return this.http.post<PageRenderer>(`${this.apiUrl}/publish`, {});
   }
 }

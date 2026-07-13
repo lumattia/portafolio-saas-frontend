@@ -31,11 +31,10 @@ export abstract class BaseContainerEditorComponent extends BaseSectionEditorComp
   }
   addSubSection(): void {
     var sidenavRef = this.sidenavService.open(TemplateSelectorComponent);
+    sidenavRef.componentInstance.parentSectionId = this.section().id;
     sidenavRef.result.then((res) => {
       if (res.confirmed && res.data) {
-        let newSection = res.data as SectionRenderer;
-        newSection.parentSectionId = this.section().id;
-        this.section().subSections?.push(newSection)
+        this.section().subSections?.push(res.data as SectionRenderer)
         this.currentSubSectionIndex = this.subSections.length - 1;
       };
     });
@@ -43,9 +42,9 @@ export abstract class BaseContainerEditorComponent extends BaseSectionEditorComp
 
   removeSubSection(subSection: SectionRenderer): void { 
     if (subSection.isPublished) {
-      subSection.isDeleted = true;
+      subSection.isDeleted = !subSection.isDeleted;
     }else{
-      subSection.subSections = subSection.subSections.filter(s => s.id !== subSection.id);
+      this.section().subSections = this.section().subSections?.filter(s => s.id !== subSection.id);
     }
     this.currentSubSectionIndex = this.currentSubSectionIndex;
   }

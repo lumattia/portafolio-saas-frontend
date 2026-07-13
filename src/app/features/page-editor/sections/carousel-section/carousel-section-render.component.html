@@ -4,7 +4,7 @@
         type="button"
         class="nav-button prev interactive-element"
         (click)="previousSlide()"
-        [disabled]="subSections.length === 1"
+        [disabled]="currentSlideIndex === 0"
       >
         &#10094;
       </button>
@@ -18,7 +18,7 @@
             />
           </div>
         } @else {
-          <div class="placeholder">No slides</div>
+          <div class="placeholder">No slide selected</div>
         }
       </div>
 
@@ -26,7 +26,7 @@
         type="button"
         class="nav-button next interactive-element"
         (click)="nextSlide()"
-        [disabled]="subSections.length === 1"
+        [disabled]="subSections.length === currentSlideIndex + 1"
       >
         &#10095;
       </button>
