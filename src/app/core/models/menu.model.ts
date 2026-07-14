@@ -26,4 +26,7 @@ export interface MenuItemRenderer {
   url: string;
   parentMenuItemId?: string;
   subMenuItems: MenuItemRenderer[];
+
+  // Helper fields
+  toggled: boolean;
 }

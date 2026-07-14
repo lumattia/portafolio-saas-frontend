@@ -28,16 +28,22 @@
     color: var(--text-secondary-color);
   }
   
-  .menu-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  .menu-tree {
+    display: flex;
+    flex-direction: column;
     gap: 0.5rem;
     margin-bottom: 1rem;
   }
   
-  .menu-item {
+  .menu-item-wrapper {
     display: flex;
     flex-direction: column;
+  }
+  
+  .menu-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     gap: 0.5rem;
     padding: 0.75rem;
     background: var(--surface-color);
@@ -47,8 +53,17 @@
   
   .menu-item-content {
     display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
+    align-items: center;
+    gap: 0.5rem;
+    flex: 1;
+  }
+  
+  .expand-button {
+    transition: transform 0.2s ease;
+    
+    &.expanded {
+      transform: rotate(90deg);
+    }
   }
   
   .menu-text {
@@ -59,12 +74,28 @@
     color: var(--text-secondary-color);
     font-size: 0.875rem;
     word-break: break-all;
+    &.disabled{
+      opacity: 0.5;
+      color: var(--text-disabled)
+    }
   }
   
   .menu-actions {
     display: flex;
     gap: 0.25rem;
-    justify-content: flex-end;
+  }
+  
+  .submenu {
+    margin-left: 1.5rem;
+    margin-top: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    
+    .menu-item {
+      padding: 0.5rem 0.75rem;
+      background: rgba(0, 0, 0, 0.02);
+    }
   }
   
   .add-section {

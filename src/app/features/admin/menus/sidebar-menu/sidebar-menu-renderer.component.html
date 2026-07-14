@@ -2,56 +2,29 @@
   <nav class="sidebar-menu-renderer">
     @for (item of menu()!.menuItems; track item.id) {
       <div class="menu-item-wrapper">
-        @if (item.url) {
-          <a 
-            [href]="item.url" 
-            (click)="handleMenuLinkClick($event, item.url)"
-            class="menu-item">
-            <div class="menu-item-content">
-              <span class="menu-item-text">{{ item.text }}</span>
-            </div>
-            @if (item.subMenuItems.length > 0) {
-              <span 
-                class="menu-item-expand-icon"
-                [class.expanded]="expandedItems().has(item.id)"
-                (click)="$event.preventDefault(); toggleExpand(item.id)">
-                ▶
-              </span>
-            }
-          </a>
-        } @else {
-          <div 
-            class="menu-item"
-            (click)="toggleExpand(item.id)">
-            <div class="menu-item-content">
-              <span class="menu-item-text">{{ item.text }}</span>
-            </div>
-            @if (item.subMenuItems.length > 0) {
-              <span 
-                class="menu-item-expand-icon"
-                [class.expanded]="expandedItems().has(item.id)">
-                ▶
-              </span>
-            }
+        <a 
+          (click)="handleMenuLinkClick($event, item)"
+          class="menu-item">
+          <div class="menu-item-content">
+            <span class="menu-item-text">{{ item.text }}</span>
           </div>
-        }
-        
-        @if (expandedItems().has(item.id) && item.subMenuItems.length > 0) {
+          @if (item.subMenuItems.length > 0) {
+            <span 
+              class="menu-item-expand-icon"
+              [class.expanded]="item.toggled"
+              (click)="item.toggled = !item.toggled;">
+              ▶
+            </span>
+          }
+        </a>
+        @if (item.toggled && item.subMenuItems.length > 0) {
           <div class="submenu-container">
             @for (child of item.subMenuItems; track child.id) {
-              @if (child.url) {
-                <a 
-                  [href]="child.url" 
-                  (click)="handleMenuLinkClick($event, child.url)"
-                  class="submenu-item">
-                  {{ child.text }}
-                </a>
-              } @else {
-                <div 
-                  class="submenu-item">
-                  {{ child.text }}
-                </div>
-              }
+              <a 
+                (click)="handleMenuLinkClick($event, child)"
+                class="submenu-item">
+                {{ child.text }}
+              </a>
             }
           </div>
         }

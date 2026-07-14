@@ -1,7 +1,7 @@
 import { Component, input, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { MenuRenderer } from '../../../../core/models/menu.model';
+import { MenuItemRenderer, MenuRenderer } from '../../../../core/models/menu.model';
 
 @Component({
   selector: 'app-sidebar-menu-renderer',
@@ -14,19 +14,13 @@ export class SidebarMenuRendererComponent {
   private readonly router = inject(Router);
   
   readonly menu = input<MenuRenderer | null>(null);
-  readonly expandedItems = signal<Set<string>>(new Set());
   
-  toggleExpand(itemId: string): void {
-    const current = new Set(this.expandedItems());
-    if (current.has(itemId)) {
-      current.delete(itemId);
-    } else {
-      current.add(itemId);
+  handleMenuLinkClick(event: MouseEvent, item: MenuItemRenderer): void {
+    if (item.subMenuItems.length > 0) {
+      item.toggled = !item.toggled;
+      return;
     }
-    this.expandedItems.set(current);
-  }
-  
-  handleMenuLinkClick(event: MouseEvent, url: string | undefined): void {
+    const url = item.url;
     if (!url) return;
     
     if (event.ctrlKey || event.button === 1) {

@@ -14,23 +14,61 @@
   @if (loading()) {
     <div class="loading">Loading...</div>
   } @else {
-    <div class="menu-grid">
-      @for (item of menu.menuItems || []; track item.id) {
-        <div class="menu-item">
-          <div class="menu-item-content">
-            <span class="menu-text">{{ item.text }}</span>
-            @if (item.url) {
-              <span class="menu-url" [title]="item.url">({{ truncateUrl(item.url) }})</span>
-            }
+    <div class="menu-tree">
+      @for (item of this.menu.menuItems; track item.id) {
+        <div class="menu-item-wrapper">
+          <div class="menu-item">
+            <div class="menu-item-content">
+              @if(item.subMenuItems.length>0){
+                <app-button 
+                  variant="icon" 
+                  size="sm" 
+                  class="expand-button"
+                  (click)="item.toggled = !item.toggled"
+                  [class.expanded]="item.toggled"
+                >
+                  <app-icon name="chevron-right" size="sm" />
+                </app-button>
+              }
+              <span class="menu-text">{{ item.text }}</span>
+              @if (item.url) {
+                <span class="menu-url" [class.disabled]="item.subMenuItems.length>0" [title]="item.url">({{ truncateUrl(item.url) }})</span>
+              }
+            </div>
+            <div class="menu-actions">
+              <app-button variant="icon" size="sm" (click)="addChildItem(item)" title="Add submenu">
+                <app-icon name="add" size="sm" />
+              </app-button>
+              <app-button variant="icon" size="sm" (click)="openEditModal(item)">
+                <app-icon name="edit" size="sm" />
+              </app-button>
+              <app-button variant="icon" size="sm" (click)="deleteItem(item.id)">
+                <app-icon name="delete" size="sm" />
+              </app-button>
+            </div>
           </div>
-          <div class="menu-actions">
-            <app-button variant="icon" size="sm" (click)="openEditModal(item)">
-              <app-icon name="edit" size="sm" />
-            </app-button>
-            <app-button variant="icon" size="sm" (click)="deleteItem(item.id)">
-              <app-icon name="delete" size="sm" />
-            </app-button>
-          </div>
+          @if (item.toggled && item.subMenuItems.length > 0) {
+            <div class="submenu">
+              @for (child of item.subMenuItems; track child.id) {
+                <div class="menu-item">
+                  <div class="menu-item-content">
+                    <span class="menu-text">{{ child.text }}</span>
+                    @if (child.url) {
+                      <span class="menu-url" [title]="child.url">({{ truncateUrl(child.url) }})</span>
+                    }
+                  </div>
+                  <div class="menu-actions">
+                    <app-button variant="icon" size="sm" (click)="openEditModal(child)">
+                      <app-icon name="edit" size="sm" />
+                    </app-button>
+                    <app-button variant="icon" size="sm" (click)="deleteItem(child.id)">
+                      <app-icon name="delete" size="sm" />
+                    </app-button>
+                  </div>
+                </div>
+              }
+            </div>
+          }
         </div>
       }
     </div>

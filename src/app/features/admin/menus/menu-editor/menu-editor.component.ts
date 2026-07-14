@@ -28,13 +28,12 @@ export class MenuEditorComponent implements OnInit {
     readonly showAddModal = signal(false);
     readonly editingItem = signal<MenuItemRenderer | null>(null);
     readonly draggedIndex = signal<number | null>(null);
-    readonly expandedItems = signal<Set<string>>(new Set());
     readonly hasUnsavedChanges = signal(false);
     
     readonly newItemText = signal('');
     readonly newItemUrl = signal('');
     readonly newItemStyle = signal('');
-    readonly newItemParentId = signal<string | undefined>(undefined);
+    readonly parentItem = signal<MenuItemRenderer | null>(null);
     
     private overlayMouseDownOutside = false;
 
@@ -68,9 +67,9 @@ export class MenuEditorComponent implements OnInit {
         return '/' + url;
     }
     
-    openAddModal(parentId: string | undefined = undefined): void {
+    openAddModal(parentItem: MenuItemRenderer | null = null): void {
       this.resetForm();
-      this.newItemParentId.set(parentId);
+      this.parentItem.set(parentItem);
       this.editingItem.set(null);
       this.showAddModal.set(true);
     }
@@ -94,7 +93,6 @@ export class MenuEditorComponent implements OnInit {
     openEditModal(item: MenuItemRenderer): void {
       this.newItemText.set(item.text);
       this.newItemUrl.set(item.url || '');
-      this.newItemParentId.set(item.parentMenuItemId ?? undefined);
       this.editingItem.set(item);
       this.showAddModal.set(true);
     }
@@ -155,30 +153,36 @@ export class MenuEditorComponent implements OnInit {
       if (!this.menu) return;
       
       const editingItem = this.editingItem();
-  
+      
       const newItem: MenuItemRenderer = {
         id: editingItem?.id || crypto.randomUUID(),
         text: this.newItemText(),
         url: this.normalizeUrl(this.newItemUrl() || ''),
-        parentMenuItemId: this.newItemParentId() || undefined,
-        subMenuItems: editingItem?.subMenuItems || []
+        subMenuItems: editingItem?.subMenuItems || [],
+        toggled: false
       };
-      
-      let updatedMenuItems: MenuItemRenderer[];
-      
       if (editingItem) {
-        updatedMenuItems = this.menu.menuItems.map((item: any) => 
-          item.id === editingItem.id ? newItem : item
-        );
+        const parent = this.parentItem();
+         if (parent) {
+          parent.subMenuItems = parent.subMenuItems.map((item: any) => 
+            item.id === editingItem.id ? newItem : item
+          );
+        } else {
+          this.menu.menuItems = this.menu.menuItems.map((item: any) => 
+            item.id === editingItem.id ? newItem : item
+          );
+        }
       } else {
-        updatedMenuItems = [...this.menu.menuItems, newItem];
+        // Add new item
+        const parent = this.parentItem();
+        if (parent) {
+          newItem.parentMenuItemId = this.parentItem()?.id || undefined
+          parent.subMenuItems = [...(parent.subMenuItems || []), newItem];
+        } else {
+          // Add to root level
+          this.menu.menuItems = [...this.menu.menuItems, newItem];
+        }
       }
-      
-      this.menu = {
-        id: this.menu.id,
-        type: this.menu.type,
-        menuItems: updatedMenuItems,
-      };
       
       this.closeModal();
       this.checkForChanges();
@@ -205,6 +209,7 @@ export class MenuEditorComponent implements OnInit {
         type: menuToSave.type,
         menuItems: menuItems,
       };
+      console.log(request)
       if (menuToSave.id) {
         this.menuService.update(menuToSave.id, request).subscribe({
           next: () => {
@@ -254,7 +259,7 @@ export class MenuEditorComponent implements OnInit {
       this.newItemText.set('');
       this.newItemUrl.set('');
       this.newItemStyle.set('');
-      this.newItemParentId.set(undefined);
+      this.parentItem.set(null);
       this.editingItem.set(null);
     }
 
@@ -264,25 +269,7 @@ export class MenuEditorComponent implements OnInit {
     return url.substring(0, 27) + '...';
   }
   
-  toggleExpand(itemId: string): void {
-    const current = new Set(this.expandedItems());
-    if (current.has(itemId)) {
-      current.delete(itemId);
-    } else {
-      current.add(itemId);
-    }
-    this.expandedItems.set(current);
-  }
-  
-addChildItem(parentItem: MenuItemRenderer): void {
-    this.openAddModal(parentItem.id);
-  }
-  
-  getRootItems(): MenuItemRenderer[] {
-    return this.menu?.menuItems.filter((item: any) => !item.parentMenuItemId) || [];
-  }
-  
-  getChildren(parentId: string): MenuItemRenderer[] {
-    return this.menu?.menuItems.filter((item: any) => item.parentMenuItemId === parentId) || [];
+  addChildItem(parentItem: MenuItemRenderer): void {
+      this.openAddModal(parentItem);
   }
 }
