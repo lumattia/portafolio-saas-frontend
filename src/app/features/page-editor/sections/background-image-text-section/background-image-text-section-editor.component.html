@@ -2,11 +2,14 @@
   @if (content && content.inputs) {
     <div class="field-group">
       <label>Background Image</label>
-      <app-image-input
-        [value]="content.inputs.backgroundImage"
-        (valueChange)="onContentChange('inputs.backgroundImage', $event)"
-        [config]="{ maxWidth: 1920, maxHeight: 1080, quality: 0.8 }"
-      />
+       <app-image-input
+            [existingImageUrl]="imageUrl"
+            [originalFileName]="section().file?.fileName"
+            [maxHeight]="600"
+            [minAspectRatio]="0"
+            [maxAspectRatio]="6/1"
+            (fileChanged)="onFileChange($event)"
+          />
     </div>
     <div class="field-group">
       <label>Text</label>

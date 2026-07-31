@@ -136,7 +136,7 @@ export class PageEditorComponent implements OnInit {
 
   savePage(): void {
     this.loading.set(true)
-    
+
     const sections: SectionRequest[] = this.getSectionsForSave();
     const id = this.internalPageId();
 
@@ -163,7 +163,6 @@ export class PageEditorComponent implements OnInit {
   }
 
   setDeletedState(): void {
-    console.log("!")
     const section = this.selectedSection;
     if (!section) return;
     if (section.isPublished) {
@@ -194,6 +193,7 @@ export class PageEditorComponent implements OnInit {
         isEnabled: s.isEnabled,
         isDeleted: s.isDeleted,
         parentSectionId: s.parentSectionId,
+        file: s.fileRequest
       };
 
       result.push(dto);
@@ -206,7 +206,7 @@ export class PageEditorComponent implements OnInit {
 
   // Ejecutamos con tus secciones raíz
   flatten(this.sections());
-  
+
   return result;
   }
 }

@@ -14,7 +14,7 @@ export class ConfirmModalComponent {
   @Input() title = 'Confirmar';
   @Input() message = '¿Deseas continuar?';
   @Input() messageParams: any = {};
-  
+
   // These will be injected by ModalService
   close?: (result?: any) => void;
   dismiss?: (reason?: any) => void;

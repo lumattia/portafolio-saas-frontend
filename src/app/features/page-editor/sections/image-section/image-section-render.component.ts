@@ -10,7 +10,7 @@ import { BaseSectionRendererComponent } from '../base-section-renderer.component
   templateUrl: './image-section-render.component.html',
   styleUrls: ['./image-section-render.component.scss'],
 })
-export class ImageSectionRenderComponent extends BaseSectionRendererComponent { 
+export class ImageSectionRenderComponent extends BaseSectionRendererComponent {
   get content(): ImageSectionContent {
     return createDefaultImageSectionContent(this.section()!.contentJson);
   }

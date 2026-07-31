@@ -1,3 +1,5 @@
+import { FileInfoRequest, FileInfoResponse } from "./common.models";
+
 export interface PageRequest {
   id?: string;
   title: string;
@@ -10,6 +12,7 @@ export interface SectionRequest {
   id: string;
   sectionTemplateId?: string;
   contentJson: any;
+  file?: FileInfoRequest;
   isEnabled: boolean;
   isDeleted: boolean;
   parentSectionId?: string;
@@ -37,4 +40,6 @@ export interface SectionRenderer {
   parentSectionId?: string;
   subSections: SectionRenderer[];
   subSectionIndex?: number;
+  file?: FileInfoResponse;
+  fileRequest?: FileInfoRequest;
 }

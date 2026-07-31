@@ -2,7 +2,7 @@
 export interface IdName {
   id: string | number;
   name: string;
-  flag?: string; 
+  flag?: string;
 }
 
 export interface PagedParameters {
@@ -20,4 +20,14 @@ export interface PagedList<T> {
   totalPages: number;
   hasPrevious: boolean;
   hasNext: boolean;
+}
+export interface FileInfoRequest {
+  base64: string;
+  fileName: string;
+  contentType: string;
+}
+export interface FileInfoResponse {
+  url: string;
+  fileName: string;
+  size: number;
 }

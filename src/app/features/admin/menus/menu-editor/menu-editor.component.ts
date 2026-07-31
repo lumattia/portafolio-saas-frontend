@@ -209,7 +209,6 @@ export class MenuEditorComponent implements OnInit {
         type: menuToSave.type,
         menuItems: menuItems,
       };
-      console.log(request)
       if (menuToSave.id) {
         this.menuService.update(menuToSave.id, request).subscribe({
           next: () => {

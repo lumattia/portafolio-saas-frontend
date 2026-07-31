@@ -22,9 +22,9 @@ export class BackgroundImageTextSectionRenderComponent extends BaseSectionRender
   }
 
   get backgroundStyle(): { [key: string]: string } {
-    if (this.content.inputs?.backgroundImage) {
+    if (this.imageUrl) {
       return {
-        'background-image': `url(${this.content.inputs.backgroundImage})`,
+        'background-image': `url(${this.imageUrl})`,
         'background-size': 'cover',
         'background-position': 'center',
         'background-repeat': 'no-repeat',

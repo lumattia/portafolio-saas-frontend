@@ -74,7 +74,6 @@ export class PublicLayoutComponent implements OnInit {
         }
         const parsedMenu = menu;
         this.sidebarMenu.set(parsedMenu);
-        console.log(this.sidebarMenu())
       },
       error: (err: any) => {
         console.error('Failed to load sidebar menu', err);

@@ -2,17 +2,16 @@
   <nav class="sidebar-menu-renderer">
     @for (item of menu()!.menuItems; track item.id) {
       <div class="menu-item-wrapper">
-        <a 
+        <a
           (click)="handleMenuLinkClick($event, item)"
           class="menu-item">
           <div class="menu-item-content">
             <span class="menu-item-text">{{ item.text }}</span>
           </div>
           @if (item.subMenuItems.length > 0) {
-            <span 
+            <span
               class="menu-item-expand-icon"
-              [class.expanded]="item.toggled"
-              (click)="item.toggled = !item.toggled;">
+              [class.expanded]="item.toggled">
               ▶
             </span>
           }
@@ -20,7 +19,7 @@
         @if (item.toggled && item.subMenuItems.length > 0) {
           <div class="submenu-container">
             @for (child of item.subMenuItems; track child.id) {
-              <a 
+              <a
                 (click)="handleMenuLinkClick($event, child)"
                 class="submenu-item">
                 {{ child.text }}

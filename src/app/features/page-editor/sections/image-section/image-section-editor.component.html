@@ -2,11 +2,14 @@
   @if (content && content.inputs) {
     <div class="field-group">
       <label>Image</label>
-      <app-image-input
-        [value]="content.inputs.image"
-        (valueChange)="onContentChange('inputs.image', $event)"
-        [config]="{ maxWidth: 1920, maxHeight: 1080, quality: 0.8 }"
-      />
+          <app-image-input
+            [existingImageUrl]="imageUrl"
+            [originalFileName]="section().file?.fileName"
+            [maxHeight]="600"
+            [minAspectRatio]="0"
+            [maxAspectRatio]="6/1"
+            (fileChanged)="onFileChange($event)"
+          />
     </div>
   }
   <app-button variant="danger" size="sm" (click)="deleteSection()">

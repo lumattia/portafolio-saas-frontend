@@ -1,6 +1,5 @@
 export interface ImageTextSectionContent {
   inputs: {
-    image: string;
     text: string;
   };
   styles: {
@@ -11,7 +10,6 @@ export interface ImageTextSectionContent {
 export function createDefaultImageTextSectionContent(partial?: ImageTextSectionContent): ImageTextSectionContent {
   return {
     inputs: {
-      image: partial?.inputs?.image ?? '',
       text: partial?.inputs?.text ?? '',
     },
     styles: {

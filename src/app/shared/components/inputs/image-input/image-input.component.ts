@@ -1,185 +1,170 @@
-import { Component, input, output, signal, ViewChild, ElementRef, effect } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, inject, signal, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { IconComponent } from '../../icon/icon.component';
-
-export interface ImageInputConfig {
-  maxWidth?: number;
-  maxHeight?: number;
-  maxScale?: number;
-  quality?: number;
-  aspectRatio?: number;
-}
+import { ImageProcessorComponent } from '../image-processor/image-processor.component';
+import { TranslatePipe } from '@ngx-translate/core';
+import { GenericErrorModalComponent } from '../../modals/generic-error-modal/generic-error-modal.component';
+import { FileInfoRequest } from '../../../../core/models/common.models';
+import { ModalService } from '../../../../core/services/modal.service';
 
 @Component({
   selector: 'app-image-input',
   standalone: true,
-  imports: [CommonModule, IconComponent],
+  imports: [CommonModule, TranslatePipe],
   templateUrl: './image-input.component.html',
-  styleUrls: ['./image-input.component.scss'],
+  styleUrls: ['./image-input.component.scss']
 })
-export class ImageInputComponent {
-  config = input<Partial<ImageInputConfig>>({});
-  value = input<string>('');
-  valueChange = output<string>();
-
-  readonly previewUrl = signal<string>('');
-  readonly isDragging = signal(false);
-  readonly isProcessing = signal(false);
-  readonly showCropper = signal(false);
+export class ImageInputComponent implements OnInit {
+  private modalService = inject(ModalService);
 
   @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
 
-  constructor() {
-    // Initialize preview with existing value when it changes
-    effect(() => {
-      const currentValue = this.value();
-      if (currentValue) {
-        this.previewUrl.set(currentValue);
-      } else {
-        this.previewUrl.set('');
+  @Input() existingImageUrl: string | undefined = undefined;
+  @Input() originalFileName: string | undefined = undefined;
+
+  @Input() maxWidth?: number;
+  @Input() maxHeight?: number;
+  @Input() minAspectRatio?: number;
+  @Input() maxAspectRatio?: number;
+  @Input() fixedAspectRatio?: number;
+
+  @Input() readonly: boolean = false;
+  @Output() fileChanged = new EventEmitter<FileInfoRequest>();
+
+  previewUrl = signal<string | undefined>(undefined);
+  currentFileName = signal<string>('');
+  rawImageSource = signal<string>('');
+  format = signal<'png' | 'jpeg' | 'bmp' | 'webp' | 'ico'>('webp');
+
+  ngOnInit() {
+    this.currentFileName.set(this.originalFileName ?? '');
+    if (this.existingImageUrl) {
+      this.previewUrl.set(this.existingImageUrl);
+      if (!this.originalFileName) {
+        const name = this.existingImageUrl.substring(this.existingImageUrl.lastIndexOf('/') + 1);
+        this.currentFileName.set(name.split('?')[0]);
       }
-    });
-  }
-
-  onFileSelected(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    if (input.files && input.files[0]) {
-      this.processFile(input.files[0]);
     }
   }
 
-  onDragOver(event: DragEvent): void {
-    event.preventDefault();
-    this.isDragging.set(true);
+  ngOnChanges() {
+    this.currentFileName.set(this.originalFileName ?? '');
+    this.previewUrl.set(this.existingImageUrl);
   }
 
-  onDragLeave(event: DragEvent): void {
-    event.preventDefault();
-    this.isDragging.set(false);
-  }
-
-  onDrop(event: DragEvent): void {
-    event.preventDefault();
-    this.isDragging.set(false);
-    
-    if (event.dataTransfer?.files && event.dataTransfer.files[0]) {
-      this.processFile(event.dataTransfer.files[0]);
-    }
-  }
-
-  onRemoveImage(): void {
-    this.previewUrl.set('');
-    this.valueChange.emit('');
-    if (this.fileInput) {
-      this.fileInput.nativeElement.value = '';
-    }
-  }
-
-  triggerFileInput(): void {
-    this.fileInput.nativeElement.click();
-  }
-
-  private async processFile(file: File): Promise<void> {
-    this.isProcessing.set(true);
-
-    try {
-      // Validate file type
-      if (!file.type.startsWith('image/')) {
-        console.error('File must be an image');
-        return;
+  async triggerManager(event: Event) {
+    event.stopPropagation();
+    if (this.readonly) return;
+    if (this.previewUrl()) {
+      if (!this.rawImageSource() && this.existingImageUrl) {
+        const downloaded = await this.downloadRemoteImage();
+        if (!downloaded) return;
       }
-
-      // Validate file size (max 10MB)
-      if (file.size > 10 * 1024 * 1024) {
-        console.error('File size must be less than 10MB');
-        return;
-      }
-
-      // Create preview
-      const previewUrl = URL.createObjectURL(file);
-      this.previewUrl.set(previewUrl);
-
-      // Process image (resize and compress)
-      const processedDataUrl = await this.processImage(file);
-      this.valueChange.emit(processedDataUrl);
-    } catch (error) {
-      console.error('Error processing image:', error);
-    } finally {
-      this.isProcessing.set(false);
+      this.openProcessorModal();
+    }
+    else {
+      this.fileInput.nativeElement.click();
     }
   }
 
-  private async processImage(file: File): Promise<string> {
-    return new Promise((resolve, reject) => {
-      const img = new Image();
+  onFileSelected(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      this.extractFormatFromMime(file.type)
+
+      this.currentFileName.set(file.name);
       const reader = new FileReader();
-
-      reader.onload = (e) => {
-        img.src = e.target?.result as string;
+      reader.onload = (e: any) => {
+        this.rawImageSource.set(e.target.result);
+        this.openProcessorModal();
       };
-
-      img.onload = () => {
-        const canvas = document.createElement('canvas');
-        const ctx = canvas.getContext('2d');
-
-        if (!ctx) {
-          reject(new Error('Could not get canvas context'));
-          return;
-        }
-
-        const config = this.config();
-        const maxWidth = config.maxWidth || 1920;
-        const maxHeight = config.maxHeight || 1080;
-        const quality = config.quality || 0.8;
-        const aspectRatio = config.aspectRatio;
-
-        // Calculate dimensions
-        let width = img.width;
-        let height = img.height;
-
-        // Apply aspect ratio if specified
-        if (aspectRatio) {
-          const targetRatio = aspectRatio;
-          const currentRatio = width / height;
-
-          if (currentRatio > targetRatio) {
-            // Image is wider than target, crop width
-            const newWidth = height * targetRatio;
-            const xOffset = (width - newWidth) / 2;
-            width = newWidth;
-            // We'll handle cropping in the canvas draw
-          } else {
-            // Image is taller than target, crop height
-            const newHeight = width / targetRatio;
-            const yOffset = (height - newHeight) / 2;
-            height = newHeight;
-          }
-        }
-
-        // Resize if needed
-        if (width > maxWidth) {
-          height = (height * maxWidth) / width;
-          width = maxWidth;
-        }
-
-        if (height > maxHeight) {
-          width = (width * maxHeight) / height;
-          height = maxHeight;
-        }
-
-        canvas.width = width;
-        canvas.height = height;
-
-        // Draw and compress
-        ctx.drawImage(img, 0, 0, width, height);
-        const dataUrl = canvas.toDataURL('image/jpeg', quality);
-        resolve(dataUrl);
-      };
-
-      img.onerror = () => reject(new Error('Failed to load image'));
-      reader.onerror = () => reject(new Error('Failed to read file'));
-
       reader.readAsDataURL(file);
+    }
+    event.target.value = '';
+  }
+
+  private async downloadRemoteImage(): Promise<boolean> {
+    try {
+      const response = await fetch(this.existingImageUrl!);
+      const blob = await response.blob();
+      this.extractFormatFromMime(blob.type);
+      return new Promise<boolean>((resolve) => {
+        const reader = new FileReader();
+        reader.onload = (e: any) => {
+          this.rawImageSource.set(e.target.result);
+          resolve(true);
+        };
+        reader.readAsDataURL(blob);
+      });
+    } catch (error) {
+      const modalRef = this.modalService.open(GenericErrorModalComponent, {
+        title: 'shared.imageInput.downloadErrorTitle',
+        message: 'shared.imageInput.downloadErrorMessage'
+      });
+      modalRef.result.then((result) => {
+        if (result) {
+          this.fileInput.nativeElement.click();
+        }
+      });
+      return false;
+    }
+  }
+
+  private openProcessorModal() {
+    const modalRef = this.modalService.open(ImageProcessorComponent, {
+      imageBase64: this.rawImageSource(),
+      originalFormat: this.format(),
+      maxWidth: this.maxWidth,
+      maxHeight: this.maxHeight,
+      minAspectRatio: this.minAspectRatio,
+      maxAspectRatio: this.maxAspectRatio,
+      fixedAspectRatio: this.fixedAspectRatio
     });
+
+    modalRef.result.then((result: any) => {
+      if (result.data === undefined) return;
+
+      if (result.data === null) {
+        // Eliminó la imagen
+        this.previewUrl.set(undefined);
+        this.rawImageSource.set('');
+        this.format.set('webp');
+        this.currentFileName.set('');
+        const emptyFile: FileInfoRequest = {
+          base64: '',
+          fileName: 'delete.txt',
+          contentType: 'text/plain'
+        };
+        this.fileChanged.emit(emptyFile);
+      } else {
+        // Modificó/recortó la imagen
+        this.previewUrl.set(result.data);
+        const finalFile = this.base64ToFile(result.data);
+        this.fileChanged.emit(finalFile);
+      }
+    });
+  }
+  private base64ToFile(base64Data: string): FileInfoRequest {
+    const arr = base64Data.split(',');
+    const mimeMatch = arr[0].match(/:(.*?);/);
+    const contentType = mimeMatch ? mimeMatch[1] : 'image/jpeg';
+
+    return {
+      base64: base64Data,
+      fileName: this.currentFileName(),
+      contentType: contentType
+    };
+  }
+  private extractFormatFromMime(mimeType: string) {
+    if (mimeType.includes('jpeg') || mimeType.includes('jpg')) {
+      this.format.set('jpeg');
+    } else if (mimeType.includes('webp')) {
+      this.format.set('webp');
+    } else if (mimeType.includes('bmp')) {
+      this.format.set('bmp');
+    } else if (mimeType.includes('icon')) {
+      this.format.set('ico');
+    } else {
+      this.format.set('png');
+    }
   }
 }
