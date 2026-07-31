@@ -12,6 +12,7 @@ export interface MenuItemRequest {
   id?: string;
   text: string;
   url?: string;
+  order:number;
   parentMenuItemId?: string;
 }
 

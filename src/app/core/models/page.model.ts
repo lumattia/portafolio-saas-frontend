@@ -15,6 +15,7 @@ export interface SectionRequest {
   file?: FileInfoRequest;
   isEnabled: boolean;
   isDeleted: boolean;
+  order:number;
   parentSectionId?: string;
 }
 

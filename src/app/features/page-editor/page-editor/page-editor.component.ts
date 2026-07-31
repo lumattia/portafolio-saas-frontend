@@ -183,30 +183,31 @@ export class PageEditorComponent implements OnInit {
   }
   getSectionsForSave(): SectionRequest[]{
    const result: SectionRequest[] = [];
+    let currentIndex = 0;
+    const flatten = (sections: SectionRenderer[]) => {
+      for (const s of sections) {
+        const dto: SectionRequest = {
+          id: s.id,
+          sectionTemplateId: s.sectionTemplateId ?? undefined,
+          contentJson: s.contentJson,
+          isEnabled: s.isEnabled,
+          isDeleted: s.isDeleted,
+          parentSectionId: s.parentSectionId,
+          file: s.fileRequest,
+          order: currentIndex++
+        };
 
-  const flatten = (sections: SectionRenderer[]) => {
-    for (const s of sections) {
-      const dto: SectionRequest = {
-        id: s.id,
-        sectionTemplateId: s.sectionTemplateId ?? undefined,
-        contentJson: s.contentJson,
-        isEnabled: s.isEnabled,
-        isDeleted: s.isDeleted,
-        parentSectionId: s.parentSectionId,
-        file: s.fileRequest
-      };
+        result.push(dto);
 
-      result.push(dto);
-
-      if (s.subSections && s.subSections.length > 0) {
-        flatten(s.subSections);
+        if (s.subSections && s.subSections.length > 0) {
+          flatten(s.subSections);
+        }
       }
-    }
-  };
+    };
 
-  // Ejecutamos con tus secciones raíz
-  flatten(this.sections());
+    // Ejecutamos con tus secciones raíz
+    flatten(this.sections());
 
-  return result;
+    return result;
   }
 }

@@ -21,7 +21,7 @@ export class MenuEditorComponent implements OnInit {
 
     private readonly menuService = inject(MenuService);
     private readonly modalService = inject(ModalService);
-    
+
     menu: MenuRenderer = {} as MenuRenderer;
     originalMenu: MenuRenderer = {} as MenuRenderer;
     readonly loading = signal(false);
@@ -29,25 +29,25 @@ export class MenuEditorComponent implements OnInit {
     readonly editingItem = signal<MenuItemRenderer | null>(null);
     readonly draggedIndex = signal<number | null>(null);
     readonly hasUnsavedChanges = signal(false);
-    
+
     readonly newItemText = signal('');
     readonly newItemUrl = signal('');
     readonly newItemStyle = signal('');
     readonly parentItem = signal<MenuItemRenderer | null>(null);
-    
+
     private overlayMouseDownOutside = false;
 
     ngOnInit(): void {
         this.originalMenu = JSON.parse(JSON.stringify(this.menu));
     }
-    
+
     private checkForChanges(): void {
         this.hasUnsavedChanges.set(JSON.stringify(this.menu) !== JSON.stringify(this.originalMenu));
     }
-    
+
     private normalizeUrl(url: string): string {
         if (!url) return '/';
-        
+
         // If it's already an external URL, return as is
         if (url.startsWith('http://') || url.startsWith('https://')) {
             // If it's the current site's full URL, convert to relative path
@@ -57,23 +57,23 @@ export class MenuEditorComponent implements OnInit {
             }
             return url;
         }
-        
+
         // If it starts with /, it's already absolute
         if (url.startsWith('/')) {
             return url;
         }
-        
+
         // Otherwise, make it absolute
         return '/' + url;
     }
-    
+
     openAddModal(parentItem: MenuItemRenderer | null = null): void {
       this.resetForm();
       this.parentItem.set(parentItem);
       this.editingItem.set(null);
       this.showAddModal.set(true);
     }
-    
+
     attemptClose(): void {
       if (this.hasUnsavedChanges()) {
           const modalRef = this.modalService.open(ConfirmModalComponent, {
@@ -89,14 +89,14 @@ export class MenuEditorComponent implements OnInit {
           this.close();
       }
     }
-    
+
     openEditModal(item: MenuItemRenderer): void {
       this.newItemText.set(item.text);
       this.newItemUrl.set(item.url || '');
       this.editingItem.set(item);
       this.showAddModal.set(true);
     }
-    
+
     closeModal(): void {
       this.showAddModal.set(false);
       this.resetForm();
@@ -107,14 +107,14 @@ export class MenuEditorComponent implements OnInit {
       this.overlayMouseDownOutside = true;
     }
   }
-  
+
   handleOverlayMouseUp(event: MouseEvent): void {
     // Reset the flag on mouse up
     if (event.target !== event.currentTarget) {
       this.overlayMouseDownOutside = false;
     }
   }
-  
+
   handleOverlayClick(event: MouseEvent): void {
     // Only close if both mousedown and click happened on the overlay
     if (event.target === event.currentTarget && this.overlayMouseDownOutside) {
@@ -127,33 +127,33 @@ export class MenuEditorComponent implements OnInit {
       this.draggedIndex.set(index);
       event.dataTransfer?.setData('text/plain', index.toString());
     }
-    
+
     onDragOver(event: DragEvent): void {
       event.preventDefault();
     }
-    
+
     onDrop(event: DragEvent, dropIndex: number): void {
       event.preventDefault();
-      
+
       const dragIndex = this.draggedIndex();
       if (dragIndex === null || dragIndex === dropIndex) return;
-  
+
       if (!this.menu) return;
-      
+
       const items = [...this.menu.menuItems];
       const [draggedItem] = items.splice(dragIndex, 1);
       items.splice(dropIndex, 0, draggedItem);
-      
+
       this.menu = { ...this.menu, menuItems: items };
       this.draggedIndex.set(null);
       this.checkForChanges();
     }
-    
+
     saveItem(): void {
       if (!this.menu) return;
-      
+
       const editingItem = this.editingItem();
-      
+
       const newItem: MenuItemRenderer = {
         id: editingItem?.id || crypto.randomUUID(),
         text: this.newItemText(),
@@ -164,11 +164,11 @@ export class MenuEditorComponent implements OnInit {
       if (editingItem) {
         const parent = this.parentItem();
          if (parent) {
-          parent.subMenuItems = parent.subMenuItems.map((item: any) => 
+          parent.subMenuItems = parent.subMenuItems.map((item: any) =>
             item.id === editingItem.id ? newItem : item
           );
         } else {
-          this.menu.menuItems = this.menu.menuItems.map((item: any) => 
+          this.menu.menuItems = this.menu.menuItems.map((item: any) =>
             item.id === editingItem.id ? newItem : item
           );
         }
@@ -183,24 +183,24 @@ export class MenuEditorComponent implements OnInit {
           this.menu.menuItems = [...this.menu.menuItems, newItem];
         }
       }
-      
+
       this.closeModal();
       this.checkForChanges();
     }
-    
-    deleteItem(itemId: string): void {      
+
+    deleteItem(itemId: string): void {
       if (!this.menu) return;
-      
+
       const updatedMenuItems = this.menu.menuItems.filter((item: any) => item.id !== itemId);
       this.menu = {
         id: this.menu.id,
         type: this.menu.type,
         menuItems: updatedMenuItems,
       };
-      
+
       this.checkForChanges();
     }
-  
+
     saveMenu(): void {
       const menuToSave = this.menu;
       const menuItems: MenuItemRequest[] = this.getMenuItemsForSave(menuToSave.menuItems);
@@ -233,7 +233,7 @@ export class MenuEditorComponent implements OnInit {
     }
      getMenuItemsForSave(menuItems: MenuItemRenderer[]): MenuItemRequest[]{
       const result: MenuItemRequest[] = [];
-    
+        let currentIndex = 0;
       const flatten = (sections: MenuItemRenderer[]) => {
         for (const s of sections) {
           const dto: MenuItemRequest = {
@@ -241,6 +241,7 @@ export class MenuEditorComponent implements OnInit {
             text: s.text,
             url: s.url,
             parentMenuItemId: s.parentMenuItemId,
+            order: currentIndex++
           };
           result.push(dto);
           if (s.subMenuItems && s.subMenuItems.length > 0) {
@@ -248,10 +249,10 @@ export class MenuEditorComponent implements OnInit {
           }
         }
       };
-    
+
       // Ejecutamos con tus secciones raíz
       flatten(menuItems);
-      
+
       return result;
       }
     private resetForm(): void {
@@ -267,7 +268,7 @@ export class MenuEditorComponent implements OnInit {
     if (url.length <= 30) return url;
     return url.substring(0, 27) + '...';
   }
-  
+
   addChildItem(parentItem: MenuItemRenderer): void {
       this.openAddModal(parentItem);
   }
