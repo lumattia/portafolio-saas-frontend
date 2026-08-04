@@ -1,4 +1,4 @@
-<div class="image-text-section-editor">
+<div class="section-editor-content">
   @if (content && content.inputs) {
     <div class="field-group">
       <label>Image</label>
@@ -19,26 +19,24 @@
         placeholder="Enter text..."
       />
     </div>
-    <div class="field-group">
-      <button type="button" class="style-toggle" (click)="toggleStylePanel()">
-        Style {{ showStylePanel() ? '&#9662;' : '&#9656;' }}
-      </button>
-      @if (showStylePanel()) {
-        <div class="style-panel">
-          <label>Image Position</label>
-          <select
-            [ngModel]="content.styles.imagePosition"
-            (ngModelChange)="onContentChange('styles.imagePosition', $event)"
-            class="style-select"
-          >
-            <option value="top-left">Top Left</option>
-            <option value="top-right">Top Right</option>
-          </select>
-        </div>
-      }
-    </div>
+    <app-collapsible
+      [(checked)]="showStylePanel"
+      label="Style"
+    >
+      <div class="style-field">
+        <label>Image Position</label>
+        <app-select-input
+        [options]="[{id: 'top-left',name: 'Top-left'},{id: 'top-right',name: 'Top-right'}]"
+        [value]="content.styles.imagePosition"
+        (valueChange)="onContentChange('styles.imagePosition', $event)"
+        [showClearButton]="false"
+        [showSearch]="false"
+        >
+        </app-select-input>
+      </div>
+    </app-collapsible>
   }
-  <app-button variant="danger" size="sm" (click)="deleteSection()">
+  <app-button variant="danger" size="sm" (onClick)="deleteSection()">
     @if (section().isDeleted) { Undo } @else { Delete Section }
   </app-button>
 </div>

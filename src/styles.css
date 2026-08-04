@@ -105,7 +105,7 @@
   --image-warning: none;
   --image-error: none;
   --image-info: none;
-  
+
   /* Legacy fallbacks for compatibility */
   --bg: var(--background-primary);
   --bg-alt: var(--background-alt);
@@ -133,8 +133,46 @@ code {
   border-radius: 0.25rem;
   background: var(--background-tertiary);
 }
+.info-message {
+  background-color: #fef3c7;
+  border-left: 4px solid #f59e0b;
+  padding: 12px 16px;
+  margin-bottom: 16px;
+  border-radius: 4px;
+
+  p {
+    margin: 0;
+    font-size: 13px;
+    color: #92400e;
+    line-height: 1.4;
+  }
+}
+
 .placeholder {
   color: #9ca3af;
   font-size: 14px;
   font-style: italic;
+}
+.field-group {
+  label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #374151;
+  }
+}
+.section-editor-content{
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px
+}
+.style-field{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  &:hover label{
+    color: var(--primary)
+  }
 }

@@ -1,0 +1,12 @@
+<div class="collapsible-section">
+  <div class="collapsible-header" (click)="!disabled() && toggle()">
+    <h2 class="collapsible-title">{{ label() }}</h2>
+    <span class="collapse-icon">{{ checked() ? '▼' : '▲' }}</span>
+  </div>
+
+  @if (checked()) {
+    <div class="collapsible-content">
+      <ng-content />
+    </div>
+  }
+</div>

@@ -14,7 +14,7 @@ export class ButtonComponent {
   readonly disabled = input(false);
   readonly type = input<'button' | 'submit' | 'reset'>('button');
   readonly active = input(false);
-  readonly click = output<MouseEvent>();
+  readonly onClick = output<MouseEvent>();
 
   getClasses(): string {
     return `${this.variant()} ${this.size()} ${this.active() ? 'active' : ''}`;
@@ -23,7 +23,7 @@ export class ButtonComponent {
   handleClick(event: MouseEvent): void {
     if (!this.disabled()) {
       event.stopPropagation();
-      this.click.emit(event);
+      this.onClick.emit(event);
     }
   }
 }

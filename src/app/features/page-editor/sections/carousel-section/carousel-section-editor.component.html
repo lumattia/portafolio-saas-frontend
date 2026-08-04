@@ -1,47 +1,9 @@
-<div class="carousel-section-editor">
-  @if (!hasSubSection) {
-    <!-- No slides yet - show add slide button -->
-    <div class="no-slides-state">
-      <h3>No slides added</h3>
-      <p>Click the button below to add your first slide</p>
-      <app-button type="button" class="choose-template-button" (click)="addSubSection()">
-        Add First Slide
-      </app-button>
-    </div>
-  } @else {
-    <div class="carousel-editor">
-      <div class="slide-selector">
-        <div class="slide-tabs">
-          @for (slide of subSections; track slide.id; let i = $index) {
-            <app-button
-              type="button"
-              size="sm"
-              class="slide-tab"
-              [active]="i === currentSubSectionIndex"
-              (click)="setCurrentSlideIndex(i)"
-            >
-              Slide {{ i + 1 }}
-            </app-button>
-          }
-          <app-button size="sm" type="button" (click)="addSubSection()" title="Add slide">
-            Add slide
-          </app-button>
-          @if (currentSubSection) {
-            <app-button size="sm" variant="danger" type="button" (click)="removeSubSection(currentSubSection)" title="Delete slide">
-              Delete
-            </app-button>
-          }
-        </div>
-      </div>
-
-      @if (currentSubSection) {
-        <div class="slide-editor">
-          <ng-container
-            *ngComponentOutlet="componentMap[currentSubSection.componentSelector]; inputs: { section: currentSubSection, onDelete: removeSubSection.bind(this, currentSubSection)}"
-          ></ng-container>
-        </div>
-      }@else {
-      <div class="field-group">
+<div class="section-editor-content">
+  <app-subsection-selector [section]="section()"></app-subsection-selector>
+  <app-collapsible
+        label="Style"
+      >
+    <div class="style-field">
         <label>Height</label>
         <app-number-input
           [value]="content.styles.height"
@@ -50,10 +12,9 @@
           [max]="1000"
         />
       </div>
-      }
-    </div>
-  }
-  <app-button variant="danger" size="sm" (click)="deleteSection()">
+    </app-collapsible>
+
+  <app-button variant="danger" size="sm" (onClick)="deleteSection()">
     @if (section().isDeleted) { Undo } @else { Delete Section }
   </app-button>
 </div>

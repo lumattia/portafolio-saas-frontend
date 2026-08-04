@@ -5,15 +5,15 @@
     </div>
     <nav class="nav">
       <app-theme-toggle />
-      <app-button 
-        variant="icon" 
-        (click)="toggleViewMode()" 
+      <app-button
+        variant="icon"
+        (onClick)="toggleViewMode()"
         title="{{viewModeService.isAdminMode()?'Ver Snapshot':'Editar'}}">
         <app-icon name="eye" size="md" />
       </app-button>
-      <app-button 
-        variant="primary" 
-        (click)="publishSite()" 
+      <app-button
+        variant="primary"
+        (onClick)="publishSite()"
         [disabled]="isPublishing()">
         @if (isPublishing()) {
           Publicando...
@@ -37,11 +37,11 @@
       {{ publishMessage()!.text }}
     </div>
   }
-  
+
   <div class="main-content">
     <aside class="sidebar desktop-only">
       <div class="sidebar-header">
-        <app-button variant="icon" (click)="openSidebarMenuEditor()" title="Editar menú lateral">
+        <app-button variant="icon" (onClick)="openSidebarMenuEditor()" title="Editar menú lateral">
           <app-icon name="edit" size="sm" />
         </app-button>
       </div>

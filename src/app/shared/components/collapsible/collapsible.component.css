@@ -1,0 +1,38 @@
+.collapsible-section {
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  background-color: #fff;
+}
+
+.collapsible-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  background-color: #f9fafb;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background-color: #f3f4f6;
+  }
+}
+
+.collapsible-title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.collapse-icon {
+  font-size: 12px;
+  color: #6b7280;
+  transition: transform 0.2s;
+}
+
+.collapsible-content {
+  padding: 4px;
+  border-top: 1px solid #d1d5db;
+}

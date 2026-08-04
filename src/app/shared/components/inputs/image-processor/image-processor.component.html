@@ -43,8 +43,8 @@
     </div>
 
     <div class="modal-footer">
-      <app-button variant="secondary" (click)="onCancelClick()">{{'shared.cancel' | translate}}</app-button>
-      <app-button variant="danger" (click)="removeImage()">{{'shared.remove' | translate}}</app-button>
-      <app-button (click)="saveImage()" [disabled]="!isFormValid()">{{'shared.save' | translate}}</app-button>
+      <app-button variant="secondary" (onClick)="onCancelClick()">{{'shared.cancel' | translate}}</app-button>
+      <app-button variant="danger" (onClick)="removeImage()">{{'shared.remove' | translate}}</app-button>
+      <app-button (onClick)="saveImage()" [disabled]="!isFormValid()">{{'shared.save' | translate}}</app-button>
     </div>
 </div>

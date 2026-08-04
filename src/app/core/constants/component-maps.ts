@@ -11,6 +11,8 @@ import { ImageTextSectionEditorComponent } from '../../features/page-editor/sect
 import { BackgroundImageTextSectionEditorComponent } from '../../features/page-editor/sections/background-image-text-section/background-image-text-section-editor.component';
 import { CarouselSectionEditorComponent } from '../../features/page-editor/sections/carousel-section/carousel-section-editor.component';
 import { FlexLayoutSectionEditorComponent } from '../../features/page-editor/sections/flex-layout-section/flex-layout-section-editor.component';
+import { BlankSectionEditorComponent } from '../../features/page-editor/sections/blank-section/blank-section-editor.component';
+import { BlankSectionRenderComponent } from '../../features/page-editor/sections/blank-section/blank-section-render.component';
 
 export const RENDER_COMPONENT_MAP: Record<string, Type<any>> = {
   'image': ImageSectionRenderComponent,
@@ -18,7 +20,8 @@ export const RENDER_COMPONENT_MAP: Record<string, Type<any>> = {
   'image-text': ImageTextSectionRenderComponent,
   'background-image-text': BackgroundImageTextSectionRenderComponent,
   'carousel': CarouselSectionRenderComponent,
-  'flex-layout': FlexLayoutSectionRenderComponent,
+  'flex': FlexLayoutSectionRenderComponent,
+  'blank': BlankSectionRenderComponent,
 };
 
 export const EDITOR_COMPONENT_MAP: Record<string, Type<any>> = {
@@ -27,5 +30,6 @@ export const EDITOR_COMPONENT_MAP: Record<string, Type<any>> = {
   'image-text': ImageTextSectionEditorComponent,
   'background-image-text': BackgroundImageTextSectionEditorComponent,
   'carousel': CarouselSectionEditorComponent,
-  'flex-layout': FlexLayoutSectionEditorComponent,
+  'flex': FlexLayoutSectionEditorComponent,
+  'blank': BlankSectionEditorComponent,
 };

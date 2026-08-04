@@ -1,0 +1,23 @@
+
+.subsection-selector {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.subsection-tabs {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+
+.subsection-tab {
+  &.active {
+    background-color: var(--success);
+  }
+}
+.subsection-editor {
+  border: var(--border-secondary) 1px solid;
+  border-radius: 8px
+}

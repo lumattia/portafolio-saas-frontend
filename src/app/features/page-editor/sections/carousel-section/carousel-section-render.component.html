@@ -14,7 +14,7 @@
           <div class="slide">
             <app-section-renderer
               [section]="currentSlide"
-              [isSelected]="true"
+              [isSelected]="false"
             />
           </div>
         } @else {
@@ -30,7 +30,7 @@
       >
         &#10095;
       </button>
-      
+
       @if (subSections.length > 1) {
         <div class="carousel-indicators interactive-element">
           @for (slide of subSections; track slide.id; let i = $index) {

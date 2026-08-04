@@ -1,94 +1,41 @@
-<div class="flex-layout-editor">
-  <h3>Flex Layout Settings</h3>
-  
-  <div class="form-group">
-    <label for="direction">Direction</label>
-    <select 
-      id="direction" 
-      [(ngModel)]="content.styles.direction" 
-      (ngModelChange)="onContentChange('styles.direction', $event)"
+<div class="section-editor-content">
+  <app-subsection-selector [section]="section()"></app-subsection-selector>
+  <app-collapsible
+      [(checked)]="showStylePanel"
+      label="Style"
     >
-      <option value="row">Row (Horizontal)</option>
-      <option value="column">Column (Vertical)</option>
-    </select>
-  </div>
-
-  <div class="form-group">
-    <label for="gap">Gap (px)</label>
-    <input 
-      type="number" 
-      id="gap" 
-      [(ngModel)]="content.styles.gap" 
-      (ngModelChange)="onContentChange('styles.gap', $event)"
-      min="0"
-      step="1"
-    >
-  </div>
-
-  <div class="form-group">
-    <label for="justifyContent">Justify Content</label>
-    <select 
-      id="justifyContent" 
-      [(ngModel)]="content.styles.justifyContent" 
-      (ngModelChange)="onContentChange('styles.justifyContent', $event)"
-    >
-      <option value="flex-start">Flex Start</option>
-      <option value="center">Center</option>
-      <option value="flex-end">Flex End</option>
-      <option value="space-between">Space Between</option>
-      <option value="space-around">Space Around</option>
-      <option value="space-evenly">Space Evenly</option>
-    </select>
-  </div>
-
-  <div class="form-group">
-    <label for="alignItems">Align Items</label>
-    <select 
-      id="alignItems" 
-      [(ngModel)]="content.styles.alignItems" 
-      (ngModelChange)="onContentChange('styles.alignItems', $event)"
-    >
-      <option value="flex-start">Flex Start</option>
-      <option value="center">Center</option>
-      <option value="flex-end">Flex End</option>
-      <option value="stretch">Stretch</option>
-    </select>
-  </div>
-
-  <div class="form-group">
-    <label for="wrap">Wrap</label>
-    <select 
-      id="wrap" 
-      [(ngModel)]="content.styles.wrap" 
-      (ngModelChange)="onContentChange('styles.wrap', $event)"
-    >
-      <option value="nowrap">No Wrap</option>
-      <option value="wrap">Wrap</option>
-      <option value="wrap-reverse">Wrap Reverse</option>
-    </select>
-  </div>
-
-  <div class="sub-sections-section">
-    <h4>Sub Sections ({{ subSections.length }})</h4>
-    <button type="button" class="add-button" (click)="addSubSection()">
-      + Add Section
-    </button>
-    @if (subSections.length === 0) {
-      <div class="no-sub-sections">No sub-sections added yet</div>
-    } @else {
-      <div class="sub-sections-list">
-        @for (subSection of subSections; track subSection.id) {
-          <div class="sub-section-item">
-            <span>{{ subSection.componentSelector }}</span>
-            <button type="button" class="remove-button" (click)="removeSubSection(subSection)">
-              Remove
-            </button>
-          </div>
-        }
+   <div class="style-field">
+        <label>Gap (px)</label>
+        <app-number-input
+        [value]="content.styles.gap"
+        (valueChange)="onContentChange('styles.gap', $event)"
+        [min]="0"
+        ></app-number-input>
       </div>
-    }
-  </div>
-  <app-button variant="danger" size="sm" (click)="deleteSection()">
+      <div class="style-field">
+        <label>Justify Content</label>
+        <app-select-input
+        [options]="justifyContentOption"
+        [value]="content.styles.justifyContent"
+        (valueChange)="onContentChange('styles.justifyContent', $event)"
+        [showClearButton]="false"
+        [showSearch]="false"
+        >
+        </app-select-input>
+      </div>
+      <div class="style-field">
+        <label>Align Items</label>
+        <app-select-input
+        [options]="alignItemsOption"
+        [value]="content.styles.alignItems"
+        (valueChange)="onContentChange('styles.alignItems', $event)"
+        [showClearButton]="false"
+        [showSearch]="false"
+        >
+        </app-select-input>
+      </div>
+    </app-collapsible>
+  <app-button variant="danger" size="sm" (onClick)="deleteSection()">
     @if (section().isDeleted) { Undo } @else { Delete Section }
   </app-button>
 </div>

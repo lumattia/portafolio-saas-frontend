@@ -1,0 +1,25 @@
+<div class="subsection-selector">
+  <div class="subsection-tabs">
+    @for (subsection of subSections; track subsection.id; let i = $index) {
+      <app-button
+        type="button"
+        size="sm"
+        class="subsection-tab"
+        [active]="i === currentSubSectionIndex"
+        (onClick)="selectSubsection(i)"
+      >
+        {{subsection.componentSelector}}
+      </app-button>
+    }
+    <app-button variant="ghost" size="sm" type="button" (onClick)="addSubSection()" title="Add subsection">
+      <app-icon size="sm" name="add"></app-icon>
+    </app-button>
+  </div>
+</div>
+ @if (currentSubSection) {
+  <div class="subsection-editor">
+    <ng-container
+      *ngComponentOutlet="componentMap[currentSubSection.componentSelector]; inputs: { section: currentSubSection, onDelete: removeSubSection.bind(this, currentSubSection)}"
+    ></ng-container>
+  </div>
+}

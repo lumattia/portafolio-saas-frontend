@@ -1,4 +1,4 @@
-<div class="image-section-editor">
+<div class="section-editor-content">
   @if (content && content.inputs) {
     <div class="field-group">
       <label>Image</label>
@@ -12,7 +12,7 @@
           />
     </div>
   }
-  <app-button variant="danger" size="sm" (click)="deleteSection()">
+  <app-button variant="danger" size="sm" (onClick)="deleteSection()">
     @if (section().isDeleted) { Undo } @else { Delete Section }
   </app-button>
 </div>

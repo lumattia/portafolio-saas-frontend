@@ -1,7 +1,10 @@
 <div class="flex-layout-container" [ngStyle]="containerStyle">
   @for (subSection of subSections; track subSection.id) {
-    <ng-container
-      *ngComponentOutlet="componentMap[subSection.componentSelector]; inputs: { content: subSection.contentJson, subSections: subSection.subSections }"
-    ></ng-container>
+    <app-section-renderer
+      [section]="subSection"
+      [isSelected]="false"
+    />
+  }@empty {
+    <div class="placeholder">Empty flex</div>
   }
 </div>

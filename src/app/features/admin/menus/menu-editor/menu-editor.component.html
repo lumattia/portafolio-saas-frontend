@@ -2,15 +2,15 @@
   <div class="editor-header">
     <h2>Footer Menu</h2>
     <div class="header-actions">
-      <app-button variant="primary" (click)="saveMenu()" [disabled]="!hasUnsavedChanges()">
+      <app-button variant="primary" (onClick)="saveMenu()" [disabled]="!hasUnsavedChanges()">
         Guardar
       </app-button>
-      <app-button variant="icon" (click)="attemptClose()" title="Cerrar">
+      <app-button variant="icon" (onClick)="attemptClose()" title="Cerrar">
         <app-icon name="close" size="md" />
       </app-button>
     </div>
   </div>
-  
+
   @if (loading()) {
     <div class="loading">Loading...</div>
   } @else {
@@ -20,11 +20,11 @@
           <div class="menu-item">
             <div class="menu-item-content">
               @if(item.subMenuItems.length>0){
-                <app-button 
-                  variant="icon" 
-                  size="sm" 
+                <app-button
+                  variant="icon"
+                  size="sm"
                   class="expand-button"
-                  (click)="item.toggled = !item.toggled"
+                  (onClick)="item.toggled = !item.toggled"
                   [class.expanded]="item.toggled"
                 >
                   <app-icon name="chevron-right" size="sm" />
@@ -36,13 +36,13 @@
               }
             </div>
             <div class="menu-actions">
-              <app-button variant="icon" size="sm" (click)="addChildItem(item)" title="Add submenu">
+              <app-button variant="icon" size="sm" (onClick)="addChildItem(item)" title="Add submenu">
                 <app-icon name="add" size="sm" />
               </app-button>
-              <app-button variant="icon" size="sm" (click)="openEditModal(item)">
+              <app-button variant="icon" size="sm" (onClick)="openEditModal(item)">
                 <app-icon name="edit" size="sm" />
               </app-button>
-              <app-button variant="icon" size="sm" (click)="deleteItem(item.id)">
+              <app-button variant="icon" size="sm" (onClick)="deleteItem(item.id)">
                 <app-icon name="delete" size="sm" />
               </app-button>
             </div>
@@ -58,10 +58,10 @@
                     }
                   </div>
                   <div class="menu-actions">
-                    <app-button variant="icon" size="sm" (click)="openEditModal(child)">
+                    <app-button variant="icon" size="sm" (onClick)="openEditModal(child)">
                       <app-icon name="edit" size="sm" />
                     </app-button>
-                    <app-button variant="icon" size="sm" (click)="deleteItem(child.id)">
+                    <app-button variant="icon" size="sm" (onClick)="deleteItem(child.id)">
                       <app-icon name="delete" size="sm" />
                     </app-button>
                   </div>
@@ -72,18 +72,18 @@
         </div>
       }
     </div>
-    
+
     <div class="add-section">
-      <app-button variant="primary" (click)="openAddModal()">Add Menu Item</app-button>
+      <app-button variant="primary" (onClick)="openAddModal()">Add Menu Item</app-button>
     </div>
   }
-  
+
   @if (showAddModal()) {
     <div class="modal-overlay" (mousedown)="handleOverlayMouseDown($event)" (mouseup)="handleOverlayMouseUp($event)" (click)="handleOverlayClick($event)">
       <div class="modal" (click)="$event.stopPropagation()">
         <div class="modal-header">
           <h3>{{ editingItem() ? 'Edit' : 'Add' }} Menu Item</h3>
-          <app-button variant="icon" (click)="closeModal()">×</app-button>
+          <app-button variant="icon" (onClick)="closeModal()">×</app-button>
         </div>
         <div class="modal-body">
           <div class="form-group">
@@ -96,10 +96,10 @@
           </div>
         </div>
         <div class="modal-footer">
-          <app-button variant="primary" (click)="saveItem()">
+          <app-button variant="primary" (onClick)="saveItem()">
             {{ editingItem() ? 'Update' : 'Add' }}
           </app-button>
-          <app-button variant="secondary" (click)="closeModal()">Cancel</app-button>
+          <app-button variant="secondary" (onClick)="closeModal()">Cancel</app-button>
         </div>
       </div>
     </div>

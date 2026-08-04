@@ -13,16 +13,16 @@
     <nav class="nav">
       <app-theme-toggle />
       @if (auth.isAuthenticated()) {
-        <app-button variant="secondary" size="sm" (click)="toggleViewMode()">
+        <app-button variant="secondary" size="sm" (onClick)="toggleViewMode()">
           {{ viewModeService.isAdminMode() ? 'View Snapshot' : 'Edit Mode' }}
         </app-button>
         <div class="user-menu-container">
-          <app-button variant="icon" size="sm" (click)="toggleUserMenu()">
+          <app-button variant="icon" size="sm" (onClick)="toggleUserMenu()">
             <app-icon name="user" size="sm" />
           </app-button>
           @if (showUserMenu()) {
             <div class="user-menu">
-              <app-button block (click)="logout()">Logout</app-button>
+              <app-button block (onClick)="logout()">Logout</app-button>
             </div>
           }
         </div>
@@ -33,7 +33,7 @@
       }
     </nav>
   </header>
-  
+
   <div class="main-content">
     <aside class="sidebar desktop-only">
       @if (sidebarMenu()) {
