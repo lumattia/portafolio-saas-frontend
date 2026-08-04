@@ -24,4 +24,7 @@ export class FlexLayoutSectionRenderComponent  extends BaseContainerRendererComp
       'align-items': this.content.styles.alignItems || 'flex-start',
     };
   }
+  onSubsectionSelect(index: number){
+    this.section().subSectionIndex=index;
+  }
 }
