@@ -14,8 +14,8 @@
         [format]="format()"
         [imageQuality]="quality()"
         [onlyScaleDown]="true"
-        [resizeToWidth]="maxWidth"
-        [resizeToHeight]="maxHeight"
+        [resizeToWidth]="cropWidth()"
+        [resizeToHeight]="cropHeight()"
         output="base64"
         >
       </image-cropper>
@@ -28,15 +28,40 @@
       </span>
     </div>
 
-    <hr class="section-divider" />
     <div class="controls-grid">
-      <div class="input-group col-span-3">
+      <div class="input-group">
+        <label>Max Width (px)</label>
+
+        <app-number-input
+          [value]="cropWidth()"
+          (valueChange)="imageCropper.crop()"
+          [max]="maxWidth"
+          [min]="1"
+          [autoClamp]="true"
+        />
+      </div>
+      <div class="input-group">
+        <label>Max Height (px)</label>
+        <app-number-input
+          [value]="cropHeight()"
+          (valueChange)="imageCropper.crop()"
+          [max]="maxHeight"
+          [min]="1"
+          [autoClamp]="true"
+        />
+      </div>
+      <div class="input-group">
         <label>{{'shared.imageInput.finalQuality' | translate:{quality: (quality())} }}</label>
         <input type="range" [ngModel]="quality()" (change)="imageCropper.crop()" (ngModelChange)="quality.set($event)" min="1" max="100" step="1">
       </div>
     </div>
+
     <div class="result-preview-box">
       <h4>{{'shared.imageInput.preview' | translate}}</h4>
+
+    <div class="info-item" [class.error]="!isFileSizeValid()">
+      <span class="label">{{ `Result size: ${(this.resultFileSizeKB() / 1024).toFixed(2)}MB (max: ${(this.maxFileSizeKB / 1024).toFixed(2)}MB)` }}</span>
+    </div>
       <div class="preview-info">
         <img [src]="resultBase64()">
       </div>

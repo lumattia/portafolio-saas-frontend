@@ -5,31 +5,12 @@
 }
 
 .dimension-inputs > * {
-  flex: 1;
-}
-
-.dimension-inputs app-select-input {
   width: 100px;
-  flex: none;
-}
-
-.dimension-number-input {
-  padding: 8px 12px;
-  border: 1px solid #d1d5db;
-  border-radius: 4px;
-  font-size: 14px;
-  width: 100%;
-
-  &:focus {
-    outline: none;
-    border-color: #6366f1;
-  }
 }
 
 .range-hint {
   font-size: 12px;
   color: #6b7280;
   white-space: nowrap;
-  flex: none;
-  width:0px;
+  width: 50px !important;
 }

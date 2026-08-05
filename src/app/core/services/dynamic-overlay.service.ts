@@ -22,7 +22,7 @@ export abstract class DynamicOverlayService {
   private activeOverlays: Map<ComponentRef<any>, OverlayRef<any>> = new Map();
 
   constructor(
-    protected appRef: ApplicationRef, 
+    protected appRef: ApplicationRef,
     protected injector: EnvironmentInjector,
     private containerId: string
   ) {  }
@@ -44,40 +44,40 @@ export abstract class DynamicOverlayService {
     const componentRef = createComponent(componentType, {
       environmentInjector: this.injector
     });
-    
+
     const element = (componentRef.hostView as any).rootNodes[0] as HTMLElement;
     container!.appendChild(element);
     this.appRef.attachView(componentRef.hostView);
-    
+
     const instance = componentRef.instance as any;
-  
+
     for (const key in config) {
       if (config.hasOwnProperty(key)) {
-        instance[key] = config[key];
+      componentRef.setInput(key, config[key]);
       }
     }
-    
+
     if (container) {
       container.style.pointerEvents = 'auto';
     }
-    
+
     let resolveFn: (value: any) => void;
     let rejectFn: (reason: any) => void;
-    
+
     const resultPromise = new Promise<any>((resolve) => {
       resolveFn = resolve;
     });
-    
+
     instance.close = (result?: any) => {
       const ref = this.activeOverlays.get(componentRef) as InternalOverlayRef<T>;
       if (ref) ref.close(result);
     };
-    
+
     instance.dismiss = (reason?: any) => {
       const ref = this.activeOverlays.get(componentRef) as InternalOverlayRef<T>;
       if (ref) ref.dismiss(reason);
     };
-    
+
     const overlayRef: InternalOverlayRef<T> = {
       componentInstance: instance,
       result: resultPromise,
@@ -86,7 +86,7 @@ export abstract class DynamicOverlayService {
       close: (result?: any) => this.closeOverlay(componentRef, { confirmed: true, data: result }),
       dismiss: (reason?: any) => this.closeOverlay(componentRef, { confirmed: false, reason })
     };
-    
+
     this.activeOverlays.set(componentRef, overlayRef);
     return overlayRef;
   }
@@ -97,7 +97,7 @@ export abstract class DynamicOverlayService {
       ref.resolve(output);
       this.destroyOverlay(componentRef);
     }
-    
+
     if (this.activeOverlays.size === 0 && this.container) {
       this.container.style.pointerEvents = 'none';
     }
@@ -105,9 +105,9 @@ export abstract class DynamicOverlayService {
 
   private destroyOverlay<T>(componentRef: ComponentRef<T>): void {
     this.appRef.detachView(componentRef.hostView);
-    
+
     const element = (componentRef.hostView as any).rootNodes[0] as HTMLElement;
-    
+
     if (element && this.container) {
       if (this.container.contains(element)) {
         this.container.removeChild(element);

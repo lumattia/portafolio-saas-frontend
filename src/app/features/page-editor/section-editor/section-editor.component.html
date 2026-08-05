@@ -8,7 +8,7 @@
 
   <div class="editor-content">
       <ng-container
-         *ngComponentOutlet="editorMap[componentSelector]; inputs: { section: section, onDelete: onSetDeleteState}"
+         *ngComponentOutlet="editorMap[componentSelector]; inputs: { section: section(), onDelete: onSetDeleteState()}"
       ></ng-container>
   </div>
 </div>

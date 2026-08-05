@@ -92,3 +92,6 @@
   font-size: 0.75rem;
   color: var(--error);
 }
+input{
+  width:100%;
+}

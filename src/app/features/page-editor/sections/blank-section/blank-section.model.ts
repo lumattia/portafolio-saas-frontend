@@ -25,30 +25,19 @@ export function createDefaultBlankSectionContent(partial?: BlankSectionContent):
 }
 
 export const HEIGHT_UNIT_RANGES: Record<HeightUnit, { min: number; max: number }> = {
-  'px': { min: 0, max: 5000 },
-  'rem': { min: 0, max: 100 },
-  'em': { min: 0, max: 100 },
-  '%': { min: 0, max: 100 },
-  'vh': { min: 0, max: 100 },
+  'px': { min: 1, max: 5000 },
+  'rem': { min: 1, max: 100 },
+  'em': { min: 1, max: 100 },
+  '%': { min: 1, max: 100 },
+  'vh': { min: 1, max: 100 },
   'auto': { min: 0, max: 0 }
 };
 
 export const WIDTH_UNIT_RANGES: Record<WidthUnit, { min: number; max: number }> = {
-  'px': { min: 0, max: 5000 },
-  'rem': { min: 0, max: 100 },
-  'em': { min: 0, max: 100 },
-  '%': { min: 0, max: 100 },
-  'vw': { min: 0, max: 100 },
+  'px': { min: 1, max: 5000 },
+  'rem': { min: 1, max: 100 },
+  'em': { min: 1, max: 100 },
+  '%': { min: 1, max: 100 },
+  'vw': { min: 1, max: 100 },
   'auto': { min: 0, max: 0 }
 };
-
-export function clampValue(value: number, unit: string): number {
-  const heightRange = HEIGHT_UNIT_RANGES[unit as HeightUnit];
-  const widthRange = WIDTH_UNIT_RANGES[unit as WidthUnit];
-  const range = heightRange || widthRange;
-
-  if (unit === 'auto') return 0;
-  if (!range) return value;
-
-  return Math.max(range.min, Math.min(range.max, value));
-}

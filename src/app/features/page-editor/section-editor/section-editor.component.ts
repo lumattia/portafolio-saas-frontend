@@ -15,15 +15,14 @@ import { SectionRenderer } from '../../../core/models/page.model';
 export class SectionEditorComponent {
   close!: () => void;
   dismiss!: (reason?: any) => void;
-
-  section : SectionRenderer = {} as SectionRenderer;
-  onSetDeleteState!: () => void;
+  section = input.required<SectionRenderer>();
+  onSetDeleteState = input.required<() => void>();
   readonly editorMap = EDITOR_COMPONENT_MAP;
 
   get componentSelector(): string {
-    return this.section.componentSelector;
+    return this.section().componentSelector;
   }
   get isDeleted() {
-    return this.section.isDeleted;
+    return this.section().isDeleted;
   }
 }

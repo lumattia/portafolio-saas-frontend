@@ -5,16 +5,17 @@
     <div class="style-field">
         <label>Height</label>
         <div class="dimension-inputs">
-          <input
-            type="number"
+          <app-number-input
             [value]="heightValue"
-            (input)="onDimensionChange('height', 'value', $event.target.value, $event)"
-            class="dimension-number-input"
+            (valueChange)="onContentChange('styles.height.value', $event);dispatch()"
+            [min]="getUnitRange(content.styles.height.unit, 'height').min"
+            [max]="getUnitRange(content.styles.height.unit, 'height').max"
+            [autoClamp]="true"
           />
           <app-select-input
             [options]="heightUnitOptions"
             [value]="content.styles.height.unit"
-            (valueChange)="onDimensionChange('height', 'unit', $event)"
+            (valueChange)="onDimensionChange('height', $event)"
             [showClearButton]="false"
             [showSearch]="false"
           />
@@ -26,16 +27,17 @@
       <div class="style-field">
         <label>Width</label>
         <div class="dimension-inputs">
-          <input
-            type="number"
+          <app-number-input
             [value]="widthValue"
-            (input)="onDimensionChange('width', 'value', $event.target.value, $event)"
-            class="dimension-number-input"
+            (valueChange)="onContentChange('styles.width.value', $event);dispatch()"
+            [min]="getUnitRange(content.styles.width.unit, 'width').min"
+            [max]="getUnitRange(content.styles.width.unit, 'width').max"
+            [autoClamp]="true"
           />
           <app-select-input
             [options]="widthUnitOptions"
             [value]="content.styles.width.unit"
-            (valueChange)="onDimensionChange('width', 'unit', $event)"
+            (valueChange)="onDimensionChange('width',  $event)"
             [showClearButton]="false"
             [showSearch]="false"
           />

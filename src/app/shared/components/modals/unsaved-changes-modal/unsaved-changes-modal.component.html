@@ -8,8 +8,8 @@
       <p>{{ 'unsavedChanges.message' | translate }}</p>
     </div>
     <div class="modal-footer">
-      <app-button variant="secondary" (click)="onLeaveClick()">{{ 'unsavedChanges.leave' | translate }}</app-button>
-      <app-button (click)="onStayClick()">{{ 'unsavedChanges.stay' | translate }}</app-button>
+      <app-button variant="secondary" (onClick)="onLeaveClick()">{{ 'unsavedChanges.leave' | translate }}</app-button>
+      <app-button (onClick)="onStayClick()">{{ 'unsavedChanges.stay' | translate }}</app-button>
     </div>
   </div>
 </div>
