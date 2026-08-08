@@ -21,11 +21,6 @@ export interface PagedList<T> {
   hasPrevious: boolean;
   hasNext: boolean;
 }
-export interface FileInfoRequest {
-  base64: string;
-  fileName: string;
-  contentType: string;
-}
 export interface FileInfoResponse {
   url: string;
   fileName: string;

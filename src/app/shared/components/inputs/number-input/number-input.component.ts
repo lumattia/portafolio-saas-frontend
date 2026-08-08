@@ -231,7 +231,6 @@ private stepBy(direction: number): void {
 
     this.value = finalValue;
     this.valueChange.emit(finalValue ?? undefined);
-
     if (this.control?.value !== finalValue) {
       this.control?.setValue(this.lastValidRawString, { emitEvent: false });
     }

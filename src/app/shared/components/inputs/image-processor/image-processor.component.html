@@ -6,7 +6,7 @@
   </div>
     <div class="cropper-container">
       <image-cropper
-        [imageBase64]="imageBase64Signal()"
+        [imageFile]="imageFile"
         [maintainAspectRatio]="!!fixedAspectRatio"
         [aspectRatio]="fixedAspectRatio"
         (cropperChange)="onCropChange($event)"
@@ -16,7 +16,7 @@
         [onlyScaleDown]="true"
         [resizeToWidth]="cropWidth()"
         [resizeToHeight]="cropHeight()"
-        output="base64"
+        output="blob"
         >
       </image-cropper>
     </div>
@@ -34,7 +34,7 @@
 
         <app-number-input
           [value]="cropWidth()"
-          (valueChange)="imageCropper.crop()"
+          (valueChange)="cropWidth.set($event || 1)"
           [max]="maxWidth"
           [min]="1"
           [autoClamp]="true"
@@ -44,7 +44,7 @@
         <label>Max Height (px)</label>
         <app-number-input
           [value]="cropHeight()"
-          (valueChange)="imageCropper.crop()"
+          (valueChange)="cropHeight.set($event || 1)"
           [max]="maxHeight"
           [min]="1"
           [autoClamp]="true"
@@ -52,7 +52,7 @@
       </div>
       <div class="input-group">
         <label>{{'shared.imageInput.finalQuality' | translate:{quality: (quality())} }}</label>
-        <input type="range" [ngModel]="quality()" (change)="imageCropper.crop()" (ngModelChange)="quality.set($event)" min="1" max="100" step="1">
+        <input type="range" [ngModel]="quality()" (ngModelChange)="quality.set($event)" min="1" max="100" step="1">
       </div>
     </div>
 
@@ -62,8 +62,15 @@
     <div class="info-item" [class.error]="!isFileSizeValid()">
       <span class="label">{{ `Result size: ${(this.resultFileSizeKB() / 1024).toFixed(2)}MB (max: ${(this.maxFileSizeKB / 1024).toFixed(2)}MB)` }}</span>
     </div>
+    @if (resultImageSize(); as size) {
+    <div class="info-item">
+      <span class="label">
+        W x H: {{ size.width }} × {{ size.height }}
+      </span>
+    </div>
+  }
       <div class="preview-info">
-        <img [src]="resultBase64()">
+        <img [src]="safeUrl()">
       </div>
     </div>
 

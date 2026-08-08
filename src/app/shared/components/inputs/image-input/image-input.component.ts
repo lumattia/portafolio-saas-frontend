@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { ImageProcessorComponent } from '../image-processor/image-processor.component';
 import { TranslatePipe } from '@ngx-translate/core';
 import { GenericErrorModalComponent } from '../../modals/generic-error-modal/generic-error-modal.component';
-import { FileInfoRequest } from '../../../../core/models/common.models';
 import { ModalService } from '../../../../core/services/modal.service';
 
 @Component({
@@ -28,11 +27,11 @@ export class ImageInputComponent implements OnInit {
   @Input() fixedAspectRatio?: number;
 
   @Input() readonly: boolean = false;
-  @Output() fileChanged = new EventEmitter<FileInfoRequest>();
+  @Output() fileChanged = new EventEmitter<File>();
 
   previewUrl = signal<string | undefined>(undefined);
   currentFileName = signal<string>('');
-  rawImageSource = signal<string>('');
+  rawImageFile = signal<File | null>(null);
   format = signal<'png' | 'jpeg' | 'bmp' | 'webp' | 'ico'>('webp');
 
   ngOnInit() {
@@ -55,7 +54,7 @@ export class ImageInputComponent implements OnInit {
     event.stopPropagation();
     if (this.readonly) return;
     if (this.previewUrl()) {
-      if (!this.rawImageSource() && this.existingImageUrl) {
+      if (!this.rawImageFile() && this.existingImageUrl) {
         const downloaded = await this.downloadRemoteImage();
         if (!downloaded) return;
       }
@@ -72,12 +71,8 @@ export class ImageInputComponent implements OnInit {
       this.extractFormatFromMime(file.type)
 
       this.currentFileName.set(file.name);
-      const reader = new FileReader();
-      reader.onload = (e: any) => {
-        this.rawImageSource.set(e.target.result);
-        this.openProcessorModal();
-      };
-      reader.readAsDataURL(file);
+      this.rawImageFile.set(file);
+      this.openProcessorModal();
     }
     event.target.value = '';
   }
@@ -87,14 +82,9 @@ export class ImageInputComponent implements OnInit {
       const response = await fetch(this.existingImageUrl!);
       const blob = await response.blob();
       this.extractFormatFromMime(blob.type);
-      return new Promise<boolean>((resolve) => {
-        const reader = new FileReader();
-        reader.onload = (e: any) => {
-          this.rawImageSource.set(e.target.result);
-          resolve(true);
-        };
-        reader.readAsDataURL(blob);
-      });
+      const file = new File([blob], this.currentFileName() || 'image', { type: blob.type });
+      this.rawImageFile.set(file);
+      return true;
     } catch (error) {
       const modalRef = this.modalService.open(GenericErrorModalComponent, {
         title: 'shared.imageInput.downloadErrorTitle',
@@ -111,7 +101,7 @@ export class ImageInputComponent implements OnInit {
 
   private openProcessorModal() {
     const modalRef = this.modalService.open(ImageProcessorComponent, {
-      imageBase64: this.rawImageSource(),
+      imageFile: this.rawImageFile(),
       originalFormat: this.format(),
       maxWidth: this.maxWidth,
       maxHeight: this.maxHeight,
@@ -126,33 +116,18 @@ export class ImageInputComponent implements OnInit {
       if (result.data === null) {
         // Eliminó la imagen
         this.previewUrl.set(undefined);
-        this.rawImageSource.set('');
+        this.rawImageFile.set(null);
         this.format.set('webp');
         this.currentFileName.set('');
-        const emptyFile: FileInfoRequest = {
-          base64: '',
-          fileName: 'delete.txt',
-          contentType: 'text/plain'
-        };
-        this.fileChanged.emit(emptyFile);
+        this.fileChanged.emit(new File([], 'delete'));
       } else {
-        // Modificó/recortó la imagen
-        this.previewUrl.set(result.data);
-        const finalFile = this.base64ToFile(result.data);
-        this.fileChanged.emit(finalFile);
+        // Modificó/recortó la imagen - result is now a File
+        const file = result.data as File;
+        this.previewUrl.set(URL.createObjectURL(file));
+        this.currentFileName.set(file.name);
+        this.fileChanged.emit(file);
       }
     });
-  }
-  private base64ToFile(base64Data: string): FileInfoRequest {
-    const arr = base64Data.split(',');
-    const mimeMatch = arr[0].match(/:(.*?);/);
-    const contentType = mimeMatch ? mimeMatch[1] : 'image/jpeg';
-
-    return {
-      base64: base64Data,
-      fileName: this.currentFileName(),
-      contentType: contentType
-    };
   }
   private extractFormatFromMime(mimeType: string) {
     if (mimeType.includes('jpeg') || mimeType.includes('jpg')) {

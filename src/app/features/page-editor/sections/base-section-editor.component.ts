@@ -1,6 +1,5 @@
 import { Directive, input } from '@angular/core';
 import { SectionRenderer } from '../../../core/models/page.model';
-import { FileInfoRequest } from '../../../core/models/common.models';
 
 @Directive()
 export abstract class BaseSectionEditorComponent {
@@ -8,8 +7,8 @@ export abstract class BaseSectionEditorComponent {
   onDelete = input<() => void>();
   abstract get content(): any;
   get imageUrl(){
-    const req = this.section().fileRequest;
-    if (req?.base64 != null) return req.base64;
+    const req = this.section().imageUrl;
+    if (req != null) return req;
 
     const file = this.section().file;
     if (file?.url) return file.url;
@@ -35,7 +34,8 @@ export abstract class BaseSectionEditorComponent {
 
     this.section().contentJson = newContent;
   }
-   onFileChange(fileRequest: FileInfoRequest): void {
-    this.section().fileRequest = fileRequest;
+   onFileChange(file: File): void {
+    this.section().fileRequest = file;
+    this.section().imageUrl = file.size > 0 ? URL.createObjectURL(file) : '';
   }
 }

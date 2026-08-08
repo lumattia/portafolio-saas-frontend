@@ -42,7 +42,7 @@ export class BlankSectionRenderComponent extends BaseSectionRendererComponent{
 
   private updateParentFlexStyle(): void {
     const parentElement = this.elementRef.nativeElement.parentElement;
-    if (parentElement && parentElement.classList.contains('section-renderer')) {
+    if (parentElement && parentElement.classList.contains('renderer')) {
       // Read directly from section().contentJson to get the latest values
       const width = this.content.styles.width;
       const height = this.content.styles.height;

@@ -6,13 +6,14 @@ export type ViewMode = 'admin' | 'snapshot' | null;
 @Injectable({ providedIn: 'root' })
 export class ViewModeService {
   private readonly auth = inject(AuthService);
-  
+
   readonly viewMode = signal<ViewMode>(this.loadStoredViewMode());
 
   constructor() {
   }
 
   private loadStoredViewMode(): ViewMode {
+    if (!this.auth.user()) return null;
     const stored = localStorage.getItem('viewMode');
     if (stored === 'admin' || stored === 'snapshot') {
       return stored;

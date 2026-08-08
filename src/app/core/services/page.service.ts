@@ -8,17 +8,25 @@ import { PageRenderer, PageRequest } from '../models/page.model';
 export class PageService {
   private readonly http = inject(HttpClient);
   private readonly apiUrl = `${environment.apiUrl}/admin/pages`;
-  
+
   getByIdentifier(identifier?: string): Observable<PageRenderer> {
     return this.http.get<PageRenderer>(`${this.apiUrl}/${identifier}`);
   }
 
-  create(request: PageRequest): Observable<PageRenderer> {
+create(request: PageRequest): Observable<PageRenderer> {
     return this.http.post<PageRenderer>(this.apiUrl, request);
-  }
-
+}
   update(id: string, request: PageRequest): Observable<PageRenderer> {
-    return this.http.put<PageRenderer>(`${this.apiUrl}/${id}`, request);
+    const formData = new FormData();
+    formData.append('json', JSON.stringify(request));
+    request.sections?.forEach(s => {
+      if (s.file) formData.append(`file_${s.id}`, s.file);
+    });
+    formData.forEach((value, key) => {
+  console.log(`${key}:`, value);
+});
+
+    return this.http.put<PageRenderer>(`${this.apiUrl}/${id}`, formData);
   }
 
   delete(id: string): Observable<void> {

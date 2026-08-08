@@ -1,4 +1,4 @@
-import { FileInfoRequest, FileInfoResponse } from "./common.models";
+import { FileInfoResponse } from "./common.models";
 
 export interface PageRequest {
   id?: string;
@@ -12,7 +12,7 @@ export interface SectionRequest {
   id: string;
   sectionTemplateId?: string;
   contentJson: any;
-  file?: FileInfoRequest;
+  file?: File;
   isEnabled: boolean;
   isDeleted: boolean;
   order:number;
@@ -24,7 +24,6 @@ export interface PageRenderer {
   title: string;
   slug: string;
   metaDescription: string;
-  isHomePage: boolean;
   isEnabled: boolean;
   isDeleted: boolean;
   sections: SectionRenderer[];
@@ -42,5 +41,6 @@ export interface SectionRenderer {
   subSections: SectionRenderer[];
   subSectionIndex?: number;
   file?: FileInfoResponse;
-  fileRequest?: FileInfoRequest;
+  fileRequest?: File;
+  imageUrl?: string;
 }
