@@ -1,51 +1,20 @@
 <div class="section-editor-content">
-  <div class="info-message">
-      <p>The dashed border helps you identify this blank section while editing. It won't be visible to visitors.</p>
-    </div>
-    <div class="style-field">
-        <label>Height</label>
-        <div class="dimension-inputs">
-          <app-number-input
-            [value]="heightValue"
-            (valueChange)="onContentChange('styles.height.value', $event);dispatch()"
-            [min]="getUnitRange(content.styles.height.unit, 'height').min"
-            [max]="getUnitRange(content.styles.height.unit, 'height').max"
-            [autoClamp]="true"
-          />
-          <app-select-input
-            [options]="heightUnitOptions"
-            [value]="content.styles.height.unit"
-            (valueChange)="onDimensionChange('height', $event)"
-            [showClearButton]="false"
-            [showSearch]="false"
-          />
-          <span class="range-hint">
-            {{ getUnitRange(content.styles.height.unit, 'height').min }} - {{ getUnitRange(content.styles.height.unit, 'height').max }}
-          </span>
-        </div>
-      </div>
-      <div class="style-field">
-        <label>Width</label>
-        <div class="dimension-inputs">
-          <app-number-input
-            [value]="widthValue"
-            (valueChange)="onContentChange('styles.width.value', $event);dispatch()"
-            [min]="getUnitRange(content.styles.width.unit, 'width').min"
-            [max]="getUnitRange(content.styles.width.unit, 'width').max"
-            [autoClamp]="true"
-          />
-          <app-select-input
-            [options]="widthUnitOptions"
-            [value]="content.styles.width.unit"
-            (valueChange)="onDimensionChange('width',  $event)"
-            [showClearButton]="false"
-            [showSearch]="false"
-          />
-          <span class="range-hint">
-            {{ getUnitRange(content.styles.width.unit, 'width').min }} - {{ getUnitRange(content.styles.width.unit, 'width').max }}
-          </span>
-        </div>
-      </div>
+  <app-dimension-input
+    dimensionType="height"
+    [label]="'Height'"
+    [(value)]="content.styles.height.value"
+    [(unit)]="content.styles.height.unit"
+    [autoClamp]="true"
+    [sectionId]="section().id"
+  />
+  <app-dimension-input
+    dimensionType="width"
+    [label]="'Width'"
+    [(value)]="content.styles.width.value"
+    [(unit)]="content.styles.width.unit"
+    [autoClamp]="true"
+    [sectionId]="section().id"
+  />
   <app-button variant="danger" size="sm" (onClick)="deleteSection()">
     @if (section().isDeleted) { Undo } @else { Delete Section }
   </app-button>

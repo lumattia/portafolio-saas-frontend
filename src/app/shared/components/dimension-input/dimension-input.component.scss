@@ -1,0 +1,22 @@
+.dimension-input {
+  margin-bottom: 1rem;
+  
+  label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: #374151;
+    
+    .range-display {
+      font-size: 0.85em;
+      color: #6b7280;
+      font-weight: 400;
+    }
+  }
+  
+  .dimension-inputs {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+  }
+}

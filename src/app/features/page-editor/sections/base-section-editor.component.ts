@@ -1,19 +1,15 @@
 import { Directive, input } from '@angular/core';
 import { SectionRenderer } from '../../../core/models/page.model';
+import { BaseSectionComponent, BaseSectionContent } from './base-section.component';
 
 @Directive()
-export abstract class BaseSectionEditorComponent {
-  section = input.required<SectionRenderer>();
+export abstract class BaseSectionEditorComponent<T extends BaseSectionContent = BaseSectionContent> extends BaseSectionComponent<T> {
+  override section = input.required<SectionRenderer>();
   onDelete = input<() => void>();
-  abstract get content(): any;
-  get imageUrl(){
-    const req = this.section().imageUrl;
-    if (req != null) return req;
+  get content(): T {
+    return this.section().contentJson as T;
+  }
 
-    const file = this.section().file;
-    if (file?.url) return file.url;
-    return undefined;
-  };
   deleteSection(): void {
     this.onDelete()?.();
   }
@@ -33,7 +29,8 @@ export abstract class BaseSectionEditorComponent {
     current[keys[keys.length - 1]] = value ?? '';
     section.contentJson = newContent;
   }
-   onFileChange(file: File): void {
+
+  onFileChange(file: File): void {
     this.section().fileRequest = file;
     this.section().imageUrl = file.size > 0 ? URL.createObjectURL(file) : '';
   }

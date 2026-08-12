@@ -1,6 +1,6 @@
 import { Component, computed, forwardRef, inject, input, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { CarouselSectionContent, createDefaultCarouselSectionContent } from './carousel-section.model';
+import { DEFAULT_CAROUSEL_SECTION_CONTENT, CarouselSectionContent } from './carousel-section.model';
 import { SectionRendererComponent } from '../../section-renderer/section-renderer.component';
 import { BaseContainerRendererComponent } from '../base-container-renderer.component';
 import { SectionRenderer } from '../../../../core/models/page.model';
@@ -13,9 +13,8 @@ import { SectionRenderer } from '../../../../core/models/page.model';
   styleUrls: ['./carousel-section-render.component.scss'],
 })
 export class CarouselSectionRenderComponent extends BaseContainerRendererComponent {
-  get content(): CarouselSectionContent {
-    return createDefaultCarouselSectionContent(this.section()!.contentJson);
-  }
+  override readonly defaultContent = DEFAULT_CAROUSEL_SECTION_CONTENT;
+
   get currentSlideIndex(): number{
     return this.section().subSectionIndex??0;
   }

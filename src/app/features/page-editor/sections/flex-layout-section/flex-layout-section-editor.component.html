@@ -7,8 +7,7 @@
    <div class="style-field">
         <label>Gap (px)</label>
         <app-number-input
-        [value]="content.styles.gap"
-        (valueChange)="onContentChange('styles.gap', $event)"
+        [(value)]="content.styles.gap"
         [min]="0"
         ></app-number-input>
       </div>
@@ -16,8 +15,7 @@
         <label>Justify Content</label>
         <app-select-input
         [options]="justifyContentOption"
-        [value]="content.styles.justifyContent"
-        (valueChange)="onContentChange('styles.justifyContent', $event)"
+        [(value)]="content.styles.justifyContent"
         [showClearButton]="false"
         [showSearch]="false"
         >
@@ -27,8 +25,7 @@
         <label>Align Items</label>
         <app-select-input
         [options]="alignItemsOption"
-        [value]="content.styles.alignItems"
-        (valueChange)="onContentChange('styles.alignItems', $event)"
+        [(value)]="content.styles.alignItems"
         [showClearButton]="false"
         [showSearch]="false"
         >

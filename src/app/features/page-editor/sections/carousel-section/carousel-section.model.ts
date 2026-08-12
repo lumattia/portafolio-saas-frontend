@@ -1,14 +1,18 @@
-export interface CarouselSectionContent {
+import { BaseSectionContent } from '../base-section.component';
+import { DimensionValue, HeightUnit, WidthUnit } from '../dimension.model';
+
+export interface CarouselSectionContent extends BaseSectionContent {
   inputs: {};
   styles: {
-    height: number;
+    width: DimensionValue<WidthUnit>;
+    height: DimensionValue<HeightUnit>;
   };
 }
-export function createDefaultCarouselSectionContent(partial?: CarouselSectionContent): CarouselSectionContent {
-  return {
-    inputs: partial?.inputs ?? {},
-    styles: {
-      height: partial?.styles?.height ?? 300
-    }
-  };
-}
+
+export const DEFAULT_CAROUSEL_SECTION_CONTENT: CarouselSectionContent = {
+  inputs: {},
+  styles: {
+    width: { value: 100, unit: '%' },
+    height: { value: 300, unit: 'px' }
+  }
+};

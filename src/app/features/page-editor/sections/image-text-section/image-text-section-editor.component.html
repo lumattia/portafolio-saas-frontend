@@ -14,26 +14,31 @@
     <div class="field-group">
       <label>Text</label>
       <app-rich-text-input
-        [value]="content.inputs.text"
-        (valueChange)="onContentChange('inputs.text', $event)"
+        [(value)]="content.inputs.text"
         placeholder="Enter text..."
       />
     </div>
     <app-collapsible
-      [(checked)]="showStylePanel"
       label="Style"
     >
       <div class="style-field">
         <label>Image Position</label>
         <app-select-input
         [options]="[{id: 'top-left',name: 'Top-left'},{id: 'top-right',name: 'Top-right'}]"
-        [value]="content.styles.imagePosition"
-        (valueChange)="onContentChange('styles.imagePosition', $event)"
+        [(value)]="content.styles.imagePosition"
         [showClearButton]="false"
         [showSearch]="false"
         >
         </app-select-input>
       </div>
+      <app-dimension-input
+        dimensionType="width"
+        [label]="'Width'"
+        [(value)]="content.styles.width.value"
+        [(unit)]="content.styles.width.unit"
+        [autoClamp]="true"
+        [sectionId]="section().id"
+      />
     </app-collapsible>
   }
   <app-button variant="danger" size="sm" (onClick)="deleteSection()">

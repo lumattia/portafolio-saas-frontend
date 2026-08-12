@@ -1,12 +1,15 @@
-export interface ImageSectionContent {
+import { BaseSectionContent } from '../base-section.component';
+import { DimensionValue, WidthUnit } from '../dimension.model';
+
+export interface ImageSectionContent extends BaseSectionContent {
   inputs: {
   };
-  styles: {};
-}
-export function createDefaultImageSectionContent(partial?: ImageSectionContent): ImageSectionContent {
-  return {
-    inputs: {
-    },
-    styles: partial?.styles ?? {}
+  styles: {
+    width: DimensionValue<WidthUnit>;
   };
 }
+
+export const DEFAULT_IMAGE_SECTION_CONTENT: ImageSectionContent = {
+  inputs: {},
+  styles: { width: { value: 100, unit: '%' } }
+};

@@ -2,7 +2,7 @@ import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ButtonComponent } from '../../../../shared/components/button/button.component';
-import { createDefaultFlexLayoutSectionContent, FlexLayoutSectionContent } from './flex-layout-section.model';
+import { FlexLayoutSectionContent } from './flex-layout-section.model';
 import { BaseContainerEditorComponent } from '../base-container-editor.component';
 import { CollapsibleComponent } from '../../../../shared/components/collapsible/collapsible.component';
 import { SelectInputComponent } from "../../../../shared/components/inputs/select-input/select-input.component";
@@ -17,7 +17,7 @@ import { SubsectionSelectorComponent } from "../../subsection-selector/subsectio
   templateUrl: './flex-layout-section-editor.component.html',
   styleUrls: ['./flex-layout-section-editor.component.scss'],
 })
-export class FlexLayoutSectionEditorComponent  extends BaseContainerEditorComponent {
+export class FlexLayoutSectionEditorComponent  extends BaseContainerEditorComponent<FlexLayoutSectionContent> {
   readonly showStylePanel = signal(false);
   justifyContentOption: IdName[] = [
     {id:'flex-start', name:'Flex Start'},
@@ -33,7 +33,4 @@ export class FlexLayoutSectionEditorComponent  extends BaseContainerEditorCompon
     {id:'flex-end',name:'Flex End'},
     {id:'stretch',name:'Stretch'},
   ]
-  get content(): FlexLayoutSectionContent {
-    return createDefaultFlexLayoutSectionContent(this.section()!.contentJson);
-  }
 }

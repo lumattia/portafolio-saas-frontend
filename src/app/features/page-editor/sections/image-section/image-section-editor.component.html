@@ -11,6 +11,14 @@
             (fileChanged)="onFileChange($event)"
           />
     </div>
+    <app-dimension-input
+      dimensionType="width"
+      [label]="'Width'"
+      [(value)]="content.styles.width.value"
+      [(unit)]="content.styles.width.unit"
+      [autoClamp]="true"
+      [sectionId]="section().id"
+    />
   }
   <app-button variant="danger" size="sm" (onClick)="deleteSection()">
     @if (section().isDeleted) { Undo } @else { Delete Section }

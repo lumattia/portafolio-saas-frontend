@@ -1,19 +1,22 @@
-export interface ImageTextSectionContent {
+import { BaseSectionContent } from '../base-section.component';
+import { DimensionValue, WidthUnit } from '../dimension.model';
+
+export interface ImageTextSectionContent extends BaseSectionContent {
   inputs: {
     text: string;
   };
   styles: {
     imagePosition: 'top-left' | 'top-right';
+    width: DimensionValue<WidthUnit>;
   };
 }
 
-export function createDefaultImageTextSectionContent(partial?: ImageTextSectionContent): ImageTextSectionContent {
-  return {
-    inputs: {
-      text: partial?.inputs?.text ?? '',
-    },
-    styles: {
-      imagePosition: partial?.styles?.imagePosition ?? 'top-left',
-    }
-  };
-}
+export const DEFAULT_IMAGE_TEXT_SECTION_CONTENT: ImageTextSectionContent = {
+  inputs: {
+    text: '',
+  },
+  styles: {
+    imagePosition: 'top-left',
+    width: { value: 100, unit: '%' },
+  }
+};

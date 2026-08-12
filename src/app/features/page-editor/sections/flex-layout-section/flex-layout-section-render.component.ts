@@ -1,6 +1,6 @@
 import { Component, forwardRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { createDefaultFlexLayoutSectionContent, FlexLayoutSectionContent } from './flex-layout-section.model';
+import { DEFAULT_FLEX_LAYOUT_SECTION_CONTENT, FlexLayoutSectionContent } from './flex-layout-section.model';
 import { BaseContainerRendererComponent } from '../base-container-renderer.component';
 import { SectionRendererComponent } from "../../section-renderer/section-renderer.component";
 
@@ -12,9 +12,7 @@ import { SectionRendererComponent } from "../../section-renderer/section-rendere
   styleUrls: ['./flex-layout-section-render.component.scss'],
 })
 export class FlexLayoutSectionRenderComponent  extends BaseContainerRendererComponent{
-  get content(): FlexLayoutSectionContent {
-    return createDefaultFlexLayoutSectionContent(this.section()!.contentJson);
-  }
+  override readonly defaultContent = DEFAULT_FLEX_LAYOUT_SECTION_CONTENT;
 
   get containerStyle(): { [key: string]: string } {
     return {

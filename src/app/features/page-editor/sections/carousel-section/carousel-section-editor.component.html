@@ -3,15 +3,21 @@
   <app-collapsible
         label="Style"
       >
-    <div class="style-field">
-        <label>Height</label>
-        <app-number-input
-          [value]="content.styles.height"
-          (valueChange)="onContentChange('styles.height', $event)"
-          [min]="0"
-          [max]="1000"
-        />
-      </div>
+          <app-dimension-input
+      dimensionType="width"
+      [label]="'Width'"
+      [(value)]="content.styles.width.value"
+      [(unit)]="content.styles.width.unit"
+      [autoClamp]="true"
+      [sectionId]="section().id"
+    />
+    <app-dimension-input
+      dimensionType="height"
+      [label]="'Height'"
+      [(value)]="content.styles.height.value"
+      [(unit)]="content.styles.height.unit"
+      [autoClamp]="true"
+    />
     </app-collapsible>
 
   <app-button variant="danger" size="sm" (onClick)="deleteSection()">

@@ -1,14 +1,18 @@
-export interface RichTextSectionContent {
+import { BaseSectionContent } from '../base-section.component';
+import { DimensionValue, WidthUnit } from '../dimension.model';
+
+export interface RichTextSectionContent extends BaseSectionContent {
   inputs: {
     text: string;
   };
-  styles: {};
-}
-export function createDefaultRichTextSectionContent(partial?: RichTextSectionContent): RichTextSectionContent {
-  return {
-    inputs: {
-      text: partial?.inputs?.text ?? '',
-    },
-    styles: partial?.styles ?? {},
+  styles: {
+    width: DimensionValue<WidthUnit>;
   };
 }
+
+export const DEFAULT_RICH_TEXT_SECTION_CONTENT: RichTextSectionContent = {
+  inputs: {
+    text: '',
+  },
+  styles: { width: { value: 100, unit: '%' } },
+};

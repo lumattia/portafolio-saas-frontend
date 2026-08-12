@@ -1,0 +1,19 @@
+<div class="dimension-input" *ngIf="visible()">
+  <label>{{ displayLabel() }} <span class="range-display">({{ rangeDisplay() }})</span></label>
+  <div class="dimension-inputs">
+    <app-number-input
+      [value]="value()"
+      (valueChange)="onValueChange($event)"
+      [min]="currentMin()"
+      [max]="currentMax()"
+      [autoClamp]="autoClamp()"
+    />
+    <app-select-input
+      [options]="unitOptions()"
+      [value]="unit()"
+      (valueChange)="onUnitChange($event)"
+      [showClearButton]="false"
+      [showSearch]="false"
+    />
+  </div>
+</div>
