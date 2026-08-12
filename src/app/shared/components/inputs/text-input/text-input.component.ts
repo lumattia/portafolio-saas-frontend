@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, WritableSignal } from '@angular/core';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
 
@@ -14,6 +14,7 @@ export class TextInputComponent implements OnInit {
   @Input() placeholderKey = '';
   @Input() control: FormControl | null = null;
   @Input() value: any = null;
+  @Input() signal?: WritableSignal<string>;
   @Input() type = 'text';
   @Input() required = false;
   @Input() disabled = false;
@@ -41,8 +42,9 @@ export class TextInputComponent implements OnInit {
       if (this.pattern) {
         validators.push(Validators.pattern(this.pattern));
       }
-      
-      this.control = new FormControl(this.value, validators);
+
+      const initialValue = this.signal ? this.signal() : this.value;
+      this.control = new FormControl(initialValue, validators);
     }
   }
 
@@ -67,15 +69,15 @@ export class TextInputComponent implements OnInit {
     }
     if (this.control.hasError('minlength')) {
       const errorDetails = this.control.getError('minlength');
-      return { 
-        key: this.errorKey || 'validation.minLength', 
+      return {
+        key: this.errorKey || 'validation.minLength',
         params: { minLength: errorDetails.requiredLength }
       };
     }
     if (this.control.hasError('maxlength')) {
       const errorDetails = this.control.getError('maxlength');
-      return { 
-        key: this.errorKey || 'validation.maxLength', 
+      return {
+        key: this.errorKey || 'validation.maxLength',
         params: { maxLength: errorDetails.requiredLength }
       };
     }
@@ -94,6 +96,11 @@ export class TextInputComponent implements OnInit {
     const newValue = input.value;
     this.control!.setValue(newValue);
     this.value = newValue;
+
+    if (this.signal) {
+      this.signal.set(newValue);
+    }
+
     this.valueChange.emit(newValue);
   }
 }

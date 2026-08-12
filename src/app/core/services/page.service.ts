@@ -22,9 +22,6 @@ create(request: PageRequest): Observable<PageRenderer> {
     request.sections?.forEach(s => {
       if (s.file) formData.append(`file_${s.id}`, s.file);
     });
-    formData.forEach((value, key) => {
-  console.log(`${key}:`, value);
-});
 
     return this.http.put<PageRenderer>(`${this.apiUrl}/${id}`, formData);
   }

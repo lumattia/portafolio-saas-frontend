@@ -1,4 +1,4 @@
-.footer-menu-editor {
+.menu-editor {
   background: var(--surface-color);
   padding: 1.5rem;
   min-height: 100vh;
@@ -22,24 +22,24 @@
       align-items: center;
     }
   }
-  
+
   .loading {
     padding: 1rem;
     color: var(--text-secondary-color);
   }
-  
+
   .menu-tree {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
     margin-bottom: 1rem;
   }
-  
+
   .menu-item-wrapper {
     display: flex;
     flex-direction: column;
   }
-  
+
   .menu-item {
     display: flex;
     justify-content: space-between;
@@ -50,26 +50,26 @@
     border: 1px solid rgba(0, 0, 0, 0.1);
     border-radius: 4px;
   }
-  
+
   .menu-item-content {
     display: flex;
     align-items: center;
     gap: 0.5rem;
     flex: 1;
   }
-  
+
   .expand-button {
     transition: transform 0.2s ease;
-    
+
     &.expanded {
       transform: rotate(90deg);
     }
   }
-  
+
   .menu-text {
     font-weight: 500;
   }
-  
+
   .menu-url {
     color: var(--text-secondary-color);
     font-size: 0.875rem;
@@ -79,90 +79,45 @@
       color: var(--text-disabled)
     }
   }
-  
+
   .menu-actions {
     display: flex;
     gap: 0.25rem;
   }
-  
+
   .submenu {
     margin-left: 1.5rem;
     margin-top: 0.5rem;
     display: flex;
     flex-direction: column;
     gap: 0.25rem;
-    
+
     .menu-item {
       padding: 0.5rem 0.75rem;
       background: rgba(0, 0, 0, 0.02);
     }
   }
-  
+
   .add-section {
     margin-top: 1rem;
   }
-  
-  .modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 1000;
-  }
-  
-  .modal {
-    background: var(--surface-color);
-    border-radius: 8px;
-    padding: 1.5rem;
-    min-width: 400px;
-    max-width: 90vw;
-  }
-  
-  .modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1rem;
-    
-    h3 {
-      margin: 0;
-    }
-  }
-  
-  .modal-body {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    margin-bottom: 1rem;
-  }
-  
+
   .form-group {
     display: flex;
     flex-direction: column;
     gap: 0.25rem;
-    
+
     label {
       font-weight: 500;
       font-size: 0.875rem;
     }
-    
+
     input {
       padding: 0.5rem;
       border: 1px solid rgba(0, 0, 0, 0.1);
       border-radius: 4px;
       font-size: 1rem;
     }
-  }
-  
-  .modal-footer {
-    display: flex;
-    gap: 0.5rem;
-    justify-content: flex-end;
   }
 
   /* New styles for collapsible sections */
@@ -202,4 +157,37 @@
     flex-direction: column;
     gap: 0.5rem;
   }
+}
+
+/* Global styles for modal when used with TemplateRef */
+.modal {
+  background: var(--surface-color);
+  border-radius: 8px;
+  padding: 1.5rem;
+  min-width: 400px;
+  max-width: 90vw;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+
+  h3 {
+    margin: 0;
+  }
+}
+
+.modal-body {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.modal-footer {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-end;
 }

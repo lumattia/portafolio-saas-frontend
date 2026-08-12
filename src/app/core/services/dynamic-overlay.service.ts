@@ -1,11 +1,7 @@
-import { Injectable, ComponentRef, ApplicationRef, EnvironmentInjector, createComponent, Type } from '@angular/core';
-
-export interface OverlayConfig {
-  [key: string]: any;
-}
+import { Injectable, ComponentRef, ApplicationRef, EnvironmentInjector, createComponent, Type, TemplateRef, EmbeddedViewRef } from '@angular/core';
 
 export interface OverlayRef<T> {
-  componentInstance: T;
+  componentInstance: any;
   result: Promise<any>;
   close: (result?: any) => void;
   dismiss: (reason?: any) => void;
@@ -17,9 +13,9 @@ interface InternalOverlayRef<T> extends OverlayRef<T> {
 }
 
 @Injectable()
-export abstract class DynamicOverlayService {
+export abstract class DynamicOverlayService<TOptions> {
   protected container: HTMLElement | null = null;
-  private activeOverlays: Map<ComponentRef<any>, OverlayRef<any>> = new Map();
+  private activeOverlays: Map<ComponentRef<any> | EmbeddedViewRef<any>, OverlayRef<any>> = new Map();
 
   constructor(
     protected appRef: ApplicationRef,
@@ -27,35 +23,65 @@ export abstract class DynamicOverlayService {
     private containerId: string
   ) {  }
 
-  protected abstract configureContainerStyles(container: HTMLElement): void;
+  protected abstract configureContainerStyles(container: HTMLElement, options?: TOptions): void;
 
-  private ensureContainer(): HTMLElement {
+  private ensureContainer(options?: TOptions): HTMLElement {
     if (!this.container) {
       this.container = document.createElement('div');
       this.container.id = this.containerId;
-      this.configureContainerStyles(this.container);
+      this.configureContainerStyles(this.container, options);
       document.body.appendChild(this.container);
     }
     return this.container;
   }
 
-  open<T>(componentType: Type<T>, config: OverlayConfig = {}): OverlayRef<T> {
-    const container = this.ensureContainer();
-    const componentRef = createComponent(componentType, {
-      environmentInjector: this.injector
-    });
+  open<T>(content: Type<T> | TemplateRef<any>, options?: TOptions): OverlayRef<T> {
+    const container = this.ensureContainer(options);
 
-    const element = (componentRef.hostView as any).rootNodes[0] as HTMLElement;
-    container!.appendChild(element);
-    this.appRef.attachView(componentRef.hostView);
+    let element: HTMLElement;
+    let instance: any;
+    let viewRef: ComponentRef<T> | EmbeddedViewRef<any>;
 
-    const instance = componentRef.instance as any;
-
-    for (const key in config) {
-      if (config.hasOwnProperty(key)) {
-      componentRef.setInput(key, config[key]);
-      }
+    if (content instanceof TemplateRef) {
+      // Handle TemplateRef
+      const embeddedViewRef = content.createEmbeddedView({});
+      viewRef = embeddedViewRef;
+      this.appRef.attachView(embeddedViewRef);
+      element = embeddedViewRef.rootNodes[0] as HTMLElement;
+      instance = {};
+    } else {
+      // Handle Component Type
+      const componentRef = createComponent(content, {
+        environmentInjector: this.injector
+      });
+      viewRef = componentRef;
+      element = (componentRef.hostView as any).rootNodes[0] as HTMLElement;
+      this.appRef.attachView(componentRef.hostView);
+      instance = componentRef.instance as any;
     }
+
+    container!.appendChild(element);
+
+    // Create a proxy to intercept property assignments and call setInput for inputs
+    const proxy = new Proxy(instance, {
+      set(target, prop, value) {
+        // Only try setInput for components, not templates
+        if (viewRef instanceof ComponentRef) {
+          try {
+            (viewRef as ComponentRef<T>).setInput(prop as string, value);
+            return true;
+          } catch {
+            target[prop] = value;
+            return true;
+          }
+        }
+        target[prop] = value;
+        return true;
+      },
+      get(target, prop) {
+        return target[prop];
+      }
+    });
 
     if (container) {
       container.style.pointerEvents = 'auto';
@@ -69,33 +95,33 @@ export abstract class DynamicOverlayService {
     });
 
     instance.close = (result?: any) => {
-      const ref = this.activeOverlays.get(componentRef) as InternalOverlayRef<T>;
+      const ref = this.activeOverlays.get(viewRef) as InternalOverlayRef<T>;
       if (ref) ref.close(result);
     };
 
     instance.dismiss = (reason?: any) => {
-      const ref = this.activeOverlays.get(componentRef) as InternalOverlayRef<T>;
+      const ref = this.activeOverlays.get(viewRef) as InternalOverlayRef<T>;
       if (ref) ref.dismiss(reason);
     };
 
     const overlayRef: InternalOverlayRef<T> = {
-      componentInstance: instance,
+      componentInstance: proxy,
       result: resultPromise,
       resolve: resolveFn!,
       reject: rejectFn!,
-      close: (result?: any) => this.closeOverlay(componentRef, { confirmed: true, data: result }),
-      dismiss: (reason?: any) => this.closeOverlay(componentRef, { confirmed: false, reason })
+      close: (result?: any) => this.closeOverlay(viewRef, { confirmed: true, data: result }),
+      dismiss: (reason?: any) => this.closeOverlay(viewRef, { confirmed: false, reason })
     };
 
-    this.activeOverlays.set(componentRef, overlayRef);
+    this.activeOverlays.set(viewRef, overlayRef);
     return overlayRef;
   }
 
-  private closeOverlay<T>(componentRef: ComponentRef<T>, output: any): void {
-    const ref = this.activeOverlays.get(componentRef) as InternalOverlayRef<T>;
+  private closeOverlay<T>(viewRef: ComponentRef<T> | EmbeddedViewRef<any>, output: any): void {
+    const ref = this.activeOverlays.get(viewRef) as InternalOverlayRef<T>;
     if (ref) {
       ref.resolve(output);
-      this.destroyOverlay(componentRef);
+      this.destroyOverlay(viewRef);
     }
 
     if (this.activeOverlays.size === 0 && this.container) {
@@ -103,10 +129,19 @@ export abstract class DynamicOverlayService {
     }
   }
 
-  private destroyOverlay<T>(componentRef: ComponentRef<T>): void {
-    this.appRef.detachView(componentRef.hostView);
+  private destroyOverlay<T>(viewRef: ComponentRef<T> | EmbeddedViewRef<any>): void {
+    if (viewRef instanceof ComponentRef) {
+      this.appRef.detachView(viewRef.hostView);
+    } else {
+      this.appRef.detachView(viewRef);
+    }
 
-    const element = (componentRef.hostView as any).rootNodes[0] as HTMLElement;
+    let element: HTMLElement;
+    if (viewRef instanceof ComponentRef) {
+      element = (viewRef.hostView as any).rootNodes[0] as HTMLElement;
+    } else {
+      element = viewRef.rootNodes[0] as HTMLElement;
+    }
 
     if (element && this.container) {
       if (this.container.contains(element)) {
@@ -114,8 +149,10 @@ export abstract class DynamicOverlayService {
       }
     }
 
-    componentRef.destroy();
-    this.activeOverlays.delete(componentRef);
+    if (viewRef instanceof ComponentRef) {
+      viewRef.destroy();
+    }
+    this.activeOverlays.delete(viewRef);
     if (this.activeOverlays.size === 0 && this.container) {
       document.body.removeChild(this.container);
       this.container = null;

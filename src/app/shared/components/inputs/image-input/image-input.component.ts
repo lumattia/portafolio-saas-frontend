@@ -86,10 +86,9 @@ export class ImageInputComponent implements OnInit {
       this.rawImageFile.set(file);
       return true;
     } catch (error) {
-      const modalRef = this.modalService.open(GenericErrorModalComponent, {
-        title: 'shared.imageInput.downloadErrorTitle',
-        message: 'shared.imageInput.downloadErrorMessage'
-      });
+      const modalRef = this.modalService.open(GenericErrorModalComponent);
+      modalRef.componentInstance.title= 'shared.imageInput.downloadErrorTitle';
+      modalRef.componentInstance.message= 'shared.imageInput.downloadErrorMessage';
       modalRef.result.then((result) => {
         if (result) {
           this.fileInput.nativeElement.click();
@@ -100,15 +99,14 @@ export class ImageInputComponent implements OnInit {
   }
 
   private openProcessorModal() {
-    const modalRef = this.modalService.open(ImageProcessorComponent, {
-      imageFile: this.rawImageFile(),
-      originalFormat: this.format(),
-      maxWidth: this.maxWidth,
-      maxHeight: this.maxHeight,
-      minAspectRatio: this.minAspectRatio,
-      maxAspectRatio: this.maxAspectRatio,
-      fixedAspectRatio: this.fixedAspectRatio
-    });
+    const modalRef = this.modalService.open(ImageProcessorComponent);
+    modalRef.componentInstance.imageFile= this.rawImageFile();
+    modalRef.componentInstance.originalFormat= this.format();
+    modalRef.componentInstance.maxWidth= this.maxWidth;
+    modalRef.componentInstance.maxHeight= this.maxHeight;
+    modalRef.componentInstance.minAspectRatio= this.minAspectRatio;
+    modalRef.componentInstance.maxAspectRatio= this.maxAspectRatio;
+    modalRef.componentInstance.fixedAspectRatio= this.fixedAspectRatio;
 
     modalRef.result.then((result: any) => {
       if (result.data === undefined) return;

@@ -1,4 +1,4 @@
-import { Component, inject, signal, OnInit } from '@angular/core';
+import { Component, inject, signal, input, OnInit, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SectionTemplateService } from '../../../core/services/section-template.service';
 import { SectionTemplateDto } from '../../../core/models/section-template.model';
@@ -30,7 +30,7 @@ export class TemplateSelectorComponent implements OnInit {
   readonly templates = signal<PagedList<SectionTemplateDto> | null>(null);
   readonly isLoading = signal(false);
   readonly categoryOptions = signal<IdName[]>([]);
-  parentSectionId: string|undefined = undefined;
+  @Input() parentSectionId: string | undefined= undefined;
   ngOnInit(): void {
     this.loadTemplates();
     this.loadCategoryOption();

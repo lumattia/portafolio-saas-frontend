@@ -125,10 +125,9 @@ export class PageEditorComponent implements OnInit {
 
   selectSection(section: SectionRenderer): void {
     this.selectedSection = section;
-    this.editorSidenavRef = this.sidenavService.open(SectionEditorComponent, {
-      section: section,
-      onSetDeleteState: () => this.setDeletedState()
-    });
+    this.editorSidenavRef = this.sidenavService.open(SectionEditorComponent);
+    this.editorSidenavRef.componentInstance.section = section;
+    this.editorSidenavRef.componentInstance.onSetDeleteState = () => this.setDeletedState();
     this.editorSidenavRef.result.then(() => {
       this.selectedSection = null;
     });
@@ -169,10 +168,9 @@ export class PageEditorComponent implements OnInit {
       section.isDeleted = !section.isDeleted;
     this.editorSidenavRef?.close()
     }else{
-      const modalRef = this.modalService.open(ConfirmModalComponent, {
-        title: 'Elimnar',
-        message: 'Esta sección aún no ha sido publicada. Al eliminarla y guardar, se borrará definitivamente y no podrá recuperarse. ¿Deseas continuar?'
-      });
+      const modalRef = this.modalService.open(ConfirmModalComponent);
+      modalRef.componentInstance.title = 'Elimnar';
+      modalRef.componentInstance.message = 'Esta sección aún no ha sido publicada. Al eliminarla y guardar, se borrará definitivamente y no podrá recuperarse. ¿Deseas continuar?';
       modalRef.result.then((res) => {
         if (res.confirmed) {
           this.sections.update(sections => sections.filter(s => s.id !== section.id));

@@ -1,4 +1,4 @@
-import { Component, inject, signal, OnInit, model } from '@angular/core';
+import { Component, inject, signal, computed, OnInit, model, input, ViewChild, TemplateRef, ViewEncapsulation } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MenuService } from '../../../../core/services/menu.service';
@@ -7,27 +7,26 @@ import { MenuItemRenderer, MenuItemRequest, MenuRenderer, MenuRequest, MenuType 
 import { ButtonComponent } from '../../../../shared/components/button/button.component';
 import { IconComponent } from '../../../../shared/components/icon/icon.component';
 import { ConfirmModalComponent } from '../../../../shared/components/modals/confirm-modal/confirm-modal.component';
+import { TextInputComponent } from '../../../../shared/components/inputs/text-input/text-input.component';
 
 @Component({
   selector: 'app-footer-menu-editor',
   standalone: true,
-  imports: [CommonModule, FormsModule, ButtonComponent, IconComponent],
+  imports: [CommonModule, FormsModule, ButtonComponent, IconComponent, TextInputComponent],
   templateUrl: './menu-editor.component.html',
-  styleUrls: ['./menu-editor.component.scss']
+  styleUrls: ['./menu-editor.component.scss'],
 })
-export class MenuEditorComponent implements OnInit {
+export class MenuEditorComponent {
     close!: () => void;
     dismiss!: (reason?: any) => void;
 
     private readonly menuService = inject(MenuService);
     private readonly modalService = inject(ModalService);
-
-    menu: MenuRenderer = {} as MenuRenderer;
-    originalMenu: MenuRenderer = {} as MenuRenderer;
+    menu = input.required<MenuRenderer>();
     readonly loading = signal(false);
-    readonly showAddModal = signal(false);
     readonly editingItem = signal<MenuItemRenderer | null>(null);
     readonly draggedIndex = signal<number | null>(null);
+    readonly draggedParent = signal<MenuItemRenderer | null>(null);
     readonly hasUnsavedChanges = signal(false);
 
     readonly newItemText = signal('');
@@ -35,15 +34,8 @@ export class MenuEditorComponent implements OnInit {
     readonly newItemStyle = signal('');
     readonly parentItem = signal<MenuItemRenderer | null>(null);
 
-    private overlayMouseDownOutside = false;
-
-    ngOnInit(): void {
-        this.originalMenu = JSON.parse(JSON.stringify(this.menu));
-    }
-
-    private checkForChanges(): void {
-        this.hasUnsavedChanges.set(JSON.stringify(this.menu) !== JSON.stringify(this.originalMenu));
-    }
+    @ViewChild('itemModalTemplate') itemModalTemplate!: TemplateRef<any>;
+    private itemModalRef: any;
 
     private normalizeUrl(url: string): string {
         if (!url) return '/';
@@ -71,15 +63,14 @@ export class MenuEditorComponent implements OnInit {
       this.resetForm();
       this.parentItem.set(parentItem);
       this.editingItem.set(null);
-      this.showAddModal.set(true);
+      this.itemModalRef = this.modalService.open(this.itemModalTemplate);
     }
 
     attemptClose(): void {
       if (this.hasUnsavedChanges()) {
-          const modalRef = this.modalService.open(ConfirmModalComponent, {
-              title: 'Cambios sin guardar',
-              message: 'Tienes cambios sin guardar. ¿Deseas cerrar?'
-          });
+          const modalRef = this.modalService.open(ConfirmModalComponent);
+          modalRef.componentInstance.title = 'Cambios sin guardar';
+          modalRef.componentInstance.message = 'Tienes cambios sin guardar. ¿Deseas cerrar?';
           modalRef.result.then((res) => {
               if (res.confirmed) {
                   this.close();
@@ -90,63 +81,54 @@ export class MenuEditorComponent implements OnInit {
       }
     }
 
-    openEditModal(item: MenuItemRenderer): void {
+    openEditModal(parentItem: MenuItemRenderer | null = null, item: MenuItemRenderer): void {
       this.newItemText.set(item.text);
       this.newItemUrl.set(item.url || '');
+      this.parentItem.set(parentItem);
       this.editingItem.set(item);
-      this.showAddModal.set(true);
+      this.itemModalRef = this.modalService.open(this.itemModalTemplate);
     }
 
     closeModal(): void {
-      this.showAddModal.set(false);
+      if (this.itemModalRef) {
+        this.itemModalRef.close();
+        this.itemModalRef = null;
+      }
       this.resetForm();
     }
-    handleOverlayMouseDown(event: MouseEvent): void {
-    // Check if the click is on the overlay (not the modal)
-    if (event.target === event.currentTarget) {
-      this.overlayMouseDownOutside = true;
-    }
-  }
 
-  handleOverlayMouseUp(event: MouseEvent): void {
-    // Reset the flag on mouse up
-    if (event.target !== event.currentTarget) {
-      this.overlayMouseDownOutside = false;
-    }
-  }
-
-  handleOverlayClick(event: MouseEvent): void {
-    // Only close if both mousedown and click happened on the overlay
-    if (event.target === event.currentTarget && this.overlayMouseDownOutside) {
-      this.closeModal();
-    }
-    this.overlayMouseDownOutside = false;
-  }
-
-    onDragStart(event: DragEvent, index: number): void {
+    onDragStart(event: DragEvent, index: number, parent: MenuItemRenderer | null): void {
       this.draggedIndex.set(index);
-      event.dataTransfer?.setData('text/plain', index.toString());
+      this.draggedParent.set(parent);
+      event.dataTransfer?.setData('text/plain', JSON.stringify({ index, parentId: parent?.id }));
     }
 
     onDragOver(event: DragEvent): void {
       event.preventDefault();
     }
 
-    onDrop(event: DragEvent, dropIndex: number): void {
+    onDrop(event: DragEvent, dropIndex: number, dropParent: MenuItemRenderer | null): void {
       event.preventDefault();
 
       const dragIndex = this.draggedIndex();
-      if (dragIndex === null || dragIndex === dropIndex) return;
+      const dragParent = this.draggedParent();
 
-      if (!this.menu) return;
+      if (dragIndex === null || dragIndex === dropIndex || dragParent !== dropParent || !this.menu) return;
 
-      const items = [...this.menu.menuItems];
-      const [draggedItem] = items.splice(dragIndex, 1);
-      items.splice(dropIndex, 0, draggedItem);
+      const getArray = (parent: MenuItemRenderer | null) =>
+        parent ? parent.subMenuItems : this.menu().menuItems;
 
-      this.menu = { ...this.menu, menuItems: items };
+      const sourceArray = getArray(dragParent);
+      const destArray = getArray(dropParent);
+
+      if (!sourceArray || !destArray) return;
+
+      const [draggedItem] = sourceArray.splice(dragIndex, 1);
+      destArray.splice(dropIndex, 0, draggedItem);
+
       this.draggedIndex.set(null);
-      this.checkForChanges();
+      this.draggedParent.set(null);
+      this.hasUnsavedChanges.set(true);
     }
 
     saveItem(): void {
@@ -168,7 +150,7 @@ export class MenuEditorComponent implements OnInit {
             item.id === editingItem.id ? newItem : item
           );
         } else {
-          this.menu.menuItems = this.menu.menuItems.map((item: any) =>
+          this.menu().menuItems = this.menu().menuItems.map((item: any) =>
             item.id === editingItem.id ? newItem : item
           );
         }
@@ -180,37 +162,33 @@ export class MenuEditorComponent implements OnInit {
           parent.subMenuItems = [...(parent.subMenuItems || []), newItem];
         } else {
           // Add to root level
-          this.menu.menuItems = [...this.menu.menuItems, newItem];
+          this.menu().menuItems = [...this.menu().menuItems, newItem];
         }
       }
 
       this.closeModal();
-      this.checkForChanges();
+      this.hasUnsavedChanges.set(true);
     }
 
     deleteItem(itemId: string): void {
       if (!this.menu) return;
 
-      const updatedMenuItems = this.menu.menuItems.filter((item: any) => item.id !== itemId);
-      this.menu = {
-        id: this.menu.id,
-        type: this.menu.type,
-        menuItems: updatedMenuItems,
-      };
+      const updatedMenuItems = this.menu().menuItems.filter((item: any) => item.id !== itemId);
+      this.menu().menuItems = updatedMenuItems
 
-      this.checkForChanges();
+      this.hasUnsavedChanges.set(true);
     }
 
     saveMenu(): void {
       const menuToSave = this.menu;
-      const menuItems: MenuItemRequest[] = this.getMenuItemsForSave(menuToSave.menuItems);
+      const menuItems: MenuItemRequest[] = this.getMenuItemsForSave(menuToSave().menuItems);
       const request: MenuRequest = {
-        id: menuToSave.id,
-        type: menuToSave.type,
+        id: menuToSave().id,
+        type: menuToSave().type,
         menuItems: menuItems,
       };
-      if (menuToSave.id) {
-        this.menuService.update(menuToSave.id, request).subscribe({
+      if (menuToSave().id) {
+        this.menuService.update(menuToSave().id!, request).subscribe({
           next: () => {
             this.menu = menuToSave;
             this.close()
@@ -222,7 +200,8 @@ export class MenuEditorComponent implements OnInit {
       } else {
         this.menuService.create(request).subscribe({
           next: (menu) => {
-            this.menu = menu;
+            this.menu().id = menu.id;
+            this.menu().menuItems = menu.menuItems;
             this.close();
           },
           error: (err: any) => {

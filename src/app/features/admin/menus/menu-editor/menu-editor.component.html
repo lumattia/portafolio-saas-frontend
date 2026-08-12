@@ -1,6 +1,6 @@
-<div class="footer-menu-editor">
+<div class="menu-editor">
   <div class="editor-header">
-    <h2>Footer Menu</h2>
+    <h2>{{this.menu().type}} Menu</h2>
     <div class="header-actions">
       <app-button variant="primary" (onClick)="saveMenu()" [disabled]="!hasUnsavedChanges()">
         Guardar
@@ -15,9 +15,9 @@
     <div class="loading">Loading...</div>
   } @else {
     <div class="menu-tree">
-      @for (item of this.menu.menuItems; track item.id) {
-        <div class="menu-item-wrapper">
-          <div class="menu-item">
+      @for (item of this.menu().menuItems; track item.id; let i = $index) {
+        <div class="menu-item-wrapper" (dragover)="onDragOver($event)" (drop)="onDrop($event, i, null)">
+          <div class="menu-item" draggable="true" (dragstart)="onDragStart($event, i, null)">
             <div class="menu-item-content">
               @if(item.subMenuItems.length>0){
                 <app-button
@@ -39,7 +39,7 @@
               <app-button variant="icon" size="sm" (onClick)="addChildItem(item)" title="Add submenu">
                 <app-icon name="add" size="sm" />
               </app-button>
-              <app-button variant="icon" size="sm" (onClick)="openEditModal(item)">
+              <app-button variant="icon" size="sm" (onClick)="openEditModal(null, item)">
                 <app-icon name="edit" size="sm" />
               </app-button>
               <app-button variant="icon" size="sm" (onClick)="deleteItem(item.id)">
@@ -49,21 +49,23 @@
           </div>
           @if (item.toggled && item.subMenuItems.length > 0) {
             <div class="submenu">
-              @for (child of item.subMenuItems; track child.id) {
-                <div class="menu-item">
-                  <div class="menu-item-content">
-                    <span class="menu-text">{{ child.text }}</span>
-                    @if (child.url) {
-                      <span class="menu-url" [title]="child.url">({{ truncateUrl(child.url) }})</span>
-                    }
-                  </div>
-                  <div class="menu-actions">
-                    <app-button variant="icon" size="sm" (onClick)="openEditModal(child)">
-                      <app-icon name="edit" size="sm" />
-                    </app-button>
-                    <app-button variant="icon" size="sm" (onClick)="deleteItem(child.id)">
-                      <app-icon name="delete" size="sm" />
-                    </app-button>
+              @for (child of item.subMenuItems; track child.id; let j = $index) {
+                <div class="menu-item" (dragover)="onDragOver($event)" (drop)="onDrop($event, j, item)">
+                  <div class="menu-item" draggable="true" (dragstart)="onDragStart($event, j, item)">
+                    <div class="menu-item-content">
+                      <span class="menu-text">{{ child.text }}</span>
+                      @if (child.url) {
+                        <span class="menu-url" [title]="child.url">({{ truncateUrl(child.url) }})</span>
+                      }
+                    </div>
+                    <div class="menu-actions">
+                      <app-button variant="icon" size="sm" (onClick)="openEditModal(item, child)">
+                        <app-icon name="edit" size="sm" />
+                      </app-button>
+                      <app-button variant="icon" size="sm" (onClick)="deleteItem(child.id)">
+                        <app-icon name="delete" size="sm" />
+                      </app-button>
+                    </div>
                   </div>
                 </div>
               }
@@ -78,30 +80,22 @@
     </div>
   }
 
-  @if (showAddModal()) {
-    <div class="modal-overlay" (mousedown)="handleOverlayMouseDown($event)" (mouseup)="handleOverlayMouseUp($event)" (click)="handleOverlayClick($event)">
-      <div class="modal" (click)="$event.stopPropagation()">
-        <div class="modal-header">
-          <h3>{{ editingItem() ? 'Edit' : 'Add' }} Menu Item</h3>
-          <app-button variant="icon" (onClick)="closeModal()">×</app-button>
-        </div>
-        <div class="modal-body">
-          <div class="form-group">
-            <label>Text</label>
-            <input type="text" [(ngModel)]="newItemText" placeholder="Menu item text">
-          </div>
-          <div class="form-group">
-            <label>URL (optional)</label>
-            <input type="text" [(ngModel)]="newItemUrl" placeholder="https://example.com or /page-slug">
-          </div>
-        </div>
-        <div class="modal-footer">
-          <app-button variant="primary" (onClick)="saveItem()">
-            {{ editingItem() ? 'Update' : 'Add' }}
-          </app-button>
-          <app-button variant="secondary" (onClick)="closeModal()">Cancel</app-button>
-        </div>
+  <ng-template #itemModalTemplate>
+    <div class="modal">
+      <div class="modal-header">
+        <h3>{{ editingItem() ? 'Edit' : 'Add' }} Menu Item</h3>
+        <app-button variant="icon" (onClick)="closeModal()">×</app-button>
+      </div>
+      <div class="modal-body">
+        <app-text-input [labelKey]="'Text'" [placeholderKey]="'Menu item text'" [signal]="newItemText"></app-text-input>
+        <app-text-input [labelKey]="'URL (optional)'" [placeholderKey]="'https://example.com or /page-slug'" [signal]="newItemUrl"></app-text-input>
+      </div>
+      <div class="modal-footer">
+        <app-button variant="primary" (onClick)="saveItem()">
+          {{ editingItem() ? 'Update' : 'Add' }}
+        </app-button>
+        <app-button variant="secondary" (onClick)="closeModal()">Cancel</app-button>
       </div>
     </div>
-  }
+  </ng-template>
 </div>

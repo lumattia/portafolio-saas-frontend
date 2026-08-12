@@ -33,7 +33,7 @@ export class AdminLayoutComponent implements OnInit {
   readonly siteService = inject(SiteService);
   readonly sidenavService = inject(SidenavService);
   readonly MenuType = MenuType;
-  
+
   readonly theme = signal<ThemeConfig | null>(null);
   readonly sidebarMenu = signal<MenuRenderer | null>(null);
   readonly footerMenu = signal<MenuRenderer | null>(null);
@@ -111,13 +111,13 @@ private loadFooterMenu(): void {
   publishSite(): void {
     this.isPublishing.set(true);
     this.publishMessage.set(null);
-    
+
     this.siteService.publish().subscribe({
       next: (result: boolean) => {
         this.isPublishing.set(false);
         if (result) {
           this.publishMessage.set({ type: 'success', text: 'Sitio publicado correctamente' });
-          
+
           // Reload page after 2 seconds
           setTimeout(() => {
             window.location.reload();
@@ -136,7 +136,7 @@ private loadFooterMenu(): void {
 
   openSidebarMenuEditor(): void {
     let menu = this.sidebarMenu();
-    
+
     if (!menu) {
       menu = {
         id: '',
@@ -144,11 +144,12 @@ private loadFooterMenu(): void {
         menuItems: []
       };
     }
-    
+
     const sidenavRef = this.sidenavService.open(MenuEditorComponent, {
-      menu: menu
+      disableBackdropClick: true
     });
-    
+    sidenavRef.componentInstance.menu = menu;
+
     sidenavRef.result.then(() => {
       this.loadSidebarMenu();
     });
@@ -156,7 +157,7 @@ private loadFooterMenu(): void {
 
   openFooterMenuEditor(): void {
     let menu = this.footerMenu();
-    
+
     if (!menu) {
       menu = {
         id: '',
@@ -164,11 +165,12 @@ private loadFooterMenu(): void {
         menuItems: []
       };
     }
-    
+
     const sidenavRef = this.sidenavService.open(MenuEditorComponent, {
-      menu: menu
+      disableBackdropClick: true
     });
-    
+    sidenavRef.componentInstance.menu = menu;
+
     sidenavRef.result.then(() => {
       this.loadFooterMenu();
     });
