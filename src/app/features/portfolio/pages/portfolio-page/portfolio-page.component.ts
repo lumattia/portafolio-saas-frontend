@@ -3,14 +3,13 @@ import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 import { PublishedService } from '../../../../core/services/published.service';
 import { Location } from '@angular/common';
 import { filter } from 'rxjs/operators';
-import { PublishedSectionRendererComponent } from '../../components/published-section-renderer/published-section-renderer.component';
+import { SectionRendererComponent } from '../../../page-editor/section-renderer/section-renderer.component';
 import { PageRenderer } from '../../../../core/models/page.model';
 
 @Component({
   selector: 'app-portfolio-page',
   standalone: true,
-  imports: [PublishedSectionRendererComponent
-  ],
+  imports: [SectionRendererComponent],
   templateUrl: './portfolio-page.component.html',
   styleUrl: './portfolio-page.component.css',
 })

@@ -11,8 +11,9 @@
     <main class="page-content">
       <h1 class="page-title">{{ pageContent()!.title }}</h1>
       @for (section of pageContent()!.sections; track section.componentSelector; let i = $index) {
-         <app-published-section-renderer
+         <app-section-renderer
           [section]="section"
+          [disableInteraction]="true"
         />
       }
     </main>

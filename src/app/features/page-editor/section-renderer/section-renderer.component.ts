@@ -12,9 +12,10 @@ import { SectionRenderer } from '../../../core/models/page.model';
 })
 export class SectionRendererComponent {
   section = input.required<SectionRenderer>();
-  isSelected = input.required<boolean>();
+  isSelected = input<boolean>(false);
   select = output<string>();
-  
+  disableInteraction = input<boolean>(false);
+
   readonly componentMap = RENDER_COMPONENT_MAP;
 
   get componentSelector() {
