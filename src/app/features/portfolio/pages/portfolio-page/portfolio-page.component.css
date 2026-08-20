@@ -1,5 +1,9 @@
+
+:host{
+  flex-grow: 1;
+  max-width: 1200px;
+}
 .portfolio-container {
-  min-height: 100vh;
   background-color: var(--background-color, #ffffff);
   font-family: var(--font-family, 'Inter, system-ui, sans-serif');
   color: var(--text-color, #0f172a);

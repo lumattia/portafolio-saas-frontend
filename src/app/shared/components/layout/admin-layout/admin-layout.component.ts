@@ -16,11 +16,12 @@ import { IconComponent } from '../../icon/icon.component';
 import { SidebarMenuRendererComponent } from "../../../../features/admin/menus/sidebar-menu/sidebar-menu-renderer.component";
 import { FooterMenuRendererComponent } from "../../../../features/admin/menus/footer-menu/footer-menu-renderer.component";
 import { MenuEditorComponent } from '../../../../features/admin/menus/menu-editor/menu-editor.component';
+import { HeaderComponent } from "../header/header.component";
 
 @Component({
   selector: 'app-admin-layout',
   standalone: true,
-  imports: [RouterLink, CommonModule, ThemeToggleComponent, PageEditorComponent, ButtonComponent, IconComponent, SidebarMenuRendererComponent, FooterMenuRendererComponent],
+  imports: [CommonModule, PageEditorComponent, ButtonComponent, IconComponent, SidebarMenuRendererComponent, FooterMenuRendererComponent, HeaderComponent],
   templateUrl: './admin-layout.component.html',
   styleUrls: ['./admin-layout.component.css']
 })
@@ -40,6 +41,7 @@ export class AdminLayoutComponent implements OnInit {
   readonly showUserMenu = signal(false);
   readonly isPublishing = signal(false);
   readonly publishMessage = signal<{ type: 'success' | 'error'; text: string } | null>(null);
+  readonly showSidenav = signal(false);
 
   ngOnInit(): void {
     this.auth.getMe();
@@ -108,6 +110,10 @@ private loadFooterMenu(): void {
     }
   }
 
+  toggleSidenav(): void {
+    this.showSidenav.update(v => !v);
+  }
+
   publishSite(): void {
     this.isPublishing.set(true);
     this.publishMessage.set(null);
@@ -139,7 +145,7 @@ private loadFooterMenu(): void {
 
     if (!menu) {
       menu = {
-        id: '',
+        id: undefined,
         type: MenuType.Sidebar,
         menuItems: []
       };
@@ -160,7 +166,7 @@ private loadFooterMenu(): void {
 
     if (!menu) {
       menu = {
-        id: '',
+        id: undefined,
         type: MenuType.Footer,
         menuItems: []
       };

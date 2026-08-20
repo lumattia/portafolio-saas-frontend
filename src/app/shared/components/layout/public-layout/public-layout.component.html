@@ -1,51 +1,20 @@
 <div class="layout">
-  <header class="header">
-    <div class="header-left">
-      <button type="button" class="menu-button" (click)="toggleSidenav()" title="Menu">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <line x1="3" y1="12" x2="21" y2="12"></line>
-          <line x1="3" y1="6" x2="21" y2="6"></line>
-          <line x1="3" y1="18" x2="21" y2="18"></line>
-        </svg>
-      </button>
-      <a routerLink="/" class="brand">Portfolio</a>
-    </div>
-    <nav class="nav">
-      <app-theme-toggle />
-      @if (auth.isAuthenticated()) {
-        <app-button variant="secondary" size="sm" (onClick)="toggleViewMode()">
-          {{ viewModeService.isAdminMode() ? 'View Snapshot' : 'Edit Mode' }}
-        </app-button>
-        <div class="user-menu-container">
-          <app-button variant="icon" size="sm" (onClick)="toggleUserMenu()">
-            <app-icon name="user" size="sm" />
-          </app-button>
-          @if (showUserMenu()) {
-            <div class="user-menu">
-              <app-button block (onClick)="logout()">Logout</app-button>
-            </div>
-          }
-        </div>
-      } @else {
-        <a routerLink="/login">
-          <app-button variant="primary" size="sm">Login</app-button>
-        </a>
-      }
-    </nav>
-  </header>
+  <app-header
+    [onSidenavClick]="toggleSidenav">
+  </app-header>
 
   <div class="main-content">
-    <aside class="sidebar desktop-only">
-      @if (sidebarMenu()) {
+    @if (sidebarMenu()?.menuItems?.length) {
+      <aside class="sidebar desktop-only">
         <app-sidebar-menu-renderer [menu]="sidebarMenu()" />
-      }
-    </aside>
-    <main class="content" [class.with-sidebar]="true">
+      </aside>
+    }
+    <main class="content">
       <app-portfolio-page />
     </main>
   </div>
 
-  @if (footerMenu()) {
+  @if (footerMenu()?.menuItems?.length) {
     <footer class="footer">
       <app-footer-menu-renderer [menu]="footerMenu()" />
     </footer>

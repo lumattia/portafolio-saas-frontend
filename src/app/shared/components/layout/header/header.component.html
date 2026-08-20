@@ -1,0 +1,101 @@
+<header class="shared-header">
+  <div class="header-left">
+    <button type="button" class="menu-button" (click)="onSidenavClick()" title="Menu">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="3" y1="12" x2="21" y2="12"></line>
+        <line x1="3" y1="6" x2="21" y2="6"></line>
+        <line x1="3" y1="18" x2="21" y2="18"></line>
+      </svg>
+    </button>
+    <a routerLink="/" class="brand">Portfolio</a>
+    @if (viewModeService.isAdminMode()) {
+      <app-button variant="icon" (onClick)="openHeaderMenuEditor()" title="Editar header">
+        <app-icon name="edit" size="sm" />
+      </app-button>
+      <app-header-menu-renderer [menu]="headerMenu()" />
+    }@else if(headerMenu()?.menuItems?.length){
+      <app-header-menu-renderer [menu]="headerMenu()" />
+    }
+  </div>
+  <div class="header-right">
+    <app-theme-toggle />
+    <div class="user-card-container">
+      @if (auth.isAuthenticated()) {
+        <div class="user-card" (click)="toggleUserDropdown()">
+          <div class="user-info">
+            <div class="user-email">{{ auth.user()?.email }}</div>
+          </div>
+          <app-icon name="chevron-right" size="sm" />
+        </div>
+        @if (showUserDropdown()) {
+          <div class="dropdown-menu">
+            <div class="dropdown-item" (click)="openToolbar()">
+              <app-icon name="menu" size="sm" />
+              <span>Toolbar</span>
+            </div>
+            <div class="dropdown-item" (click)="logout()">
+              <app-icon name="close" size="sm" />
+              <span>Salir</span>
+            </div>
+          </div>
+        }
+      } @else {
+        <div class="login-card" (click)="navigateToLogin()">
+          <span>Login</span>
+        </div>
+      }
+    </div>
+  </div>
+</header>
+
+@if (showToolbar() && auth.isAuthenticated()) {
+  <div
+    class="draggable-toolbar"
+    [class.closing]="isToolbarClosing()"
+    [style.left.px]="toolbarLeft()"
+    [style.top.px]="toolbarTop()">
+    <div class="toolbar-content">
+      <button type="button" class="close-button" (click)="closeToolbarWithAnimation()">
+        <app-icon name="close" size="sm" />
+      </button>
+      <div class="toolbar-view-selector">
+        <button
+          type="button"
+          class="toolbar-icon"
+          [class.active]="viewModeService.isAdminMode()"
+          (click)="setViewMode('admin')"
+          title="Modo Edición">
+          <app-icon name="edit" size="sm" />
+        </button>
+        <button
+          type="button"
+          class="toolbar-icon"
+          [class.active]="viewModeService.isPreviewMode()"
+          (click)="setViewMode('preview')"
+          title="Vista Previa">
+          <app-icon name="eye" size="sm" />
+        </button>
+        <button
+          type="button"
+          class="toolbar-icon"
+          [class.active]="viewModeService.isSnapshotMode()"
+          (click)="setViewMode('snapshot')"
+          title="Vista Publicada">
+          <app-icon name="globe" size="sm" />
+        </button>
+      </div>
+      <button
+        type="button"
+        class="toolbar-icon"
+        [disabled]="!viewModeService.isAdminMode() || isPublishing()"
+        (click)="publishSite()"
+        title="Publicar">
+        @if (isPublishing()) {
+          <app-icon name="loader" size="sm" />
+        } @else {
+          <app-icon name="upload" size="sm" />
+        }
+      </button>
+    </div>
+  </div>
+}

@@ -1,7 +1,5 @@
-@if (viewMode === 'snapshot') {
-  <app-public-layout />
-} @else if (viewMode === 'admin') {
+@if (viewMode === 'admin') {
   <app-admin-layout />
 } @else {
-  <div class="loading">Loading...</div>
+  <app-public-layout />
 }

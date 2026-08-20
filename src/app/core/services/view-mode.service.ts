@@ -1,7 +1,7 @@
 import { Injectable, inject, signal } from '@angular/core';
 import { AuthService } from './auth.service';
-
-export type ViewMode = 'admin' | 'snapshot' | null;
+export const VIEW_MODES = ['admin', 'preview', 'snapshot'] as const;
+export type ViewMode = (typeof VIEW_MODES)[number] | null;
 
 @Injectable({ providedIn: 'root' })
 export class ViewModeService {
@@ -15,8 +15,8 @@ export class ViewModeService {
   private loadStoredViewMode(): ViewMode {
     if (!this.auth.user()) return null;
     const stored = localStorage.getItem('viewMode');
-    if (stored === 'admin' || stored === 'snapshot') {
-      return stored;
+    if (VIEW_MODES.includes(stored as any)) {
+      return stored as ViewMode;
     }
     return null;
   }
@@ -49,6 +49,9 @@ export class ViewModeService {
 
   isAdminMode(): boolean {
     return this.viewMode() === 'admin';
+  }
+  isPreviewMode(): boolean {
+    return this.viewMode() === 'preview';
   }
 
   isSnapshotMode(): boolean {

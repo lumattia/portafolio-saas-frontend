@@ -1,38 +1,9 @@
 <div class="layout">
-  <header class="header">
-    <div class="header-left">
-      <a routerLink="/" class="brand">Portfolio</a>
-    </div>
-    <nav class="nav">
-      <app-theme-toggle />
-      <app-button
-        variant="icon"
-        (onClick)="toggleViewMode()"
-        title="{{viewModeService.isAdminMode()?'Ver Snapshot':'Editar'}}">
-        <app-icon name="eye" size="md" />
-      </app-button>
-      <app-button
-        variant="primary"
-        (onClick)="publishSite()"
-        [disabled]="isPublishing()">
-        @if (isPublishing()) {
-          Publicando...
-        } @else {
-          Publicar Sitio
-        }
-      </app-button>
-      <div class="user-menu" (mouseenter)="showUserMenu.set(true)" (mouseleave)="showUserMenu.set(false)">
-        <span class="user-name">{{ auth.user()?.email }}</span>
-        @if (showUserMenu()) {
-          <div class="user-dropdown">
-            <a (click)="logout()">Salir</a>
-          </div>
-        }
-      </div>
-    </nav>
-  </header>
+  <app-header
+    [onSidenavClick]="toggleSidenav">
+  </app-header>
 
-  @if (publishMessage()) {
+  @if (viewModeService.isAdminMode() && publishMessage()) {
     <div class="publish-message {{ publishMessage()!.type }}">
       {{ publishMessage()!.text }}
     </div>
@@ -52,12 +23,24 @@
     </main>
   </div>
 
-  <div class="footer-section">
+  <footer class="footer">
     <div class="footer-header">
       <app-button variant="icon" (onClick)="openFooterMenuEditor()" title="Editar menú footer">
         <app-icon name="edit" size="sm" />
       </app-button>
     </div>
-    <app-footer-menu-renderer [menu]="footerMenu()"/>
-  </div>
+    <app-footer-menu-renderer [menu]="footerMenu()" />
+  </footer>
+
+  @if (showSidenav()) {
+    <div class="sidenav-overlay mobile-only" (click)="toggleSidenav()"></div>
+    <aside class="sidenav mobile-only">
+      <div class="sidenav-header">
+        <button type="button" class="close-button" (click)="toggleSidenav()">×</button>
+      </div>
+      @if (sidebarMenu()) {
+        <app-sidebar-menu-renderer [menu]="sidebarMenu()" />
+      }
+    </aside>
+  }
 </div>

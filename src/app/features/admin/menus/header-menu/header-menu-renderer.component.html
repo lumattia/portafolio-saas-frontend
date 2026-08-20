@@ -1,0 +1,27 @@
+@if (menu()?.menuItems) {
+  <nav class="header-menu-renderer">
+    @for (item of menu()!.menuItems; track item.id) {
+      <div class="menu-item-wrapper" (mouseenter)="item.toggled = true" (mouseleave)="item.toggled = false">
+        <a
+          (click)="handleMenuLinkClick($event, item)"
+          class="menu-item">
+          {{ item.text }}
+          @if (item.subMenuItems.length > 0) {
+            <span class="dropdown-arrow">▼</span>
+          }
+        </a>
+        @if (item.toggled && item.subMenuItems.length > 0) {
+          <div class="dropdown-menu">
+            @for (child of item.subMenuItems; track child.id) {
+              <a
+                (click)="handleMenuLinkClick($event, child)"
+                class="dropdown-item">
+                {{ child.text }}
+              </a>
+            }
+          </div>
+        }
+      </div>
+    }
+  </nav>
+}

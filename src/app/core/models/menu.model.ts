@@ -1,6 +1,7 @@
 export enum MenuType {
   Sidebar = 'Sidebar',
   Footer = 'Footer',
+  Header = 'Header',
 }
 export interface MenuRequest {
   id?: string;

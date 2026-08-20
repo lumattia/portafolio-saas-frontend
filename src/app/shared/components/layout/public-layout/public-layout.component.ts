@@ -1,35 +1,31 @@
 import { Component, inject, signal, OnInit } from '@angular/core';
-import { RouterLink, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../../../core/services/auth.service';
 import { MenuService } from '../../../../core/services/menu.service';
-import { PublishedService } from '../../../../core/services/published.service';
 import { ThemeService } from '../../../../core/services/theme.service';
 import { ViewModeService } from '../../../../core/services/view-mode.service';
 import { ThemeConfig } from '../../../../core/models/theme-config.model';
-import { ThemeToggleComponent } from '../../theme-toggle/theme-toggle.component';
 import { PortfolioPageComponent } from '../../../../features/portfolio/pages/portfolio-page/portfolio-page.component';
-import { ButtonComponent } from '../../button/button.component';
-import { IconComponent } from '../../icon/icon.component';
 import { SidebarMenuRendererComponent } from '../../../../features/admin/menus/sidebar-menu/sidebar-menu-renderer.component';
 import { FooterMenuRendererComponent } from '../../../../features/admin/menus/footer-menu/footer-menu-renderer.component';
 import { MenuRenderer, MenuType } from '../../../../core/models/menu.model';
+import { HeaderComponent } from '../header/header.component';
 
 @Component({
   selector: 'app-public-layout',
   standalone: true,
-  imports: [RouterLink, CommonModule, ThemeToggleComponent, PortfolioPageComponent, ButtonComponent, IconComponent, SidebarMenuRendererComponent, FooterMenuRendererComponent],
+  imports: [CommonModule, PortfolioPageComponent, SidebarMenuRendererComponent, FooterMenuRendererComponent, HeaderComponent],
   templateUrl: './public-layout.component.html',
   styleUrls: ['./public-layout.component.css']
 })
 export class PublicLayoutComponent implements OnInit {
   readonly auth = inject(AuthService);
   private readonly menuService = inject(MenuService);
-  private readonly publishedService = inject(PublishedService);
   private readonly themeService = inject(ThemeService);
   readonly viewModeService = inject(ViewModeService);
   private readonly router = inject(Router);
-  
+
   readonly theme = signal<ThemeConfig | null>(null);
   readonly sidebarMenu = signal<MenuRenderer | null>(null);
   readonly footerMenu = signal<MenuRenderer | null>(null);
@@ -67,8 +63,8 @@ export class PublicLayoutComponent implements OnInit {
   }
 
   private loadSidebarMenu(): void {
-    this.publishedService.getMenu(MenuType.Sidebar).subscribe({
-      next: (menu: MenuRenderer) => {
+    this.menuService.getMenu(MenuType.Sidebar).subscribe({
+      next: (menu: MenuRenderer | null) => {
         if (menu == null) {
           return;
         }
@@ -82,8 +78,8 @@ export class PublicLayoutComponent implements OnInit {
   }
 
   private loadFooterMenu(): void {
-    this.publishedService.getMenu(MenuType.Footer).subscribe({
-      next: (menu: MenuRenderer) => {
+    this.menuService.getMenu(MenuType.Footer).subscribe({
+      next: (menu: MenuRenderer | null) => {
         if (menu == null) {
           return;
         }
@@ -119,15 +115,15 @@ export class PublicLayoutComponent implements OnInit {
 
   handleMenuLinkClick(event: MouseEvent, url: string | undefined): void {
     if (!url) return;
-    
+
     // Si es Ctrl+click o scroll click (middle button), dejar que el navegador maneje la navegación
     if (event.ctrlKey || event.button === 1) {
       return;
     }
-    
+
     // Si es un click normal, prevenir el comportamiento por defecto y navegar internamente
     event.preventDefault();
-    
+
     // Si es una URL externa (empieza con http:// o https://), abrir en nueva pestaña
     if (url.startsWith('http://') || url.startsWith('https://')) {
       window.open(url, '_blank', 'noopener,noreferrer');

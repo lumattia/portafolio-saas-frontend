@@ -3,19 +3,23 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { PageRenderer, PageRequest } from '../models/page.model';
+import { ViewModeService } from './view-mode.service';
 
 @Injectable({ providedIn: 'root' })
 export class PageService {
+  private readonly viewMode = inject(ViewModeService);
   private readonly http = inject(HttpClient);
   private readonly apiUrl = `${environment.apiUrl}/admin/pages`;
+  private readonly publishedApiUrl = `${environment.apiUrl}/public/published`;
 
   getByIdentifier(identifier?: string): Observable<PageRenderer> {
-    return this.http.get<PageRenderer>(`${this.apiUrl}/${identifier}`);
+    const url = `${this.viewMode.isAdminMode() ? this.apiUrl : this.publishedApiUrl}/${identifier}`;
+    return this.http.get<PageRenderer>(url);
   }
 
-create(request: PageRequest): Observable<PageRenderer> {
+  create(request: PageRequest): Observable<PageRenderer> {
     return this.http.post<PageRenderer>(this.apiUrl, request);
-}
+  }
   update(id: string, request: PageRequest): Observable<PageRenderer> {
     const formData = new FormData();
     formData.append('json', JSON.stringify(request));

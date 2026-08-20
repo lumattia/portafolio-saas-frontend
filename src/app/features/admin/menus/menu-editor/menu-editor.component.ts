@@ -10,7 +10,7 @@ import { ConfirmModalComponent } from '../../../../shared/components/modals/conf
 import { TextInputComponent } from '../../../../shared/components/inputs/text-input/text-input.component';
 
 @Component({
-  selector: 'app-footer-menu-editor',
+  selector: 'app-menu-editor',
   standalone: true,
   imports: [CommonModule, FormsModule, ButtonComponent, IconComponent, TextInputComponent],
   templateUrl: './menu-editor.component.html',
