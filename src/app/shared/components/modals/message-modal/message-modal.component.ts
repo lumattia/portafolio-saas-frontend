@@ -8,15 +8,15 @@ import { TranslatePipe } from '@ngx-translate/core';
   selector: 'app-generic-error-modal',
   standalone: true,
   imports: [CommonModule, ButtonComponent, IconComponent, TranslatePipe],
-  templateUrl: './generic-error-modal.component.html',
-  styleUrls: ['./generic-error-modal.component.css']
+  templateUrl: './message-modal.component.html',
+  styleUrls: ['./message-modal.component.css']
 })
-export class GenericErrorModalComponent {
+export class MessageModalComponent {
   @Input() title = 'Confirmar';
   @Input() message = '¿Deseas continuar?';
   @Input() translateParams: any = {};
   @Input() type: 'error' | 'warning' | 'info' = 'error';
-  
+
   // These will be injected by ModalService
   close?: (result?: any) => void;
   dismiss?: (reason?: any) => void;

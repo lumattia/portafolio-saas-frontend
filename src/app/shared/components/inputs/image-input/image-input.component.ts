@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output, inject, signal, ViewChi
 import { CommonModule } from '@angular/common';
 import { ImageProcessorComponent } from '../image-processor/image-processor.component';
 import { TranslatePipe } from '@ngx-translate/core';
-import { GenericErrorModalComponent } from '../../modals/generic-error-modal/generic-error-modal.component';
+import { MessageModalComponent } from '../../modals/message-modal/message-modal.component';
 import { ModalService } from '../../../../core/services/modal.service';
 
 @Component({
@@ -86,7 +86,7 @@ export class ImageInputComponent implements OnInit {
       this.rawImageFile.set(file);
       return true;
     } catch (error) {
-      const modalRef = this.modalService.open(GenericErrorModalComponent);
+      const modalRef = this.modalService.open(MessageModalComponent);
       modalRef.componentInstance.title= 'shared.imageInput.downloadErrorTitle';
       modalRef.componentInstance.message= 'shared.imageInput.downloadErrorMessage';
       modalRef.result.then((result) => {
