@@ -8,14 +8,7 @@
       </svg>
     </button>
     <a routerLink="/" class="brand">Portfolio</a>
-    @if (viewModeService.isAdminMode()) {
-      <app-button variant="icon" (onClick)="openHeaderMenuEditor()" title="Editar header">
-        <app-icon name="edit" size="sm" />
-      </app-button>
-      <app-header-menu-renderer [menu]="headerMenu()" />
-    }@else if(headerMenu()?.menuItems?.length){
-      <app-header-menu-renderer [menu]="headerMenu()" />
-    }
+    <app-header-menu-renderer/>
   </div>
   <div class="header-right">
     <app-theme-toggle />

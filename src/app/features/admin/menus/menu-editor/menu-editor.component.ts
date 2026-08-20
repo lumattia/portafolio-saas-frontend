@@ -170,11 +170,14 @@ export class MenuEditorComponent {
       this.hasUnsavedChanges.set(true);
     }
 
-    deleteItem(itemId: string): void {
+    deleteItem(parent: any, item: any): void {
       if (!this.menu) return;
 
-      const updatedMenuItems = this.menu().menuItems.filter((item: any) => item.id !== itemId);
-      this.menu().menuItems = updatedMenuItems
+      if (parent) {
+        parent.subMenuItems = parent.subMenuItems.filter((child: any) => child.id !== item.id);
+      } else {
+        this.menu().menuItems = this.menu().menuItems.filter((rootItem: any) => rootItem.id !== item.id);
+      }
 
       this.hasUnsavedChanges.set(true);
     }

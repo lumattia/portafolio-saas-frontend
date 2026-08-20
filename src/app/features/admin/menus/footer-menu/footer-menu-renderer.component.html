@@ -1,45 +1,21 @@
-@if (menu()?.menuItems) {
+<ng-template #menuRenderer let-items="items">
   <nav class="footer-menu-renderer">
-    @for (item of menu()!.menuItems; track item.id) {
-      <div 
-        class="menu-item-wrapper"
-        (mouseenter)="setHover(item.id)"
-        (mouseleave)="setHover(null)">
+    @for (item of items; track item.id) {
+      <div class="menu-column">
+        <!-- Título de la columna -->
         @if (item.url) {
-          <a 
-            [href]="item.url" 
-            (click)="handleMenuLinkClick($event, item.url)"
-            class="menu-item">
-            {{ item.text }}
-            @if (item.subMenuItems.length > 0) {
-              <span class="dropdown-arrow">▼</span>
-            }
-          </a>
+          <a [smartLink]="item.url" class="column-title">{{ item.text }}</a>
         } @else {
-          <div 
-            class="menu-item">
-            {{ item.text }}
-            @if (item.subMenuItems.length > 0) {
-              <span class="dropdown-arrow">▼</span>
-            }
-          </div>
+          <div class="column-title">{{ item.text }}</div>
         }
-        
-        @if (item.subMenuItems.length > 0 && hoveredItem() === item.id) {
-          <div class="submenu-dropdown">
+
+        @if (item.subMenuItems.length > 0) {
+          <div class="submenu-list">
             @for (child of item.subMenuItems; track child.id) {
               @if (child.url) {
-                <a 
-                  [href]="child.url" 
-                  (click)="handleMenuLinkClick($event, child.url)"
-                  class="submenu-item">
-                  {{ child.text }}
-                </a>
+                <a [smartLink]="child.url" class="submenu-item">{{ child.text }}</a>
               } @else {
-                <div 
-                  class="submenu-item">
-                  {{ child.text }}
-                </div>
+                <div class="submenu-item">{{ child.text }}</div>
               }
             }
           </div>
@@ -47,4 +23,22 @@
       </div>
     }
   </nav>
+</ng-template>
+@if (viewModeService.isAdminMode()) {
+  <footer class="footer">
+  <div class="footer-header">
+    <app-button variant="icon" (onClick)="openMenuEditor()" title="Editar menú footer">
+      <app-icon name="edit" size="sm" />
+    </app-button>
+  </div>
+  <ng-container
+    *ngTemplateOutlet="menuRenderer; context: { items: menu()?.menuItems }">
+  </ng-container>
+</footer>
+}@else if(menu()?.menuItems?.length){
+  <footer class="footer">
+    <ng-container
+      *ngTemplateOutlet="menuRenderer; context: { items: menu()?.menuItems }">
+    </ng-container>
+  </footer>
 }

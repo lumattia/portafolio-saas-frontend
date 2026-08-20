@@ -1,3 +1,7 @@
+:host {
+  display: contents;
+}
+
 .header-menu-renderer {
   display: flex;
   align-items: center;

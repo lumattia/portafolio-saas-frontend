@@ -1,9 +1,9 @@
-@if (menu()?.menuItems) {
+<ng-template #menuRenderer let-items="items">
   <nav class="sidebar-menu-renderer">
-    @for (item of menu()!.menuItems; track item.id) {
+    @for (item of items; track item.id) {
       <div class="menu-item-wrapper">
         <a
-          (click)="handleMenuLinkClick($event, item)"
+          [smartLink]="item"
           class="menu-item">
           <div class="menu-item-content">
             <span class="menu-item-text">{{ item.text }}</span>
@@ -20,7 +20,7 @@
           <div class="submenu-container">
             @for (child of item.subMenuItems; track child.id) {
               <a
-                (click)="handleMenuLinkClick($event, child)"
+                [smartLink]="child"
                 class="submenu-item">
                 {{ child.text }}
               </a>
@@ -30,4 +30,24 @@
       </div>
     }
   </nav>
+
+</ng-template>
+@if (viewModeService.isAdminMode()) {
+  <aside class="sidebar desktop-only">
+    <div class="sidebar-header">
+      <app-button variant="icon" (onClick)="openMenuEditor()" title="Editar menú header">
+        <app-icon name="edit" size="sm" />
+      </app-button>
+    </div>
+    <ng-container
+      *ngTemplateOutlet="menuRenderer; context: { items: menu()?.menuItems }">
+    </ng-container>
+  </aside>
+}@else if(menu()?.menuItems?.length){
+  <aside class="sidebar desktop-only">
+    <ng-container
+      *ngTemplateOutlet="menuRenderer; context: { items: menu()?.menuItems }">
+    </ng-container>
+  </aside>
 }
+

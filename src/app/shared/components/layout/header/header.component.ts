@@ -1,37 +1,29 @@
 import { Component, input, inject, signal, AfterViewInit, ElementRef, NgZone, HostListener, effect, runInInjectionContext, Injector } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, Router } from '@angular/router';
-import { MenuRenderer, MenuType } from '../../../../core/models/menu.model';
 import { ThemeToggleComponent } from '../../theme-toggle/theme-toggle.component';
 import { HeaderMenuRendererComponent } from '../../../../features/admin/menus/header-menu/header-menu-renderer.component';
 import { IconComponent } from '../../icon/icon.component';
 import { AuthService } from '../../../../core/services/auth.service';
 import { ViewModeService } from '../../../../core/services/view-mode.service';
 import { SiteService } from '../../../../core/services/site.service';
-import { MenuService } from '../../../../core/services/menu.service';
-import { SidenavService } from '../../../../core/services/sidenav.service';
-import { MenuEditorComponent } from '../../../../features/admin/menus/menu-editor/menu-editor.component';
-import { ButtonComponent } from "../../button/button.component";
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [CommonModule, RouterLink, ThemeToggleComponent, HeaderMenuRendererComponent, IconComponent, ButtonComponent],
+  imports: [CommonModule, RouterLink, ThemeToggleComponent, HeaderMenuRendererComponent, IconComponent],
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.css']
 })
 export class HeaderComponent implements AfterViewInit {
   readonly auth = inject(AuthService);
-  readonly sidenavService = inject(SidenavService);
   readonly viewModeService = inject(ViewModeService);
-  readonly menuService = inject(MenuService);
   readonly siteService = inject(SiteService);
   readonly router = inject(Router);
   readonly elementRef = inject(ElementRef);
   readonly ngZone = inject(NgZone);
   readonly injector = inject(Injector);
 
-  readonly headerMenu = signal<MenuRenderer | null>(null);
   readonly onSidenavClick = input<(() => void) | null>(null);
   readonly showToolbar = signal(true);
   readonly isPublishing = signal(false);
@@ -49,7 +41,6 @@ export class HeaderComponent implements AfterViewInit {
   private dragListenersAttached = false;
 
   ngOnInit(){
-    this.loadHeaderMenu();
     this.loadToolbarState();
 
     // Reconfigurar drag listeners cuando el toolbar se muestra/oculta
@@ -219,34 +210,5 @@ export class HeaderComponent implements AfterViewInit {
 
   navigateToLogin(): void {
     this.router.navigate(['/login']);
-  }
-
-  private loadHeaderMenu(): void {
-    this.menuService.getMenu(MenuType.Header).subscribe({
-      next: (menu: MenuRenderer | null) => {
-        this.headerMenu.set(menu);
-      },
-      error: (err: any) => {
-        console.error('Failed to load header menu', err);
-      }
-    });
-  }
-
-  openHeaderMenuEditor(): void {
-    let menu = this.headerMenu();
-    if (!menu) {
-      menu = {
-        id: undefined,
-        type: MenuType.Header,
-        menuItems: []
-      };
-    }
-    const sidenavRef = this.sidenavService.open(MenuEditorComponent, {
-      disableBackdropClick: true
-    });
-    sidenavRef.componentInstance.menu = menu;
-    sidenavRef.result.then(() => {
-      this.loadHeaderMenu();
-    });
   }
 }

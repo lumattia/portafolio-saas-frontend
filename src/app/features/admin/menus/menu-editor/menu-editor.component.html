@@ -42,7 +42,7 @@
               <app-button variant="icon" size="sm" (onClick)="openEditModal(null, item)">
                 <app-icon name="edit" size="sm" />
               </app-button>
-              <app-button variant="icon" size="sm" (onClick)="deleteItem(item.id)">
+              <app-button variant="icon" size="sm" (onClick)="deleteItem(null, item)">
                 <app-icon name="delete" size="sm" />
               </app-button>
             </div>
@@ -62,7 +62,7 @@
                       <app-button variant="icon" size="sm" (onClick)="openEditModal(item, child)">
                         <app-icon name="edit" size="sm" />
                       </app-button>
-                      <app-button variant="icon" size="sm" (onClick)="deleteItem(child.id)">
+                      <app-button variant="icon" size="sm" (onClick)="deleteItem(item, child)">
                         <app-icon name="delete" size="sm" />
                       </app-button>
                     </div>
