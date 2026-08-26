@@ -14,24 +14,65 @@
     <app-theme-toggle />
     <div class="user-card-container">
       @if (auth.isAuthenticated()) {
-        <div class="user-card" (click)="toggleUserDropdown()">
-          <div class="user-info">
-            <div class="user-email">{{ auth.user()?.email }}</div>
+        <app-popup
+          [showArrow]="false"
+          [position]="'bottom-right'"
+          [trigger]="'click'"
+          [closeOnClickOutside]="true">
+          <div class="user-card" popup-trigger data-trigger-type="click">
+            <div class="user-info">
+              <div class="user-email">{{ auth.user()?.email }}</div>
+            </div>
+            <app-icon name="chevron-right" size="sm" />
           </div>
-          <app-icon name="chevron-right" size="sm" />
-        </div>
-        @if (showUserDropdown()) {
-          <div class="dropdown-menu">
-            <div class="dropdown-item" (click)="openToolbar()">
+          <div class="popup-menu">
+            <app-popup
+              [showArrow]="true"
+              [position]="'left-top'"
+              [trigger]="'hover'"
+              [closeOnClickOutside]="false">
+              <div class="view-mode-trigger" popup-trigger data-trigger-type="hover">
+                <app-icon name="eye" size="sm" />
+                <span>View Mode</span>
+                <app-icon name="chevron-left" size="sm" />
+              </div>
+              <div class="view-mode-options">
+                <app-button variant="ghost" class="dropdown-item" [class.active]="viewModeService.isAdminMode()" (onClick)="setViewMode('admin')">
+                  <app-icon name="edit" size="sm" />
+                  <span>Modo Edición</span>
+                </app-button>
+                <app-button variant="ghost" class="dropdown-item" [class.active]="viewModeService.isPreviewMode()" (onClick)="setViewMode('preview')">
+                  <app-icon name="eye" size="sm" />
+                  <span>Vista Previa</span>
+                </app-button>
+                <app-button variant="ghost" class="dropdown-item" [class.active]="viewModeService.isSnapshotMode()" (onClick)="setViewMode('snapshot')">
+                  <app-icon name="globe" size="sm" />
+                  <span>Vista Publicada</span>
+                </app-button>
+              </div>
+            </app-popup>
+            <app-button variant="ghost" class="dropdown-item" [disabled]="!viewModeService.isAdminMode() || isPublishing()" (onClick)="publishSite()">
+              <app-icon name="upload" size="sm" />
+              <span>Publicar</span>
+            </app-button>
+            <app-button variant="ghost" class="dropdown-item" [disabled]="true">
+              <app-icon name="table" size="sm" />
+              <span>Table</span>
+            </app-button>
+            <app-button variant="ghost" class="dropdown-item" [disabled]="true">
+              <app-icon name="building" size="sm" />
+              <span>Tenant</span>
+            </app-button>
+            <app-button variant="ghost" class="dropdown-item" (onClick)="openToolbar()">
               <app-icon name="menu" size="sm" />
               <span>Toolbar</span>
-            </div>
-            <div class="dropdown-item" (click)="logout()">
+            </app-button>
+            <app-button variant="ghost" class="dropdown-item" (onClick)="logout()">
               <app-icon name="close" size="sm" />
               <span>Salir</span>
-            </div>
+            </app-button>
           </div>
-        }
+        </app-popup>
       } @else {
         <div class="login-card" (click)="navigateToLogin()">
           <span>Login</span>

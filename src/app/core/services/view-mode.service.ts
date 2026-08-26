@@ -1,4 +1,4 @@
-import { Injectable, inject, signal } from '@angular/core';
+import { Injectable, effect, inject, signal } from '@angular/core';
 import { AuthService } from './auth.service';
 export const VIEW_MODES = ['admin', 'preview', 'snapshot'] as const;
 export type ViewMode = (typeof VIEW_MODES)[number] | null;
@@ -9,7 +9,12 @@ export class ViewModeService {
 
   readonly viewMode = signal<ViewMode>(this.loadStoredViewMode());
 
-  constructor() {
+ constructor() {
+    effect(() => {
+      if (!this.auth.user()) {
+        this.setViewMode('snapshot');
+      }
+    });
   }
 
   private loadStoredViewMode(): ViewMode {
@@ -18,7 +23,7 @@ export class ViewModeService {
     if (VIEW_MODES.includes(stored as any)) {
       return stored as ViewMode;
     }
-    return null;
+    return 'snapshot';
   }
 
   private saveViewMode(mode: ViewMode): void {

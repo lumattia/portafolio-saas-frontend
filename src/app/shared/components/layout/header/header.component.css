@@ -87,21 +87,13 @@
   max-width: 100%;
 }
 
-.dropdown-menu {
-  position: absolute;
-  top: 100%;
-  right: 0;
-  margin-top: 0.5rem;
-  background: var(--surface-color);
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
-  padding: 0.5rem;
-  min-width: 200px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  z-index: 1001;
+.popup-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
 }
 
-.dropdown-item {
+.view-mode-trigger {
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -109,10 +101,78 @@
   cursor: pointer;
   border-radius: 4px;
   transition: background 0.2s;
+  position: relative;
+  width: 100%;
 }
 
-.dropdown-item:hover {
+.view-mode-trigger:hover {
   background: rgba(0, 0, 0, 0.05);
+}
+
+.view-mode-options {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.dropdown-item {
+  flex-grow: 1;
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.5rem !important;
+  padding: 0.5rem !important;
+  cursor: pointer !important;
+  border-radius: 4px !important;
+  transition: background 0.2s !important;
+  width: 100% !important;
+  text-align: left !important;
+  border: none !important;
+  background: none !important;
+  font-size: inherit !important;
+  font-family: inherit !important;
+}
+
+::ng-deep .popup-menu .dropdown-item button {
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.5rem !important;
+  padding: 0.5rem !important;
+  cursor: pointer !important;
+  border-radius: 4px !important;
+  transition: background 0.2s !important;
+  width: 100% !important;
+  text-align: left !important;
+  border: none !important;
+  background: none !important;
+  font-size: inherit !important;
+  font-family: inherit !important;
+  justify-content: flex-start !important;
+  transform: none !important;
+}
+
+::ng-deep .popup-menu .dropdown-item button:hover {
+  background: rgba(0, 0, 0, 0.05) !important;
+  transform: none !important;
+}
+
+::ng-deep .popup-menu .dropdown-item button.active {
+  background: var(--primary-color) !important;
+  color: white !important;
+}
+
+::ng-deep .popup-menu .dropdown-item button.active:hover {
+  background: var(--primary-color) !important;
+  color: white !important;
+}
+
+::ng-deep .popup-menu .dropdown-item button:disabled {
+  opacity: 0.5 !important;
+  cursor: not-allowed !important;
+}
+
+::ng-deep .popup-menu .dropdown-item button:disabled:hover {
+  background: none !important;
+  transform: none !important;
 }
 
 /* DraggableToolbar styles */

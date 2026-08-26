@@ -4,6 +4,8 @@ import { RouterLink, Router } from '@angular/router';
 import { ThemeToggleComponent } from '../../theme-toggle/theme-toggle.component';
 import { HeaderMenuRendererComponent } from '../../../../features/admin/menus/header-menu/header-menu-renderer.component';
 import { IconComponent } from '../../icon/icon.component';
+import { ButtonComponent } from '../../button/button.component';
+import { PopupComponent } from '../../popup/popup.component';
 import { AuthService } from '../../../../core/services/auth.service';
 import { ViewModeService } from '../../../../core/services/view-mode.service';
 import { SiteService } from '../../../../core/services/site.service';
@@ -13,7 +15,7 @@ import { MessageModalComponent } from '../../modals/message-modal/message-modal.
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [CommonModule, RouterLink, ThemeToggleComponent, HeaderMenuRendererComponent, IconComponent],
+  imports: [CommonModule, RouterLink, ThemeToggleComponent, HeaderMenuRendererComponent, IconComponent, ButtonComponent, PopupComponent],
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.css']
 })
@@ -28,7 +30,6 @@ export class HeaderComponent implements AfterViewInit {
   readonly injector = inject(Injector);
 
   readonly onSidenavClick = input<(() => void) | null>(null);
-  readonly showUserDropdown = signal(false);
   readonly showToolbar = signal(true);
   readonly isToolbarClosing = signal(false);
   readonly toolbarLeft = signal<number>(0);
@@ -155,14 +156,6 @@ export class HeaderComponent implements AfterViewInit {
     this.saveToolbarState();
   }
 
-  @HostListener('document:click', ['$event'])
-  onDocumentClick(event: MouseEvent): void {
-    const userCardContainer = this.elementRef.nativeElement.querySelector('.user-card-container');
-    if (userCardContainer && !userCardContainer.contains(event.target as Node)) {
-      this.showUserDropdown.set(false);
-    }
-  }
-
   closeToolbar(): void {
     this.showToolbar.set(false);
     this.saveToolbarState();
@@ -222,10 +215,6 @@ export class HeaderComponent implements AfterViewInit {
     if (this.auth.isAuthenticated()) {
       this.viewModeService.setViewMode(mode);
     }
-  }
-
-  toggleUserDropdown(): void {
-    this.showUserDropdown.update(v => !v);
   }
 
   logout(): void {

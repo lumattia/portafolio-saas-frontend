@@ -1,0 +1,20 @@
+<div class="popup-trigger-wrapper">
+  <div class="trigger-container"
+       (click)="handleClick()"
+       (mouseenter)="handleMouseEnter()"
+       (mouseleave)="handleMouseLeave()">
+    <ng-content select="[popup-trigger]"></ng-content>
+  </div>
+
+  @if (isOpen()) {
+    <div
+        class="popup-content"
+        [ngClass]="positionClass()"
+        (mouseenter)="handleMouseEnter()"
+        (mouseleave)="handleMouseLeave()"
+        [class.popup-with-arrow]="showArrow()">
+      <ng-content></ng-content>
+    </div>
+  }
+
+</div>
