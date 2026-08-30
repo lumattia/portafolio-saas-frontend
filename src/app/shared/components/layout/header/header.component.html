@@ -19,7 +19,7 @@
           [position]="'bottom-right'"
           [trigger]="'click'"
           [closeOnClickOutside]="true">
-          <div class="user-card" popup-trigger data-trigger-type="click">
+          <div class="user-card" [class.highlighting]="isUserCardHighlighting()" popup-trigger data-trigger-type="click">
             <div class="user-info">
               <div class="user-email">{{ auth.user()?.email }}</div>
             </div>
@@ -37,37 +37,37 @@
                 <app-icon name="chevron-left" size="sm" />
               </div>
               <div class="view-mode-options">
-                <app-button variant="ghost" class="dropdown-item" [class.active]="viewModeService.isAdminMode()" (onClick)="setViewMode('admin')">
+                <app-button variant="icon" [active]="viewModeService.isAdminMode()" (onClick)="setViewMode('admin')">
                   <app-icon name="edit" size="sm" />
                   <span>Modo Edición</span>
                 </app-button>
-                <app-button variant="ghost" class="dropdown-item" [class.active]="viewModeService.isPreviewMode()" (onClick)="setViewMode('preview')">
+                <app-button variant="icon" [active]="viewModeService.isPreviewMode()" (onClick)="setViewMode('preview')">
                   <app-icon name="eye" size="sm" />
                   <span>Vista Previa</span>
                 </app-button>
-                <app-button variant="ghost" class="dropdown-item" [class.active]="viewModeService.isSnapshotMode()" (onClick)="setViewMode('snapshot')">
+                <app-button variant="icon" [active]="viewModeService.isSnapshotMode()" (onClick)="setViewMode('snapshot')">
                   <app-icon name="globe" size="sm" />
                   <span>Vista Publicada</span>
                 </app-button>
               </div>
             </app-popup>
-            <app-button variant="ghost" class="dropdown-item" [disabled]="!viewModeService.isAdminMode() || isPublishing()" (onClick)="publishSite()">
+            <app-button variant="icon" [disabled]="!viewModeService.isAdminMode() || isPublishing()" (onClick)="publishSite()">
               <app-icon name="upload" size="sm" />
               <span>Publicar</span>
             </app-button>
-            <app-button variant="ghost" class="dropdown-item" [disabled]="true">
+            <app-button variant="icon" [disabled]="true">
               <app-icon name="table" size="sm" />
               <span>Table</span>
             </app-button>
-            <app-button variant="ghost" class="dropdown-item" [disabled]="true">
+            <app-button variant="icon" [disabled]="true">
               <app-icon name="building" size="sm" />
               <span>Tenant</span>
             </app-button>
-            <app-button variant="ghost" class="dropdown-item" (onClick)="openToolbar()">
+            <app-button variant="icon" (onClick)="openToolbar()">
               <app-icon name="menu" size="sm" />
               <span>Toolbar</span>
             </app-button>
-            <app-button variant="ghost" class="dropdown-item" (onClick)="logout()">
+            <app-button variant="icon" (onClick)="logout()">
               <app-icon name="close" size="sm" />
               <span>Salir</span>
             </app-button>
@@ -82,54 +82,44 @@
   </div>
 </header>
 
-@if (showToolbar() && auth.isAuthenticated()) {
-  <div
-    class="draggable-toolbar"
-    [class.closing]="isToolbarClosing()"
-    [style.left.px]="toolbarLeft()"
-    [style.top.px]="toolbarTop()">
-    <div class="toolbar-content">
-      <button type="button" class="close-button" (click)="closeToolbarWithAnimation()">
-        <app-icon name="close" size="sm" />
-      </button>
-      <div class="toolbar-view-selector">
-        <button
-          type="button"
-          class="toolbar-icon"
-          [class.active]="viewModeService.isAdminMode()"
-          (click)="setViewMode('admin')"
-          title="Modo Edición">
-          <app-icon name="edit" size="sm" />
-        </button>
-        <button
-          type="button"
-          class="toolbar-icon"
-          [class.active]="viewModeService.isPreviewMode()"
-          (click)="setViewMode('preview')"
-          title="Vista Previa">
-          <app-icon name="eye" size="sm" />
-        </button>
-        <button
-          type="button"
-          class="toolbar-icon"
-          [class.active]="viewModeService.isSnapshotMode()"
-          (click)="setViewMode('snapshot')"
-          title="Vista Publicada">
-          <app-icon name="globe" size="sm" />
-        </button>
-      </div>
-      <button
-        type="button"
-        class="toolbar-icon"
-        [disabled]="!viewModeService.isAdminMode() || isPublishing()"
-        (click)="publishSite()"
-        title="Publicar">
-        @if (isPublishing()) {
-          <app-icon name="loader" size="sm" />
-        } @else {
-          <app-icon name="upload" size="sm" />
-        }
-      </button>
+@if (auth.isAuthenticated()) {
+  <app-draggable-toolbar>
+    <app-button variant="icon" (onClick)="onToolbarClose()">
+      <app-icon name="close" size="sm" />
+    </app-button>
+    <div class="toolbar-view-selector">
+      <app-button
+        variant="icon"
+        [active]="viewModeService.isAdminMode()"
+        (onClick)="setViewMode('admin')"
+        title="Modo Edición">
+        <app-icon name="edit" size="sm" />
+      </app-button>
+      <app-button
+        variant="icon"
+        [active]="viewModeService.isPreviewMode()"
+        (onClick)="setViewMode('preview')"
+        title="Vista Previa">
+        <app-icon name="eye" size="sm" />
+      </app-button>
+      <app-button
+        variant="icon"
+        [active]="viewModeService.isSnapshotMode()"
+        (onClick)="setViewMode('snapshot')"
+        title="Vista Publicada">
+        <app-icon name="globe" size="sm" />
+      </app-button>
     </div>
-  </div>
+    <app-button
+      variant="icon"
+      [disabled]="!viewModeService.isAdminMode() || isPublishing()"
+      (onClick)="publishSite()"
+      title="Publicar">
+      @if (isPublishing()) {
+        <app-icon name="loader" size="sm" />
+      } @else {
+        <app-icon name="upload" size="sm" />
+      }
+    </app-button>
+  </app-draggable-toolbar>
 }

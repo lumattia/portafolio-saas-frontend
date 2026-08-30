@@ -1,0 +1,10 @@
+@if (showToolbar()) {
+  <div
+    class="draggable-toolbar"
+    [style.left.px]="toolbarLeft()"
+    [style.top.px]="toolbarTop()">
+    <div class="toolbar-content">
+      <ng-content></ng-content>
+    </div>
+  </div>
+}

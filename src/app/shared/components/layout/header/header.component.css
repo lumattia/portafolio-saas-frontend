@@ -70,6 +70,32 @@
   background: rgba(0, 0, 0, 0.05);
 }
 
+.user-card.highlighting {
+  animation: pulse-glow 1s ease-in-out;
+}
+
+@keyframes pulse-glow {
+  0% {
+    background: var(--primary-color);
+    color: var(--text-color);
+    box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.2);
+  }
+  50% {
+    background: var(--primary-color);
+    color: var(--text-color);
+    box-shadow: 0 0 20px 10px rgba(0, 0, 0, 0.1);
+  }
+  100% {
+    background: var(--surface-color);
+    color: var(--text-color);
+    box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
+  }
+}
+
+.user-card.highlighting .user-email {
+  color: var(--text-color);
+}
+
 .user-info {
   display: flex;
   flex-direction: column;
@@ -112,149 +138,10 @@
 .view-mode-options {
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
-}
-
-.dropdown-item {
-  flex-grow: 1;
-  display: flex !important;
-  align-items: center !important;
-  gap: 0.5rem !important;
-  padding: 0.5rem !important;
-  cursor: pointer !important;
-  border-radius: 4px !important;
-  transition: background 0.2s !important;
-  width: 100% !important;
-  text-align: left !important;
-  border: none !important;
-  background: none !important;
-  font-size: inherit !important;
-  font-family: inherit !important;
-}
-
-::ng-deep .popup-menu .dropdown-item button {
-  display: flex !important;
-  align-items: center !important;
-  gap: 0.5rem !important;
-  padding: 0.5rem !important;
-  cursor: pointer !important;
-  border-radius: 4px !important;
-  transition: background 0.2s !important;
-  width: 100% !important;
-  text-align: left !important;
-  border: none !important;
-  background: none !important;
-  font-size: inherit !important;
-  font-family: inherit !important;
-  justify-content: flex-start !important;
-  transform: none !important;
-}
-
-::ng-deep .popup-menu .dropdown-item button:hover {
-  background: rgba(0, 0, 0, 0.05) !important;
-  transform: none !important;
-}
-
-::ng-deep .popup-menu .dropdown-item button.active {
-  background: var(--primary-color) !important;
-  color: white !important;
-}
-
-::ng-deep .popup-menu .dropdown-item button.active:hover {
-  background: var(--primary-color) !important;
-  color: white !important;
-}
-
-::ng-deep .popup-menu .dropdown-item button:disabled {
-  opacity: 0.5 !important;
-  cursor: not-allowed !important;
-}
-
-::ng-deep .popup-menu .dropdown-item button:disabled:hover {
-  background: none !important;
-  transform: none !important;
-}
-
-/* DraggableToolbar styles */
-.draggable-toolbar {
-  position: fixed;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.75rem 1.5rem;
-  background: var(--surface-color);
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  border-radius: 50px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  z-index: 1000;
-  cursor: move;
-  transition: opacity 0.3s ease, right 0.3s ease;
-}
-
-.draggable-toolbar.closing {
-  opacity: 0;
-  right: 2rem;
-  top: 4rem;
-  left: auto;
-}
-
-.toolbar-content {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
 }
 
 .toolbar-view-selector {
   display: flex;
   align-items: center;
-  background: rgba(0, 0, 0, 0.05);
-  border-radius: 25px;
-  padding: 0.25rem;
-  gap: 0.25rem;
-}
-
-.toolbar-icon {
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 0.5rem;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--text-color);
-  transition: background 0.2s, color 0.2s;
-  width: 36px;
-  height: 36px;
-}
-
-.toolbar-icon:hover {
-  background: rgba(0, 0, 0, 0.1);
-}
-
-.toolbar-icon.active {
-  background: var(--primary-color);
-  color: white;
-}
-
-.toolbar-icon:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-.close-button {
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 0.25rem;
-  border-radius: 4px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--text-color);
-  transition: background 0.2s;
-}
-
-.close-button:hover {
   background: rgba(0, 0, 0, 0.05);
 }

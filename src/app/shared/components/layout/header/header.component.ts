@@ -1,4 +1,4 @@
-import { Component, input, inject, signal, AfterViewInit, ElementRef, NgZone, HostListener, effect, runInInjectionContext, Injector } from '@angular/core';
+import { Component, input, inject, signal, AfterViewInit, ElementRef, NgZone, HostListener, effect, runInInjectionContext, Injector, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, Router } from '@angular/router';
 import { ThemeToggleComponent } from '../../theme-toggle/theme-toggle.component';
@@ -7,19 +7,20 @@ import { IconComponent } from '../../icon/icon.component';
 import { ButtonComponent } from '../../button/button.component';
 import { PopupComponent } from '../../popup/popup.component';
 import { AuthService } from '../../../../core/services/auth.service';
-import { ViewModeService } from '../../../../core/services/view-mode.service';
+import { ViewMode, ViewModeService } from '../../../../core/services/view-mode.service';
 import { SiteService } from '../../../../core/services/site.service';
 import { ModalService } from '../../../../core/services/modal.service';
 import { MessageModalComponent } from '../../modals/message-modal/message-modal.component';
+import { DraggableToolbarComponent } from '../../draggable-toolbar/draggable-toolbar.component';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [CommonModule, RouterLink, ThemeToggleComponent, HeaderMenuRendererComponent, IconComponent, ButtonComponent, PopupComponent],
+  imports: [CommonModule, RouterLink, ThemeToggleComponent, HeaderMenuRendererComponent, IconComponent, ButtonComponent, PopupComponent, DraggableToolbarComponent],
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.css']
 })
-export class HeaderComponent implements AfterViewInit {
+export class HeaderComponent {
   readonly auth = inject(AuthService);
   readonly viewModeService = inject(ViewModeService);
   readonly modalService = inject(ModalService);
@@ -29,149 +30,24 @@ export class HeaderComponent implements AfterViewInit {
   readonly ngZone = inject(NgZone);
   readonly injector = inject(Injector);
 
+  @ViewChild(DraggableToolbarComponent) draggableToolbar!: DraggableToolbarComponent;
+
   readonly onSidenavClick = input<(() => void) | null>(null);
-  readonly showToolbar = signal(true);
-  readonly isToolbarClosing = signal(false);
-  readonly toolbarLeft = signal<number>(0);
-  readonly toolbarTop = signal<number>(0);
   readonly isPublishing = signal(false);
+  readonly isUserCardHighlighting = signal(false);
 
-  private isDragging = false;
-  private startX = 0;
-  private startY = 0;
-  private initialLeft = 0;
-  private initialTop = 0;
-  private animationFrameId: number | null = null;
-  private dragListenersAttached = false;
-
-  ngOnInit(){
-    this.loadToolbarState();
-
-    // Reconfigurar drag listeners cuando el toolbar se muestra/oculta
-    runInInjectionContext(this.injector, () => {
-      effect(() => {
-        if (this.showToolbar() && this.auth.isAuthenticated()) {
-          setTimeout(() => this.setupDrag(), 0);
-        } else {
-          this.cleanupDrag();
-        }
-      });
-    });
-  }
-
-  ngAfterViewInit(): void {
-    this.setInitialToolbarPosition();
-  }
-
-  private setInitialToolbarPosition(): void {
-    const storedLeft = localStorage.getItem('toolbarLeft');
-    const storedTop = localStorage.getItem('toolbarTop');
-
-    if (storedLeft && storedTop) {
-      this.toolbarLeft.set(parseInt(storedLeft, 10));
-      this.toolbarTop.set(parseInt(storedTop, 10));
-    } else {
-      // Posición inicial por defecto
-      const windowWidth = window.innerWidth;
-      const windowHeight = window.innerHeight;
-      this.toolbarLeft.set(windowWidth / 2 - 150);
-      this.toolbarTop.set(windowHeight - 80);
-    }
-  }
-
-  private loadToolbarState(): void {
-    const stored = localStorage.getItem('toolbarVisible');
-    if (stored !== null) {
-      this.showToolbar.set(stored === 'true');
-    }
-  }
-
-  private saveToolbarState(): void {
-    localStorage.setItem('toolbarVisible', this.showToolbar().toString());
-    localStorage.setItem('toolbarLeft', this.toolbarLeft().toString());
-    localStorage.setItem('toolbarTop', this.toolbarTop().toString());
-  }
-
-  private setupDrag(): void {
-    const toolbar = this.elementRef.nativeElement.querySelector('.draggable-toolbar');
-    if (!toolbar || this.dragListenersAttached) return;
-
-    this.ngZone.runOutsideAngular(() => {
-      toolbar.addEventListener('mousedown', this.onMouseDown.bind(this));
-      document.addEventListener('mousemove', this.onMouseMove.bind(this));
-      document.addEventListener('mouseup', this.onMouseUp.bind(this));
-    });
-    this.dragListenersAttached = true;
-  }
-
-  private cleanupDrag(): void {
-    if (!this.dragListenersAttached) return;
-
-    const toolbar = this.elementRef.nativeElement.querySelector('.draggable-toolbar');
-    if (toolbar) {
-      toolbar.removeEventListener('mousedown', this.onMouseDown.bind(this));
-    }
-    document.removeEventListener('mousemove', this.onMouseMove.bind(this));
-    document.removeEventListener('mouseup', this.onMouseUp.bind(this));
-    this.dragListenersAttached = false;
-  }
-
-  private onMouseDown(event: MouseEvent): void {
-    // Don't start drag if clicking on a button
-    if ((event.target as HTMLElement).closest('button')) {
-      return;
-    }
-    event.preventDefault();
-    this.isDragging = true;
-    this.startX = event.clientX;
-    this.startY = event.clientY;
-    this.initialLeft = this.toolbarLeft();
-    this.initialTop = this.toolbarTop();
-  }
-
-  private onMouseMove(event: MouseEvent): void {
-    if (!this.isDragging) return;
-
-    if (this.animationFrameId) {
-      cancelAnimationFrame(this.animationFrameId);
-    }
-
-    this.animationFrameId = requestAnimationFrame(() => {
-      const dx = event.clientX - this.startX;
-      const dy = event.clientY - this.startY;
-
-      this.ngZone.run(() => {
-        this.toolbarLeft.set(this.initialLeft + dx);
-        this.toolbarTop.set(this.initialTop + dy);
-      });
-    });
-  }
-
-  private onMouseUp(): void {
-    this.isDragging = false;
-    if (this.animationFrameId) {
-      cancelAnimationFrame(this.animationFrameId);
-      this.animationFrameId = null;
-    }
-    this.saveToolbarState();
-  }
-
-  closeToolbar(): void {
-    this.showToolbar.set(false);
-    this.saveToolbarState();
+  onToolbarClose(): void {
+    this.draggableToolbar.closeToolbar();
+    this.isUserCardHighlighting.set(true);
+    setTimeout(() => {
+      this.isUserCardHighlighting.set(false);
+    }, 1000);
   }
 
   openToolbar(): void {
-    this.showToolbar.set(true);
-    this.saveToolbarState();
-  }
-
-  closeToolbarWithAnimation(): void {
-    this.isToolbarClosing.set(true);
-    setTimeout(() => {
-      this.closeToolbar();
-      this.isToolbarClosing.set(false);
-    }, 300);
+    if (this.draggableToolbar) {
+      this.draggableToolbar.openToolbar();
+    }
   }
 
   publishSite(): void {
@@ -211,7 +87,7 @@ export class HeaderComponent implements AfterViewInit {
     });
   }
 
-  setViewMode(mode: 'admin' | 'preview' | 'snapshot'): void {
+  setViewMode(mode: ViewMode): void {
     if (this.auth.isAuthenticated()) {
       this.viewModeService.setViewMode(mode);
     }
