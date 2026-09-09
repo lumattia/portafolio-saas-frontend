@@ -1,0 +1,48 @@
+<div class="page-settings">
+  <h2>Page Settings</h2>
+
+  <div class="form-group">
+    <app-text-input
+      labelKey="Title"
+      placeholderKey="Page title"
+      [control]="titleControl"
+    />
+  </div>
+
+  <div class="form-group">
+    <app-text-input
+      labelKey="Slug"
+      placeholderKey="page-slug"
+      [control]="slugControl"
+    />
+  </div>
+
+  <div class="form-group">
+    <label for="metaDescription">Meta Description</label>
+    <textarea
+      id="metaDescription"
+      [formControl]="metaDescriptionControl"
+      placeholder="SEO meta description"
+      rows="3"
+    ></textarea>
+  </div>
+
+  <div class="form-actions">
+    <app-button
+      variant="secondary"
+      (onClick)="cancel()"
+    >
+      Cancel
+    </app-button>
+    <app-button
+      variant="primary"
+      (onClick)="save()"
+    >
+      @if (!pageId()) {
+        Create
+      } @else {
+        Save
+      }
+    </app-button>
+  </div>
+</div>

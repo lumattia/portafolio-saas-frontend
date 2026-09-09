@@ -5,25 +5,28 @@
 } @else if (pageNotFound()) {
   <div class="create-page-prompt">
     <p>Esta página no existe. ¿Deseas crear la página con el slug '{{ pageSlug() }}'?</p>
-    <button (click)="createPage()">Crear Página</button>
+    <app-button variant="primary" (onClick)="createPage()">Crear Página</app-button>
   </div>
 }@else{
   <div class="page-editor">
     <!-- Header with page metadata and Save/Publish buttons -->
-    <div class="page-header">
+    <div class="page-header" (click)="openPageSettings()">
       <div class="page-info">
         <h1 class="page-title">{{ pageTitle() }}</h1>
         @if (pageIsDeleted()) {
           <div class="soft-delete-warning">
             <p>⚠️ Esta página está marcada para eliminación</p>
-            <button (click)="undoDelete()" class="undo-button">Deshacer / Recrear</button>
+            <app-button variant="secondary" (onClick)="$event.stopPropagation(); undoDelete()">Deshacer / Recrear</app-button>
           </div>
         }
     </div>
       <div class="action-buttons">
-        <button type="button" class="btn btn-secondary" (click)="savePage()">
+        <app-button variant="primary" (onClick)="$event.stopPropagation(); createNewPage()" [disabled]="hasChanges()">
+          New Page
+        </app-button>
+        <app-button variant="secondary" (onClick)="$event.stopPropagation(); savePage()" [disabled]="!hasChanges()">
           Save
-        </button>
+        </app-button>
       </div>
     </div>
 
@@ -46,10 +49,10 @@
 
       <!-- Add Section Button -->
       <div class="add-section-container">
-        <button type="button" class="add-section-button" (click)="openTemplateSelector()">
+        <app-button variant="primary" (onClick)="openTemplateSelector()">
           <span class="plus-icon">+</span>
           <span class="button-text">Add Section</span>
-        </button>
+        </app-button>
       </div>
     </div>
   </div>

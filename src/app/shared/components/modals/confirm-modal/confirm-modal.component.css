@@ -1,31 +1,14 @@
-.modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: var(--z-index-modal-backdrop);
-}
 
-.modal.hidden {
-  display: none;
-}
-
-.dialog {
+.modal-content {
   background-color: var(--bg);
   border-radius: var(--radius-lg);
   padding: var(--spacing-lg);
   max-width: 500px;
-  width: 90%;
   max-height: 90vh;
   overflow-y: auto;
 }
 
-.dialog-header {
+.modal-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -34,7 +17,7 @@
   border-bottom: 1px solid var(--border);
 }
 
-.dialog-header h3 {
+.modal-header h3 {
   margin: 0;
   font-size: var(--font-size-xl);
 }
@@ -60,7 +43,7 @@
   color: var(--text);
 }
 
-.dialog p {
+.modal-content p {
   margin: 0 0 var(--spacing-lg) 0;
   color: var(--text-secondary);
 }

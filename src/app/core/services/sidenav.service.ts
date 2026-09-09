@@ -1,8 +1,7 @@
 import { Injectable, ApplicationRef, EnvironmentInjector } from '@angular/core';
-import { DynamicOverlayService } from './dynamic-overlay.service';
+import { DynamicOverlayService, BaseOverlayOptions } from './dynamic-overlay.service';
 
-export interface SidenavOptions {
-  disableBackdropClick?: boolean;
+export interface SidenavOptions extends BaseOverlayOptions {
   position?: 'left' | 'right';
 }
 
@@ -32,15 +31,6 @@ export class SidenavService extends DynamicOverlayService<SidenavOptions> {
     } else {
       container.style.right = '0';
       container.style.justifyContent = 'flex-end';
-    }
-
-    // Add click handler to close on backdrop click
-    if (!options?.disableBackdropClick) {
-      container.addEventListener('click', (event: Event) => {
-        if (event.target === container) {
-          this.closeAll();
-        }
-      });
     }
   }
 }

@@ -6,8 +6,8 @@ import { ModalService } from '../../../../core/services/modal.service';
 import { MenuItemRenderer, MenuItemRequest, MenuRenderer, MenuRequest, MenuType } from '../../../../core/models/menu.model';
 import { ButtonComponent } from '../../../../shared/components/button/button.component';
 import { IconComponent } from '../../../../shared/components/icon/icon.component';
-import { ConfirmModalComponent } from '../../../../shared/components/modals/confirm-modal/confirm-modal.component';
 import { TextInputComponent } from '../../../../shared/components/inputs/text-input/text-input.component';
+import { UnsavedChangesModalComponent } from '../../../../shared/components/modals/unsaved-changes-modal/unsaved-changes-modal.component';
 
 @Component({
   selector: 'app-menu-editor',
@@ -68,14 +68,8 @@ export class MenuEditorComponent {
 
     attemptClose(): void {
       if (this.hasUnsavedChanges()) {
-          const modalRef = this.modalService.open(ConfirmModalComponent);
-          modalRef.componentInstance.title = 'Cambios sin guardar';
-          modalRef.componentInstance.message = 'Tienes cambios sin guardar. ¿Deseas cerrar?';
-          modalRef.result.then((res) => {
-              if (res.confirmed) {
-                  this.close();
-              }
-          });
+          const modalRef = this.modalService.open(UnsavedChangesModalComponent);
+          modalRef.result.then((res) => { if (res.data) this.close(); });
       } else {
           this.close();
       }

@@ -1,4 +1,4 @@
-import { Component, inject, signal, OnInit } from '@angular/core';
+import { Component, inject, signal, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../../../core/services/auth.service';
@@ -16,6 +16,7 @@ import { FooterMenuRendererComponent } from "../../../../features/admin/menus/fo
 import { MenuEditorComponent } from '../../../../features/admin/menus/menu-editor/menu-editor.component';
 import { HeaderComponent } from "../header/header.component";
 import { PortfolioPageComponent } from "../../../../features/portfolio/pages/portfolio-page/portfolio-page.component";
+import { CanDeactivateComponent } from '../../../../core/guards/unsaved-changes.guard';
 
 @Component({
   selector: 'app-layout',
@@ -24,11 +25,13 @@ import { PortfolioPageComponent } from "../../../../features/portfolio/pages/por
   templateUrl: './layout.component.html',
   styleUrls: ['./layout.component.css']
 })
-export class LayoutComponent implements OnInit {
+export class LayoutComponent implements OnInit, CanDeactivateComponent {
   readonly auth = inject(AuthService);
   readonly themeService = inject(ThemeService);
   readonly router = inject(Router);
   readonly viewModeService = inject(ViewModeService);
+
+  @ViewChild(PageEditorComponent) pageEditorComponent!: PageEditorComponent;
 
   readonly theme = signal<ThemeConfig | null>(null);
   readonly isPublishing = signal(false);
@@ -66,5 +69,9 @@ export class LayoutComponent implements OnInit {
 
   toggleSidenav(): void {
     this.showSidenav.update(v => !v);
+  }
+
+  canDeactivate(): boolean {
+    return this.viewModeService.isAdminMode() && this.pageEditorComponent.canDeactivate();
   }
 }

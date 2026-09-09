@@ -10,16 +10,12 @@ import { ButtonComponent } from '../../button/button.component';
   templateUrl: './unsaved-changes-modal.component.html',
   styleUrls: ['./unsaved-changes-modal.component.css']
 })
-export class UnsavedChangesModalComponent {  
+export class UnsavedChangesModalComponent {
   // These will be injected by ModalService
   close?: (result?: any) => void;
   dismiss?: (reason?: any) => void;
 
-  constructor(private cdr: ChangeDetectorRef) {}
-
-  ngOnChanges() {
-    this.cdr.detectChanges();
-  }
+  constructor() {}
 
   onStayClick(): void {
     this.close?.(false);

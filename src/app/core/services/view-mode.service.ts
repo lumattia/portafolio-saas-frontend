@@ -1,11 +1,13 @@
 import { Injectable, effect, inject, signal } from '@angular/core';
 import { AuthService } from './auth.service';
+import { ChangeTrackingService } from './change-tracking.service';
 export const VIEW_MODES = ['admin', 'preview', 'snapshot'] as const;
 export type ViewMode = (typeof VIEW_MODES)[number] | null;
 
 @Injectable({ providedIn: 'root' })
 export class ViewModeService {
   private readonly auth = inject(AuthService);
+  private readonly changeTrackingService = inject(ChangeTrackingService);
 
   readonly viewMode = signal<ViewMode>(this.loadStoredViewMode());
 
@@ -48,6 +50,19 @@ export class ViewModeService {
   }
 
   setViewMode(mode: ViewMode): void {
+    if (this.isAdminMode()) {
+      this.changeTrackingService.deployMessage().then((canChange) => {
+        if (canChange) {
+          this.changeTrackingService.reset();
+          this.applyMode(mode);
+        }
+      });
+      return;
+    }
+    this.applyMode(mode);
+  }
+
+  private applyMode(mode: ViewMode): void {
     this.viewMode.set(mode);
     this.saveViewMode(mode);
   }

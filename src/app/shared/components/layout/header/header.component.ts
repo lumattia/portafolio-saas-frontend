@@ -56,9 +56,7 @@ export class HeaderComponent {
       next: (result: boolean) => {
         this.isPublishing.set(false);
           if (result) {
-          const modalRef = this.modalService.open(MessageModalComponent, {
-            disableBackdropClick: false
-          });
+          const modalRef = this.modalService.open(MessageModalComponent);
           modalRef.componentInstance.title = 'Publicación Exitosa';
           modalRef.componentInstance.message = 'El sitio se ha publicado correctamente.';
           modalRef.componentInstance.type = 'success';
@@ -67,9 +65,7 @@ export class HeaderComponent {
             window.location.reload();
           });
         } else {
-          const modalRef = this.modalService.open(MessageModalComponent, {
-            disableBackdropClick: false
-          });
+          const modalRef = this.modalService.open(MessageModalComponent);
           modalRef.componentInstance.title = 'Error en la Publicación';
           modalRef.componentInstance.message = 'Hubo un error al publicar el sitio.';
           modalRef.componentInstance.type = 'error';
@@ -77,9 +73,7 @@ export class HeaderComponent {
       },
       error: () => {
         this.isPublishing.set(false);
-        const modalRef = this.modalService.open(MessageModalComponent, {
-          disableBackdropClick: false
-        });
+        const modalRef = this.modalService.open(MessageModalComponent);
         modalRef.componentInstance.title = 'Error en la Publicación';
         modalRef.componentInstance.message = 'Hubo un error al publicar el sitio.';
         modalRef.componentInstance.type = 'error';

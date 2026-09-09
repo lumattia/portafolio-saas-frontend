@@ -1,7 +1,9 @@
 import { Injectable, ApplicationRef, EnvironmentInjector } from '@angular/core';
-import { DynamicOverlayService } from './dynamic-overlay.service';
-export interface ModalOptions {
+import { DynamicOverlayService, BaseOverlayOptions } from './dynamic-overlay.service';
+
+export interface ModalOptions extends BaseOverlayOptions {
 }
+
 @Injectable({
   providedIn: 'root'
 })

@@ -7,13 +7,17 @@ export interface OverlayRef<T> {
   dismiss: (reason?: any) => void;
 }
 
+export interface BaseOverlayOptions {
+  disableBackdropClick?: boolean;
+}
+
 interface InternalOverlayRef<T> extends OverlayRef<T> {
   resolve: (value: any) => void;
   reject: (reason: any) => void;
 }
 
 @Injectable()
-export abstract class DynamicOverlayService<TOptions> {
+export abstract class DynamicOverlayService<TOptions extends BaseOverlayOptions> {
   protected container: HTMLElement | null = null;
   private activeOverlays: Map<ComponentRef<any> | EmbeddedViewRef<any>, OverlayRef<any>> = new Map();
 
@@ -30,9 +34,27 @@ export abstract class DynamicOverlayService<TOptions> {
       this.container = document.createElement('div');
       this.container.id = this.containerId;
       this.configureContainerStyles(this.container, options);
+      this.setupBackdropClickHandler(this.container, options);
       document.body.appendChild(this.container);
     }
     return this.container;
+  }
+
+  private setupBackdropClickHandler(container: HTMLElement, options?: TOptions): void {
+    if (options?.disableBackdropClick) return;
+
+    let startedInside = false;
+
+    container.addEventListener('pointerdown', (event: PointerEvent) => {
+      startedInside = event.target !== container;
+    });
+
+    container.addEventListener('pointerup', (event: PointerEvent) => {
+      if (!startedInside && event.target === container) {
+        this.closeAll();
+      }
+      startedInside = false;
+    });
   }
 
   open<T>(content: Type<T> | TemplateRef<any>, options?: TOptions): OverlayRef<T> {

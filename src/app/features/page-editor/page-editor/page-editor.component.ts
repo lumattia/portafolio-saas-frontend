@@ -1,8 +1,7 @@
-import { Component, inject, computed, input, signal, OnInit, AfterViewInit, ViewChild } from '@angular/core';
+import { Component, inject, computed, signal, OnInit } from '@angular/core';
 import { CommonModule, Location } from '@angular/common';
-import { ViewContainerRef } from '@angular/core';
 import { PageService } from '../../../core/services/page.service';
-import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { SectionRendererComponent } from '../section-renderer/section-renderer.component';
 import { SectionEditorComponent } from '../section-editor/section-editor.component';
 import { PageRenderer, PageRequest, SectionRenderer, SectionRequest } from '../../../core/models/page.model';
@@ -10,23 +9,28 @@ import { ModalService } from '../../../core/services/modal.service';
 import { TemplateSelectorComponent } from '../template-selector/template-selector.component';
 import { SidenavService } from '../../../core/services/sidenav.service';
 import { ConfirmModalComponent } from '../../../shared/components/modals/confirm-modal/confirm-modal.component';
-import { filter } from 'rxjs/operators';
 import { OverlayRef } from '../../../core/services/dynamic-overlay.service';
+import { PageSettingsComponent } from '../page-settings/page-settings.component';
+import { ChangeTrackingService } from '../../../core/services/change-tracking.service';
+import { CanDeactivateComponent } from '../../../core/guards/unsaved-changes.guard';
+import { ButtonComponent } from '../../../shared/components/button/button.component';
+import { filter } from 'rxjs';
 
 @Component({
   selector: 'app-page-editor',
   standalone: true,
-  imports: [CommonModule, SectionRendererComponent],
+  imports: [CommonModule, SectionRendererComponent, ButtonComponent],
   templateUrl: './page-editor.component.html',
   styleUrls: ['./page-editor.component.scss'],
 })
-export class PageEditorComponent implements OnInit {
+export class PageEditorComponent implements OnInit, CanDeactivateComponent {
   private readonly pageService = inject(PageService);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly location = inject(Location);
   private readonly sidenavService = inject(SidenavService);
   private readonly modalService = inject(ModalService);
+  private readonly changeTrackingService = inject(ChangeTrackingService);
 
   sections = signal<SectionRenderer[]>([]);
   selectedSection: SectionRenderer | null = null;
@@ -39,10 +43,11 @@ export class PageEditorComponent implements OnInit {
   readonly pageNotFound = signal<boolean>(false);
   readonly pageIsDeleted = signal<boolean>(false);
   readonly loading = signal(true);
+  readonly hasChanges = this.changeTrackingService.hasChanges;
 
   ngOnInit(): void {
     this.loadPage();
-    this.router.events.pipe(
+      this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
     ).subscribe(() => {
       this.loadPage();
@@ -53,6 +58,7 @@ export class PageEditorComponent implements OnInit {
     const slug = this.route.snapshot.url.join('/');
     this.pageService.getByIdentifier(slug).subscribe({
       next: (detail: PageRenderer) => {
+        this.changeTrackingService.reset();
         if (detail === null) {
           this.pageNotFound.set(true);
           this.pageSlug.set(slug);
@@ -72,26 +78,6 @@ export class PageEditorComponent implements OnInit {
         console.error('Failed to load page content', err);
         this.loading.set(false);
       },
-    });
-  }
-
-  createPage(): void {
-    const slug = this.pageSlug();
-    const request: PageRequest = {
-      title: slug,
-      slug: slug,
-      metaDescription: ''
-    };
-    this.pageService.create(request).subscribe({
-      next: (page) => {
-        this.internalPageId.set(page.id);
-        this.pageNotFound.set(false);
-        this.location.replaceState(`/${page.slug}`);
-        this.loadPage();
-      },
-      error: (err: any) => {
-        console.error('Failed to create page', err);
-      }
     });
   }
 
@@ -118,13 +104,37 @@ export class PageEditorComponent implements OnInit {
     sidenavRef.result.then((res) => {
       if (res.confirmed && res.data) {
         let newSection = res.data as SectionRenderer;
-        this.sections.update((sections) => [...sections, newSection])
+        this.sections.update((sections) => [...sections, newSection]);
+        this.changeTrackingService.markAsChanged();
       };
     });
   }
 
+  openPageSettings(): void {
+    var settingRef = this.sidenavService.open(PageSettingsComponent);
+    settingRef.componentInstance.pageId = this.internalPageId();
+    settingRef.componentInstance.title = this.pageTitle();
+    settingRef.componentInstance.slug = this.pageSlug();
+
+    settingRef.result.then(() => {
+      this.pageTitle.set(settingRef.componentInstance.titleControl.value);
+      this.pageSlug.set(settingRef.componentInstance.slugControl.value);
+    });
+  }
+
+  createNewPage(): void {
+    this.sidenavService.open(PageSettingsComponent);
+  }
+
+  createPage(): void {
+    var settingRef = this.sidenavService.open(PageSettingsComponent);
+    settingRef.componentInstance.slug = this.pageSlug();
+  }
+
   selectSection(section: SectionRenderer): void {
     this.selectedSection = section;
+    this.changeTrackingService.markAsChanged();
+
     this.editorSidenavRef = this.sidenavService.open(SectionEditorComponent);
     this.editorSidenavRef.componentInstance.section = section;
     this.editorSidenavRef.componentInstance.onSetDeleteState = () => this.setDeletedState();
@@ -156,6 +166,7 @@ export class PageEditorComponent implements OnInit {
         this.pageNotFound.set(false);
         this.sections.set(detail.sections);
         this.loading.set(false);
+        this.changeTrackingService.reset();
       },
       error: (err: any) => this.loading.set(false)
     });
@@ -166,7 +177,7 @@ export class PageEditorComponent implements OnInit {
     if (!section) return;
     if (section.isPublished) {
       section.isDeleted = !section.isDeleted;
-    this.editorSidenavRef?.close()
+      this.editorSidenavRef?.close()
     }else{
       const modalRef = this.modalService.open(ConfirmModalComponent);
       modalRef.componentInstance.title = 'Elimnar';
@@ -207,5 +218,9 @@ export class PageEditorComponent implements OnInit {
     flatten(this.sections());
 
     return result;
+  }
+
+  canDeactivate(): boolean {
+    return this.changeTrackingService.getChanges();
   }
 }

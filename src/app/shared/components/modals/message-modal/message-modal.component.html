@@ -1,16 +1,15 @@
-<div class="modal-overlay" (click)="close?.()">
-  <div class="modal-content" [class]="'type-' + type">
-    <div class="modal-header">
-      <h2>{{ title | translate }}</h2>
-      <app-button variant="icon" (onClick)="close?.()">
-        <app-icon name="close" size="md" />
-      </app-button>
-    </div>
-    <div class="modal-body">
-      <p class="error-message">{{ message | translate:translateParams }}</p>
-    </div>
-    <div class="modal-footer">
-      <app-button (onClick)="onConfirm()">OK</app-button>
-    </div>
+
+<div class="modal-content" [class]="'type-' + type">
+  <div class="modal-header">
+    <h2>{{ title | translate }}</h2>
+    <app-button variant="icon" (onClick)="close?.()">
+      <app-icon name="close" size="md" />
+    </app-button>
+  </div>
+  <div class="modal-body">
+    <p class="error-message">{{ message | translate:translateParams }}</p>
+  </div>
+  <div class="modal-footer">
+    <app-button (onClick)="onConfirm()">OK</app-button>
   </div>
 </div>
