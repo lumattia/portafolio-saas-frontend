@@ -1,0 +1,42 @@
+.modal-content {
+  &.type-error {
+    border: 2px solid var(--error);
+
+    .modal-header h3 {
+      color: var(--error);
+    }
+
+    .error-message {
+      color: var(--error);
+    }
+  }
+
+  &.type-warning {
+    border: 2px solid var(--warning);
+
+    .modal-header h3 {
+      color: var(--warning);
+    }
+
+    .error-message {
+      color: var(--warning);
+    }
+  }
+
+  &.type-info {
+    border: 2px solid var(--info);
+
+    .modal-header h3 {
+      color: var(--info);
+    }
+
+    .error-message {
+      color: var(--info);
+    }
+  }
+}
+
+.error-message {
+  white-space: pre-line;
+  margin: 0 0 var(--spacing-sm) 0;
+}

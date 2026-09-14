@@ -1,0 +1,147 @@
+.shared-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--spacing-sm) var(--spacing-xl);
+  background: var(--surface-color);
+  border-bottom: 1px solid var(--border-primary);
+
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+  }
+
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+  }
+}
+
+.menu-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: var(--spacing-sm);
+  border-radius: var(--border-radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-primary);
+  transition: background var(--transition-base);
+
+  &:hover {
+    background: var(--shadow-xs);
+  }
+}
+
+.brand {
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-xl);
+  color: var(--text-primary);
+  text-decoration: none;
+}
+
+.user-card-container {
+  position: relative;
+  width: var(--width-sm);
+}
+
+.user-card,
+.login-card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm) var(--spacing-md);
+  background: var(--surface-color);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--border-radius-lg);
+  cursor: pointer;
+  transition: background var(--transition-base);
+  height: var(--height-sm);
+  width: var(--width-full);
+
+  &:hover {
+    background: var(--shadow-xs);
+  }
+
+  &.highlighting {
+    animation: pulse-glow 1s ease-in-out;
+  }
+}
+
+@keyframes pulse-glow {
+  0% {
+    background: var(--primary-color);
+    color: var(--text-primary);
+    box-shadow: 0 0 0 0 var(--shadow-md);
+  }
+  50% {
+    background: var(--primary-color);
+    color: var(--text-primary);
+    box-shadow: 0 0 var(--height-lg) var(--spacing-xl) var(--shadow-sm);
+  }
+  100% {
+    background: var(--surface-color);
+    color: var(--text-primary);
+    box-shadow: 0 0 0 0 transparent;
+  }
+}
+
+.user-card.highlighting {
+  .user-email {
+    color: var(--text-primary);
+  }
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+
+  .user-email {
+    font-weight: var(--font-weight-medium);
+    color: var(--text-primary);
+    font-size: var(--font-size-sm);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+  }
+}
+
+.popup-menu {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.view-mode-trigger {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm);
+  cursor: pointer;
+  border-radius: var(--border-radius-sm);
+  transition: background var(--transition-base);
+  position: relative;
+  width: 100%;
+
+  &:hover {
+    background: var(--shadow-xs);
+  }
+}
+
+.view-mode-options {
+  display: flex;
+  flex-direction: column;
+}
+
+.toolbar-view-selector {
+  display: flex;
+  align-items: center;
+  background: var(--shadow-xs);
+}

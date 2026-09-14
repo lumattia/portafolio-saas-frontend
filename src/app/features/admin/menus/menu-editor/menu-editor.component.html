@@ -50,22 +50,20 @@
           @if (item.toggled && item.subMenuItems.length > 0) {
             <div class="submenu">
               @for (child of item.subMenuItems; track child.id; let j = $index) {
-                <div class="menu-item" (dragover)="onDragOver($event)" (drop)="onDrop($event, j, item)">
-                  <div class="menu-item" draggable="true" (dragstart)="onDragStart($event, j, item)">
-                    <div class="menu-item-content">
-                      <span class="menu-text">{{ child.text }}</span>
-                      @if (child.url) {
-                        <span class="menu-url" [title]="child.url">({{ truncateUrl(child.url) }})</span>
-                      }
-                    </div>
-                    <div class="menu-actions">
-                      <app-button variant="icon" size="sm" (onClick)="openEditModal(item, child)">
-                        <app-icon name="edit" size="sm" />
-                      </app-button>
-                      <app-button variant="icon" size="sm" (onClick)="deleteItem(item, child)">
-                        <app-icon name="delete" size="sm" />
-                      </app-button>
-                    </div>
+                <div class="menu-item" draggable="true" (dragstart)="onDragStart($event, j, item)" (dragover)="onDragOver($event)" (drop)="onDrop($event, j, item)">
+                  <div class="menu-item-content">
+                    <span class="menu-text">{{ child.text }}</span>
+                    @if (child.url) {
+                      <span class="menu-url" [title]="child.url">({{ truncateUrl(child.url) }})</span>
+                    }
+                  </div>
+                  <div class="menu-actions">
+                    <app-button variant="icon" size="sm" (onClick)="openEditModal(item, child)">
+                      <app-icon name="edit" size="sm" />
+                    </app-button>
+                    <app-button variant="icon" size="sm" (onClick)="deleteItem(item, child)">
+                      <app-icon name="delete" size="sm" />
+                    </app-button>
                   </div>
                 </div>
               }
@@ -81,7 +79,7 @@
   }
 
   <ng-template #itemModalTemplate>
-    <div class="modal">
+    <div class="modal-content">
       <div class="modal-header">
         <h3>{{ editingItem() ? 'Edit' : 'Add' }} Menu Item</h3>
         <app-button variant="icon" (onClick)="closeModal()">×</app-button>

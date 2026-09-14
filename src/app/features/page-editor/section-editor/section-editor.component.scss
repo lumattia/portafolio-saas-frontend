@@ -1,42 +1,42 @@
 .section-editor {
   display: flex;
   flex-direction: column;
-  height: 100%;
-  background-color: #fff;
-  min-width: 600px;
-  max-width: 600px;
+  height: var(--height-full);
+  background-color: var(--background-primary);
+  min-width: var(--width-xl);
+  max-width: var(--width-xl);
 }
 
 .editor-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 10px 20px;
-  border-bottom: 1px solid #e5e7eb;
+  padding: var(--spacing-sm) var(--spacing-lg);
+  border-bottom: 1px solid var(--border-primary);
 
   h3 {
     margin: 0;
-    font-size: 18px;
-    font-weight: 600;
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-semibold);
   }
 }
 
 .close-button {
-  width: 32px;
-  height: 32px;
+  width: var(--height-xs);
+  height: var(--height-xs);
   border: none;
   background: none;
-  font-size: 24px;
+  font-size: var(--font-size-2xl);
   cursor: pointer;
-  color: #6b7280;
+  color: var(--text-muted);
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 4px;
-  transition: background-color 0.2s ease;
+  border-radius: var(--border-radius-sm);
+  transition: background-color var(--transition-base) ease;
 
   &:hover {
-    background-color: #f3f4f6;
+    background-color: var(--background-hover);
   }
 }
 
@@ -46,40 +46,40 @@
 }
 
 .editor-footer {
-  padding: 20px;
-  border-top: 1px solid #e5e7eb;
+  padding: var(--spacing-lg);
+  border-top: 1px solid var(--border-primary);
 }
 
 .delete-button {
-  width: 100%;
-  padding: 10px 14px;
-  border: 1px solid #dc2626;
-  background-color: #fff;
-  color: #dc2626;
-  border-radius: 6px;
-  font-size: 14px;
-  font-weight: 500;
+  width: var(--width-full);
+  padding: var(--spacing-sm) var(--spacing-md);
+  border: 1px solid var(--error);
+  background-color: var(--background-primary);
+  color: var(--error);
+  border-radius: var(--border-radius-md);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all var(--transition-base) ease;
 
   &:hover {
-    background-color: #dc2626;
-    color: #fff;
+    background-color: var(--error);
+    color: var(--text-inverse);
   }
 }
 
   .undo-button {
-    background-color: #10b981;
-    color: white;
+    background-color: var(--success);
+    color: var(--text-inverse);
     border: none;
-    padding: 4px 8px;
-    border-radius: 4px;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--border-radius-sm);
     cursor: pointer;
-    font-size: 12px;
-    transition: background-color 0.2s;
+    font-size: var(--font-size-xs);
+    transition: background-color var(--transition-base);
 
     &:hover {
-      background-color: #059669;
+      background-color: var(--success-hover);
     }
   }
 
@@ -87,7 +87,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 100%;
-  color: #9ca3af;
-  font-size: 14px;
+  height: var(--height-full);
+  color: var(--text-placeholder);
+  font-size: var(--font-size-sm);
 }

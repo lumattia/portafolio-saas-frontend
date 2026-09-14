@@ -1,0 +1,19 @@
+.draggable-toolbar {
+  position: fixed;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm);
+  background: var(--surface-color);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--border-radius-full);
+  box-shadow: var(--shadow-lg);
+  z-index: var(--z-index-dropdown);
+  cursor: move;
+  transition: opacity var(--transition-slow) ease, right var(--transition-slow) ease;
+}
+
+.toolbar-content {
+  display: flex;
+  align-items: center;
+}

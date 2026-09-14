@@ -6,7 +6,7 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './draggable-toolbar.component.html',
-  styleUrls: ['./draggable-toolbar.component.css']
+  styleUrls: ['./draggable-toolbar.component.scss']
 })
 export class DraggableToolbarComponent implements AfterViewInit {
   readonly elementRef = inject(ElementRef);

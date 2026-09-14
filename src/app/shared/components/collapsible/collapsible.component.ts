@@ -6,7 +6,7 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './collapsible.component.html',
-  styleUrl: './collapsible.component.css',
+  styleUrl: './collapsible.component.scss',
 })
 export class CollapsibleComponent {
   checked = model(false);

@@ -11,7 +11,7 @@ import { PageService } from '../../../../core/services/page.service';
   standalone: true,
   imports: [SectionRendererComponent],
   templateUrl: './portfolio-page.component.html',
-  styleUrl: './portfolio-page.component.css',
+  styleUrl: './portfolio-page.component.scss',
 })
 export class PortfolioPageComponent implements OnInit {
   private readonly pageService = inject(PageService);

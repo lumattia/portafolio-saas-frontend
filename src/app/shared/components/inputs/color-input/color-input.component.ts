@@ -8,7 +8,7 @@ import { TranslatePipe } from '@ngx-translate/core';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, TranslatePipe],
   templateUrl: './color-input.component.html',
-  styleUrls: ['./color-input.component.css'],
+  styleUrls: ['./color-input.component.scss'],
 })
 export class ColorInputComponent implements OnInit {
   @Input() labelKey = '';
@@ -31,7 +31,7 @@ export class ColorInputComponent implements OnInit {
         validators.push(Validators.required);
       }
       validators.push(Validators.pattern(this.hexColorRegex));
-      
+
       this.control = new FormControl(this.value ?? '#000000', validators);
     }
   }

@@ -11,7 +11,7 @@ import { MenuRendererComponent } from '../menu-renderer.component';
   standalone: true,
   imports: [CommonModule, SmartLinkDirective, ButtonComponent, IconComponent],
   templateUrl: './footer-menu-renderer.component.html',
-  styleUrls: ['./footer-menu-renderer.component.css']
+  styleUrls: ['./footer-menu-renderer.component.scss']
 })
 export class FooterMenuRendererComponent extends MenuRendererComponent {
   readonly menuType = MenuType.Footer;

@@ -5,7 +5,7 @@ import { ThemeService } from '../../../core/services/theme.service';
   selector: 'app-theme-toggle',
   standalone: true,
   templateUrl: './theme-toggle.component.html',
-  styleUrl: './theme-toggle.component.css',
+  styleUrl: './theme-toggle.component.scss',
 })
 export class ThemeToggleComponent {
   readonly theme = inject(ThemeService);

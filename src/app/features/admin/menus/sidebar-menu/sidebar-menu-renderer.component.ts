@@ -11,7 +11,7 @@ import { SmartLinkDirective } from "../../../../core/utils/smartLink.directive";
   standalone: true,
   imports: [CommonModule, ButtonComponent, IconComponent, SmartLinkDirective],
   templateUrl: './sidebar-menu-renderer.component.html',
-  styleUrls: ['./sidebar-menu-renderer.component.css']
+  styleUrls: ['./sidebar-menu-renderer.component.scss']
 })
 export class SidebarMenuRendererComponent extends MenuRendererComponent {
   readonly menuType = MenuType.Sidebar;

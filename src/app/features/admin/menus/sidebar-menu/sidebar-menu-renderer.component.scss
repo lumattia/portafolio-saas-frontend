@@ -1,0 +1,123 @@
+:host {
+  display: contents;
+}
+
+.sidebar {
+  width: var(--width-md);
+  padding: var(--spacing-md);
+  background: var(--surface-color);
+  border-right: 1px solid var(--border-primary);
+  overflow-y: auto;
+}
+
+.sidebar-header {
+  display: flex;
+  justify-content: flex-end;
+  border-bottom: 1px solid var(--border-primary);
+}
+
+.sidebar-menu-renderer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.menu-item {
+  text-decoration: none;
+  color: inherit;
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: var(--border-radius-sm);
+  transition: background-color var(--transition-base), color var(--transition-base);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+
+  &:hover {
+    background-color: var(--shadow-xs);
+  }
+}
+
+.menu-item-content {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  flex: 1;
+}
+
+.menu-item-text {
+  flex: 1;
+}
+
+.menu-item-expand-icon {
+  transition: transform var(--transition-base);
+  font-size: var(--font-size-xs);
+
+  &.expanded {
+    transform: rotate(90deg);
+  }
+}
+
+.submenu-container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+  padding-left: var(--spacing-md);
+  margin-top: var(--spacing-xs);
+  border-left: var(--spacing-xs) solid var(--border-primary);
+}
+
+.submenu-item {
+  text-decoration: none;
+  color: inherit;
+  padding: var(--spacing-xs) var(--spacing-md);
+  border-radius: var(--border-radius-sm);
+  transition: background-color var(--transition-base), color var(--transition-base);
+  display: block;
+
+  &:hover {
+    background-color: var(--shadow-xs);
+  }
+}
+
+/* Estilos personalizados que se pueden aplicar vía la propiedad style */
+.menu-item.primary,
+.submenu-item.primary {
+  font-weight: var(--font-weight-semibold);
+  color: var(--primary-color);
+}
+
+.menu-item.secondary,
+.submenu-item.secondary {
+  color: var(--text-secondary);
+}
+
+.menu-item.outline,
+.submenu-item.outline {
+  border: 1px solid currentColor;
+  text-align: center;
+}
+
+.menu-item.filled,
+.submenu-item.filled {
+  background-color: var(--primary-color);
+  color: var(--text-inverse);
+  text-align: center;
+}
+
+.menu-item.filled:hover,
+.submenu-item.filled:hover {
+  opacity: var(--opacity-pressed);
+}
+
+.menu-item.compact,
+.submenu-item.compact {
+  padding: var(--spacing-xs) var(--spacing-sm);
+  font-size: var(--font-size-sm);
+}
+
+@media (max-width: 768px) {
+  .desktop-only {
+    display: none;
+  }
+}

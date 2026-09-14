@@ -1,43 +1,43 @@
 .section-tree {
   .tree-node {
-    margin-left: 16px;
-    
+    margin-left: var(--spacing-md);
+
     .tree-node-header {
       display: flex;
       align-items: center;
-      padding: 8px 12px;
+      padding: var(--spacing-sm) var(--spacing-md);
       cursor: pointer;
-      border-radius: 4px;
-      transition: background-color 0.2s;
-      
+      border-radius: var(--border-radius-sm);
+      transition: background-color var(--transition-base);
+
       &:hover {
-        background-color: rgba(99, 102, 241, 0.1);
+        background-color: var(--primary-light);
       }
-      
+
       &.selected {
         background-color: rgba(99, 102, 241, 0.2);
-        font-weight: 500;
+        font-weight: var(--font-weight-medium);
       }
-      
+
       .expand-icon {
-        margin-right: 8px;
-        font-size: 10px;
-        color: #64748b;
+        margin-right: var(--spacing-sm);
+        font-size: var(--font-size-xs);
+        color: var(--text-secondary);
         cursor: pointer;
-        
+
         &:hover {
-          color: #6366f1;
+          color: var(--primary);
         }
       }
-      
+
       .section-name {
         flex: 1;
       }
     }
-    
+
     .tree-node-children {
-      margin-left: 12px;
-      border-left: 1px solid #e2e8f0;
+      margin-left: var(--spacing-md);
+      border-left: 1px solid var(--border-secondary);
     }
   }
 }

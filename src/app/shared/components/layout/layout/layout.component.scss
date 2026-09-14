@@ -4,6 +4,7 @@
   display: flex;
   flex-direction: column;
 }
+
 .layout {
   width: 100%;
   min-height: 100vh;
@@ -39,6 +40,34 @@
   height: 100%;
   background: rgba(0, 0, 0, 0.5);
   z-index: 1000;
+}
+
+.sidenav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 280px;
+  height: 100%;
+  background: var(--background-primary);
+  border-right: 1px solid var(--border-primary);
+  z-index: 1001;
+  overflow-y: auto;
+}
+
+.sidenav-header {
+  display: flex;
+  justify-content: flex-end;
+  padding: var(--spacing-md);
+  border-bottom: 1px solid var(--border-primary);
+}
+
+.close-button {
+  background: none;
+  border: none;
+  font-size: var(--font-size-xl);
+  cursor: pointer;
+  padding: var(--spacing-sm);
+  color: var(--text-primary);
 }
 
 @media (min-width: 769px) {

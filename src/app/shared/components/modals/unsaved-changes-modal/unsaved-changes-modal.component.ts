@@ -8,7 +8,7 @@ import { ButtonComponent } from '../../button/button.component';
   standalone: true,
   imports: [CommonModule, TranslatePipe, ButtonComponent],
   templateUrl: './unsaved-changes-modal.component.html',
-  styleUrls: ['./unsaved-changes-modal.component.css']
+  styleUrls: ['./unsaved-changes-modal.component.scss']
 })
 export class UnsavedChangesModalComponent {
   // These will be injected by ModalService

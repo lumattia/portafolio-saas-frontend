@@ -18,7 +18,7 @@ import { DraggableToolbarComponent } from '../../draggable-toolbar/draggable-too
   standalone: true,
   imports: [CommonModule, RouterLink, ThemeToggleComponent, HeaderMenuRendererComponent, IconComponent, ButtonComponent, PopupComponent, DraggableToolbarComponent],
   templateUrl: './header.component.html',
-  styleUrls: ['./header.component.css']
+  styleUrls: ['./header.component.scss']
 })
 export class HeaderComponent {
   readonly auth = inject(AuthService);

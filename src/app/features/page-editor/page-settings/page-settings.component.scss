@@ -1,34 +1,28 @@
 .page-settings {
-  height: 100%;
-  padding: 1.5rem;
+  height: var(--height-full);
+  padding: var(--spacing-xl);
   background: var(--surface-color);
 
   h2 {
-    margin: 0 0 1.5rem 0;
-    font-size: 1.5rem;
-    color: var(--text-color);
+    margin: 0 0 var(--spacing-xl) 0;
   }
+}
 
-  .form-group {
-    margin-bottom: 1.25rem;
-  }
-
-  .form-group label {
-    display: block;
-    margin-bottom: 0.5rem;
-    font-weight: 500;
-    color: var(--text-color);
-  }
+.form-group {
+  margin-bottom: var(--spacing-md);
 
   textarea {
-    width: 100%;
-    padding: 0.75rem;
+    width: var(--width-full);
+    padding: var(--spacing-sm);
     border: 1px solid var(--border);
     border-radius: var(--radius-md);
-    font-size: 1rem;
+    font-size: var(--font-size-base);
     background: var(--bg);
     color: var(--text-color);
-    transition: border-color 0.2s ease;
+    transition: border-color var(--transition-base) ease;
+    font-family: inherit;
+    resize: vertical;
+    min-height: var(--height-lg);
 
     &:focus {
       outline: none;
@@ -36,55 +30,14 @@
     }
 
     &:disabled {
-      opacity: 0.5;
+      opacity: var(--opacity-disabled);
       cursor: not-allowed;
     }
   }
+}
 
-  textarea {
-    resize: vertical;
-    min-height: 80px;
-  }
-
-  .form-actions {
-    display: flex;
-    gap: 1rem;
-    justify-content: flex-end;
-    margin-top: 1.5rem;
-
-    button {
-      padding: 0.75rem 1.5rem;
-      border: none;
-      border-radius: var(--radius-md);
-      font-size: 1rem;
-      font-weight: 500;
-      cursor: pointer;
-      transition: all 0.2s ease;
-
-      &:disabled {
-        opacity: 0.5;
-        cursor: not-allowed;
-      }
-    }
-
-    .btn-cancel {
-      background: var(--surface-color);
-      color: var(--text-color);
-      border: 1px solid var(--border);
-
-      &:hover:not(:disabled) {
-        background: rgba(0, 0, 0, 0.05);
-      }
-    }
-
-    .btn-save {
-      background: var(--primary-color);
-      color: white;
-
-      &:hover:not(:disabled) {
-        background: var(--primary-color);
-        opacity: 0.9;
-      }
-    }
-  }
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--spacing-sm);
 }

@@ -36,8 +36,8 @@
 }
 
 .checkbox-text {
-  font-size: 0.875rem;
-  color: var(--text);
+  font-size: var(--font-size-sm);
+  color: var(--text-primary);
 }
 
 .required-mark {

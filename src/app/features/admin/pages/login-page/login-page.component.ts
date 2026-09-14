@@ -10,7 +10,7 @@ import { ViewModeService } from '../../../../core/services/view-mode.service';
   standalone: true,
   imports: [ReactiveFormsModule, ButtonComponent],
   templateUrl: './login-page.component.html',
-  styleUrl: './login-page.component.css',
+  styleUrl: './login-page.component.scss',
 })
 export class LoginPageComponent {
   private readonly fb = inject(FormBuilder);

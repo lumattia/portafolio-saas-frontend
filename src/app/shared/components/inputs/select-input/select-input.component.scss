@@ -1,6 +1,7 @@
 :host{
   flex-grow: 1; width: 100%; max-width: var(--input-max-width);
 }
+
 .select-input-wrapper {
   display: flex;
   flex-direction: column;
@@ -8,9 +9,9 @@
 }
 
 .select-input-label {
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: var(--text);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--text-primary);
 }
 
 .required-mark {
@@ -24,12 +25,12 @@
 
 .select-trigger {
   padding: var(--spacing-sm) var(--spacing-md);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
-  font-size: 1rem;
-  color: var(--text);
-  background: var(--bg);
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  border: 1px solid var(--border-primary);
+  border-radius: var(--border-radius-md);
+  font-size: var(--font-size-base);
+  color: var(--text-primary);
+  background: var(--background-primary);
+  transition: border-color var(--transition-base) ease, box-shadow var(--transition-base) ease;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -53,7 +54,7 @@
   background: transparent;
   padding: 0;
   cursor: default;
-  color: var(--text);
+  color: var(--text-primary);
 }
 
 .select-trigger.readonly .select-arrow {
@@ -99,9 +100,11 @@
 .select-trigger-text {
   flex: 1;
 }
+
 .select-placeholder {
   color: var(--text-secondary);
 }
+
 .select-arrow {
   margin-left: var(--spacing-sm);
   font-size: 0.75rem;
@@ -117,7 +120,7 @@
   padding: 0;
   margin-left: var(--spacing-xs);
   cursor: pointer;
-  transition: color 0.2s ease;
+  transition: color var(--transition-base) ease;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -134,9 +137,9 @@
   top: calc(100% + 4px);
   left: 0;
   right: 0;
-  background: var(--bg);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
+  background: var(--background-primary);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--border-radius-md);
   box-shadow: var(--shadow-md);
   z-index: 1000;
   max-height: 300px;
@@ -147,15 +150,15 @@
   width: 100%;
   padding: var(--spacing-sm) var(--spacing-md);
   border: none;
-  border-bottom: 1px solid var(--border);
-  font-size: 0.875rem;
-  background: var(--bg);
-  color: var(--text);
+  border-bottom: 1px solid var(--border-primary);
+  font-size: var(--font-size-sm);
+  background: var(--background-primary);
+  color: var(--text-primary);
   outline: none;
 }
 
 .select-search:focus {
-  background: var(--bg-alt);
+  background: var(--background-alt);
 }
 
 .select-options {
@@ -169,18 +172,18 @@
 .select-option {
   padding: var(--spacing-sm) var(--spacing-md);
   cursor: pointer;
-  transition: background 0.2s ease;
-  font-size: 0.875rem;
+  transition: background var(--transition-base) ease;
+  font-size: var(--font-size-sm);
 }
 
 .select-option:hover {
-  background: var(--bg-alt);
+  background: var(--background-alt);
 }
 
 .select-option.selected {
   background: var(--background-alt);
   color: var(--primary);
-  font-weight: 500;
+  font-weight: var(--font-weight-medium);
 }
 
 .select-input-error {

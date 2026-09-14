@@ -9,7 +9,7 @@ import { ButtonComponent } from '../../../../shared/components/button/button.com
   standalone: true,
   imports: [ReactiveFormsModule, RouterLink, ButtonComponent],
   templateUrl: './register-tenant-page.component.html',
-  styleUrl: './register-tenant-page.component.css',
+  styleUrl: './register-tenant-page.component.scss',
 })
 export class RegisterTenantPageComponent {
   private readonly fb = inject(FormBuilder);

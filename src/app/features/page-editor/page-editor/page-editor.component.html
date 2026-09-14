@@ -10,8 +10,8 @@
 }@else{
   <div class="page-editor">
     <!-- Header with page metadata and Save/Publish buttons -->
-    <div class="page-header" (click)="openPageSettings()">
-      <div class="page-info">
+    <div class="page-header">
+      <div class="page-info" (click)="openPageSettings()">
         <h1 class="page-title">{{ pageTitle() }}</h1>
         @if (pageIsDeleted()) {
           <div class="soft-delete-warning">

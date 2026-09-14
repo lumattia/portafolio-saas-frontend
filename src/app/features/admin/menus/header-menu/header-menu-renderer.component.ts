@@ -11,7 +11,7 @@ import { IconComponent } from "../../../../shared/components/icon/icon.component
   standalone: true,
   imports: [CommonModule, SmartLinkDirective, ButtonComponent, IconComponent],
   templateUrl: './header-menu-renderer.component.html',
-  styleUrls: ['./header-menu-renderer.component.css']
+  styleUrls: ['./header-menu-renderer.component.scss']
 })
 export class HeaderMenuRendererComponent extends MenuRendererComponent {
   readonly menuType = MenuType.Header;

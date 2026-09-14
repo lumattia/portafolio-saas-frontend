@@ -8,7 +8,7 @@ import { ButtonComponent } from '../../button/button.component';
   standalone: true,
   imports: [CommonModule, TranslatePipe, ButtonComponent],
   templateUrl: './confirm-modal.component.html',
-  styleUrls: ['./confirm-modal.component.css']
+  styleUrls: ['./confirm-modal.component.scss']
 })
 export class ConfirmModalComponent {
   @Input() title = 'Confirmar';

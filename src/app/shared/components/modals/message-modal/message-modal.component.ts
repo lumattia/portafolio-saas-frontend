@@ -9,7 +9,7 @@ import { TranslatePipe } from '@ngx-translate/core';
   standalone: true,
   imports: [CommonModule, ButtonComponent, IconComponent, TranslatePipe],
   templateUrl: './message-modal.component.html',
-  styleUrls: ['./message-modal.component.css']
+  styleUrls: ['./message-modal.component.scss']
 })
 export class MessageModalComponent {
   @Input() title = 'Confirmar';

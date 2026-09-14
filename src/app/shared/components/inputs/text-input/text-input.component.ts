@@ -7,7 +7,7 @@ import { TranslatePipe } from '@ngx-translate/core';
   standalone: true,
   imports: [ReactiveFormsModule,TranslatePipe],
   templateUrl: './text-input.component.html',
-  styleUrls: ['./text-input.component.css'],
+  styleUrls: ['./text-input.component.scss'],
 })
 export class TextInputComponent implements OnInit {
   @Input() labelKey = '';

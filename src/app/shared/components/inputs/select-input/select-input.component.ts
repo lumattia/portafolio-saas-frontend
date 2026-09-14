@@ -10,7 +10,7 @@ import { IdName } from '../../../../core/models/common.models';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, TranslatePipe],
   templateUrl: './select-input.component.html',
-  styleUrls: ['./select-input.component.css'],
+  styleUrls: ['./select-input.component.scss'],
 })
 export class SelectInputComponent implements OnInit {
   private translateService = inject(TranslateService);
@@ -46,7 +46,7 @@ export class SelectInputComponent implements OnInit {
       if (this.required) {
         validators.push(Validators.required);
       }
-      
+
       this.control = new FormControl(this.value, validators);
     }
   }
@@ -87,7 +87,7 @@ export class SelectInputComponent implements OnInit {
     if (!search) return optionsList;
 
     // Auxiliary function to make the search ignore accents/tildes natively
-    const normalizeText = (text: string) => 
+    const normalizeText = (text: string) =>
       text ? text.normalize("NFD").replace(/[\u0300-\u036f]/g, "") : '';
 
     const normalizedSearch = normalizeText(search);

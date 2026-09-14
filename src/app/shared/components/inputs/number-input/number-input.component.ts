@@ -8,7 +8,7 @@ import { TranslatePipe } from '@ngx-translate/core';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, TranslatePipe],
   templateUrl: './number-input.component.html',
-  styleUrls: ['./number-input.component.css'],
+  styleUrls: ['./number-input.component.scss'],
 })
 export class NumberInputComponent implements OnInit {
   private renderer = inject(Renderer2);

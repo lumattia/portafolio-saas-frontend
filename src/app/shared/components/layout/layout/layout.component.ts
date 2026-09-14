@@ -23,7 +23,7 @@ import { CanDeactivateComponent } from '../../../../core/guards/unsaved-changes.
   standalone: true,
   imports: [CommonModule, PageEditorComponent, SidebarMenuRendererComponent, FooterMenuRendererComponent, HeaderComponent, PortfolioPageComponent],
   templateUrl: './layout.component.html',
-  styleUrls: ['./layout.component.css']
+  styleUrls: ['./layout.component.scss']
 })
 export class LayoutComponent implements OnInit, CanDeactivateComponent {
   readonly auth = inject(AuthService);
