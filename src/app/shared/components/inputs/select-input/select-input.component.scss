@@ -38,7 +38,7 @@
 }
 
 .select-trigger:hover:not(.disabled) {
-  border-color: var(--tertiary);
+  border-color: var(--border-secondary);
 }
 
 .select-trigger.disabled {
@@ -158,7 +158,7 @@
 }
 
 .select-search:focus {
-  background: var(--background-alt);
+  background: var(--background-hover);
 }
 
 .select-options {
@@ -177,11 +177,11 @@
 }
 
 .select-option:hover {
-  background: var(--background-alt);
+  background: var(--background-hover);
 }
 
 .select-option.selected {
-  background: var(--background-alt);
+  background: var(--background-hover);
   color: var(--primary);
   font-weight: var(--font-weight-medium);
 }

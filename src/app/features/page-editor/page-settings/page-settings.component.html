@@ -18,13 +18,12 @@
   </div>
 
   <div class="form-group">
-    <label for="metaDescription">Meta Description</label>
-    <textarea
-      id="metaDescription"
-      [formControl]="metaDescriptionControl"
-      placeholder="SEO meta description"
-      rows="3"
-    ></textarea>
+    <app-text-input
+      labelKey="Meta Description"
+      placeholderKey="SEO meta description"
+      type="text"
+      [control]="metaDescriptionControl"
+    />
   </div>
 
   <div class="form-actions">

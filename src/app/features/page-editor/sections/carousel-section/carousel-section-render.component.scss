@@ -1,7 +1,6 @@
 .carousel-section-render {
   flex-grow: 1;
   width: 100%;
-  background-color: #f9fafb;
   border-radius: 4px;
   overflow: hidden;
   position: relative;
@@ -81,13 +80,13 @@
   cursor: pointer;
   font-size: 20px;
   color: #374151;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  box-shadow: var(--shadow-md);
   transition: all 0.2s ease;
   z-index: 10;
 
   &:hover:not(:disabled) {
     background-color: #fff;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    box-shadow: var(--shadow-lg);
   }
 
   &:disabled {
@@ -107,6 +106,7 @@
 }
 
 .carousel-indicators {
+  height: min-content;
   position: absolute;
   bottom: 20px;
   left: 50%;
@@ -116,28 +116,28 @@
   z-index: 10;
 }
 
-.indicator {
+.indicator ::ng-deep button{
   width: 10px;
   height: 10px;
   border: none;
   border-radius: 50%;
-  background-color: rgba(255, 255, 255, 0.5);
+  background-color: var(--background);
   cursor: pointer;
   transition: all 0.2s ease;
 
   &:hover {
-    background-color: rgba(255, 255, 255, 0.8);
+    background-color: var(--background-hover);
+    transform: scale(1.2);
   }
 
   &.active {
-    background-color: #fff;
     transform: scale(1.2);
   }
 }
 
 .placeholder {
-  text-align: center;
-  align-self: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   width: 100%;
-  padding: 40px;
 }

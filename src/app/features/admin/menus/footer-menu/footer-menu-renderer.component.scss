@@ -2,7 +2,7 @@
   display: contents;
 }
 .footer {
-  background: var(--surface-color);
+  background: var(--background-secondary);
   border-top: 1px solid var(--border-primary);
   padding: 0;
   flex-shrink: 0;
@@ -52,7 +52,7 @@
 .column-title.primary,
 .submenu-item.primary {
   font-weight: var(--font-weight-semibold);
-  color: var(--primary-color);
+  color: var(--primary);
 }
 
 .column-title.secondary,
@@ -67,7 +67,7 @@
 
 .column-title.filled,
 .submenu-item.filled {
-  background-color: var(--primary-color);
+  background-color: var(--primary);
   color: var(--text-inverse);
 }
 

@@ -1,7 +1,7 @@
 .page-settings {
   height: var(--height-full);
   padding: var(--spacing-xl);
-  background: var(--surface-color);
+  background: var(--background-secondary);
 
   h2 {
     margin: 0 0 var(--spacing-xl) 0;
@@ -10,30 +10,6 @@
 
 .form-group {
   margin-bottom: var(--spacing-md);
-
-  textarea {
-    width: var(--width-full);
-    padding: var(--spacing-sm);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-md);
-    font-size: var(--font-size-base);
-    background: var(--bg);
-    color: var(--text-color);
-    transition: border-color var(--transition-base) ease;
-    font-family: inherit;
-    resize: vertical;
-    min-height: var(--height-lg);
-
-    &:focus {
-      outline: none;
-      border-color: var(--primary-color);
-    }
-
-    &:disabled {
-      opacity: var(--opacity-disabled);
-      cursor: not-allowed;
-    }
-  }
 }
 
 .form-actions {

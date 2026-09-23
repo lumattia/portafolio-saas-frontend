@@ -8,14 +8,9 @@
 
     .input-field {
       cursor: default;
-      background-color: var(--bg-disabled);
+      background-color: var(--background-disabled);
       opacity: 0.8;
     }
-  }
-
-  &:focus-within .input-field {
-    border-color: var(--border-focus);
-    box-shadow: 0 0 0 3px var(--primary-disabled);
   }
 }
 
@@ -32,11 +27,6 @@
   transition: all var(--transition-fast) ease-in-out;
 
   &:not(.readonly) {
-    &:active {
-      border-color: var(--border-focus);
-      box-shadow: 0 0 0 3px var(--primary-disabled);
-    }
-
     &:hover {
       background-color: var(--background-secondary);
       border-color: var(--border-secondary);

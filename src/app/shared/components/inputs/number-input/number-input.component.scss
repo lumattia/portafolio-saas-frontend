@@ -40,11 +40,11 @@
 .number-input-field:focus {
   outline: none;
   border-color: var(--border-focus);
-  box-shadow: 0 0 0 3px var(--primary-light);
+  box-shadow: var(--shadow-focus);
 }
 
 .number-input-field:hover:not(:disabled) {
-  border-color: var(--tertiary);
+  border-color: var(--border-secondary);
 }
 
 .number-input-field:disabled {

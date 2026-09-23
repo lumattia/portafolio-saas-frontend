@@ -4,11 +4,12 @@ import { DEFAULT_CAROUSEL_SECTION_CONTENT, CarouselSectionContent } from './caro
 import { SectionRendererComponent } from '../../section-renderer/section-renderer.component';
 import { BaseContainerRendererComponent } from '../base-container-renderer.component';
 import { SectionRenderer } from '../../../../core/models/page.model';
+import { ButtonComponent } from '../../../../shared/components/button/button.component';
 
 @Component({
   selector: 'app-carousel-section-render',
   standalone: true,
-  imports: [CommonModule, forwardRef(() => SectionRendererComponent)],
+  imports: [CommonModule, forwardRef(() => SectionRendererComponent), ButtonComponent],
   templateUrl: './carousel-section-render.component.html',
   styleUrls: ['./carousel-section-render.component.scss'],
 })

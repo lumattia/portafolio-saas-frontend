@@ -3,12 +3,14 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../../core/services/auth.service';
 import { ButtonComponent } from '../../../../shared/components/button/button.component';
+import { EmailInputComponent } from '../../../../shared/components/inputs/text-input/email-input.component';
+import { PasswordInputComponent } from '../../../../shared/components/inputs/password-input/password-input.component';
 import { ViewModeService } from '../../../../core/services/view-mode.service';
 
 @Component({
   selector: 'app-login-page',
   standalone: true,
-  imports: [ReactiveFormsModule, ButtonComponent],
+  imports: [ReactiveFormsModule, ButtonComponent, EmailInputComponent, PasswordInputComponent],
   templateUrl: './login-page.component.html',
   styleUrl: './login-page.component.scss',
 })

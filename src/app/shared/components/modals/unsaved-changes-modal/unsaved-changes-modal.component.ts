@@ -2,11 +2,12 @@ import { Component, Input, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslatePipe } from '@ngx-translate/core';
 import { ButtonComponent } from '../../button/button.component';
+import { IconComponent } from '../../icon/icon.component';
 
 @Component({
   selector: 'app-unsaved-changes-modal',
   standalone: true,
-  imports: [CommonModule, TranslatePipe, ButtonComponent],
+  imports: [CommonModule, TranslatePipe, ButtonComponent, IconComponent],
   templateUrl: './unsaved-changes-modal.component.html',
   styleUrls: ['./unsaved-changes-modal.component.scss']
 })

@@ -1,14 +1,14 @@
 :host {
-  --popup-bg: var(--surface-color, #ffffff);
+  --popup-bg: var(--background-secondary, #ffffff);
   --popup-border-color: rgba(0, 0, 0, 0.1);
-  --popup-text-color: var(--text-color, #333333);
-  --popup-primary-color: var(--primary-color, #007bff);
+  --popup-text-color: var(--text-primary, #333333);
+  --popup-primary-color: var(--primary, #007bff);
 
   --popup-radius: 8px;
   --popup-padding: 0.75rem 1rem;
   --popup-min-width: 150px;
   --popup-max-width: 300px;
-  --popup-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  --popup-shadow: var(--shadow-md);
 
   --arrow-size: 8px;
   --arrow-offset: calc((var(--arrow-size) - 1px) * -1);

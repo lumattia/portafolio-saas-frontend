@@ -3,11 +3,14 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { AuthService } from '../../../../core/services/auth.service';
 import { ButtonComponent } from '../../../../shared/components/button/button.component';
+import { EmailInputComponent } from '../../../../shared/components/inputs/text-input/email-input.component';
+import { PasswordInputComponent } from '../../../../shared/components/inputs/password-input/password-input.component';
+import { TextInputComponent,  } from '../../../../shared/components/inputs/text-input/text-input.component';
 
 @Component({
   selector: 'app-register-tenant-page',
   standalone: true,
-  imports: [ReactiveFormsModule, RouterLink, ButtonComponent],
+  imports: [ReactiveFormsModule, RouterLink, ButtonComponent, EmailInputComponent, PasswordInputComponent, TextInputComponent],
   templateUrl: './register-tenant-page.component.html',
   styleUrl: './register-tenant-page.component.scss',
 })

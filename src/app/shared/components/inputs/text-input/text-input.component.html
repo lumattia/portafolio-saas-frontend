@@ -7,17 +7,20 @@
     }
   </label>
 }
-  <input
-    [type]="type"
-    [formControl]="control!"
-    [placeholder]="placeholderKey ? (placeholderKey | translate) : ''"
-    [attr.disabled]="disabled"
-    [readonly]="readonly"
-    class="text-input-field"
-    [class.error]="shouldShowError"
-    [class.dirty]="isDirty"
-    (change)="onValueChange($event)"
-  />
+  <div class="text-input-field-wrapper">
+    <input
+      [type]="type"
+      [formControl]="control!"
+      [placeholder]="placeholderKey ? (placeholderKey | translate) : ''"
+      [attr.disabled]="disabled"
+      [readonly]="readonly"
+      class="text-input-field"
+      [class.error]="shouldShowError"
+      [class.dirty]="isDirty"
+      (change)="onValueChange($event)"
+    />
+    <ng-content select="[suffix]"></ng-content>
+  </div>
   @if (shouldShowError && errorMessage) {
     <span class="text-input-error">
       {{ errorMessage.key | translate: errorMessage.params }}

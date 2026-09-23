@@ -17,43 +17,6 @@
   color: var(--text-secondary);
 }
 
-form {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-md);
-
-  label {
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing-sm);
-    font-size: var(--font-size-sm);
-    color: var(--text-secondary);
-  }
-
-  input {
-    padding: var(--spacing-sm) var(--spacing-md);
-    border: 1px solid var(--border-primary);
-    border-radius: var(--border-radius-md);
-    background: var(--background-primary);
-    color: var(--text-primary);
-  }
-
-  button {
-    margin-top: var(--spacing-sm);
-    padding: var(--spacing-sm) var(--spacing-md);
-    border: none;
-    border-radius: var(--border-radius-md);
-    background: var(--primary);
-    color: var(--text-inverse);
-    font-weight: var(--font-weight-semibold);
-    cursor: pointer;
-
-    &:disabled {
-      opacity: var(--opacity-disabled);
-      cursor: not-allowed;
-    }
-  }
-}
 
 .error {
   margin: 0;

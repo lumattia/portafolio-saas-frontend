@@ -21,7 +21,7 @@ export class TextInputComponent implements OnInit {
   @Input() readonly = false;
   @Input() minLength?: number;
   @Input() maxLength?: number;
-  @Input() pattern?: string;
+  @Input() pattern?: RegExp;
   @Input() errorKey = '';
   @Input() showDirtyIndicator = false;
 

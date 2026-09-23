@@ -5,7 +5,7 @@
 .sidebar {
   width: var(--width-md);
   padding: var(--spacing-md);
-  background: var(--surface-color);
+  background: var(--background-secondary);
   border-right: 1px solid var(--border-primary);
   overflow-y: auto;
 }
@@ -34,7 +34,7 @@
   cursor: pointer;
 
   &:hover {
-    background-color: var(--shadow-xs);
+    background-color: var(--background-hover);
   }
 }
 
@@ -76,7 +76,7 @@
   display: block;
 
   &:hover {
-    background-color: var(--shadow-xs);
+    background-color: var(--background-hover);
   }
 }
 
@@ -84,7 +84,7 @@
 .menu-item.primary,
 .submenu-item.primary {
   font-weight: var(--font-weight-semibold);
-  color: var(--primary-color);
+  color: var(--primary);
 }
 
 .menu-item.secondary,
@@ -100,7 +100,7 @@
 
 .menu-item.filled,
 .submenu-item.filled {
-  background-color: var(--primary-color);
+  background-color: var(--primary);
   color: var(--text-inverse);
   text-align: center;
 }

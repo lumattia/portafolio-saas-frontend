@@ -1,14 +1,5 @@
 <div class="carousel-section-render" [style.height]="content.styles.height + 'px'">
   @if (subSections.length > 0) {
-      <button
-        type="button"
-        class="nav-button prev interactive-element"
-        (click)="previousSlide()"
-        [disabled]="currentSlideIndex === 0"
-      >
-        &#10094;
-      </button>
-
       <div class="carousel-content">
         @if (currentSlide) {
           <div class="slide">
@@ -22,24 +13,33 @@
         }
       </div>
 
-      <button
-        type="button"
-        class="nav-button next interactive-element"
-        (click)="nextSlide()"
-        [disabled]="subSections.length === currentSlideIndex + 1"
-      >
-        &#10095;
-      </button>
-
       @if (subSections.length > 1) {
+        <app-button
+          variant="icon"
+          class="nav-button prev interactive-element"
+          (onClick)="previousSlide()"
+          [disabled]="currentSlideIndex === 0"
+        >
+          &#10094;
+        </app-button>
+
+        <app-button
+          variant="icon"
+          class="nav-button next interactive-element"
+          (onClick)="nextSlide()"
+          [disabled]="subSections.length === currentSlideIndex + 1"
+        >
+          &#10095;
+        </app-button>
+
         <div class="carousel-indicators interactive-element">
           @for (slide of subSections; track slide.id; let i = $index) {
-            <button
-            type="button"
-            class="indicator"
-            [class.active]="i === currentSlideIndex"
-            (click)="goToSlide(i)"
-          ></button>
+            <app-button
+              variant="icon"
+              class="indicator"
+              [active]="i === currentSlideIndex"
+              (onClick)="goToSlide(i)"
+            ></app-button>
         }
       </div>
     }

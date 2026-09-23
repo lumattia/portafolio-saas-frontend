@@ -37,7 +37,7 @@
 }
 
 .color-input-field:hover {
-  border-color: var(--tertiary);
+  border-color: var(--border-secondary);
 }
 
 .color-input-field:focus {
@@ -51,7 +51,7 @@
 }
 
 .color-input-field.dirty {
-  border-color: var(--warning);
+  border-color: var(--border-secondary);
 }
 
 .color-input-field.dirty:focus {

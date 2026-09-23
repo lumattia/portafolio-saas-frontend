@@ -1,7 +1,9 @@
 <div class="modal-content" (click)="$event.stopPropagation()">
   <div class="modal-header">
     <h3>{{ 'unsavedChanges.title' | translate }}</h3>
-    <button class="close-btn" (click)="onStayClick()">×</button>
+    <app-button variant="icon" (onClick)="onStayClick()">
+      <app-icon name="close" size="md" />
+    </app-button>
   </div>
   <div class="modal-body">
     <p>{{ 'unsavedChanges.message' | translate }}</p>

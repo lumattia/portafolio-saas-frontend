@@ -57,11 +57,11 @@ export class LayoutComponent implements OnInit, CanDeactivateComponent {
 
   private applyTheme(theme: ThemeConfig): void {
     const root = document.documentElement;
-    root.style.setProperty('--primary-color', theme.light.primaryColor);
-    root.style.setProperty('--secondary-color', theme.light.secondaryColor);
+    root.style.setProperty('--primary', theme.light.primaryColor);
+    root.style.setProperty('--secondary', theme.light.secondaryColor);
     root.style.setProperty('--background-color', theme.light.backgroundColor);
-    root.style.setProperty('--surface-color', theme.light.surfaceColor);
-    root.style.setProperty('--text-color', theme.light.textColor);
+    root.style.setProperty('--background-secondary', theme.light.surfaceColor);
+    root.style.setProperty('--text-primary', theme.light.textColor);
     root.style.setProperty('--text-secondary-color', theme.light.textSecondaryColor);
     root.style.setProperty('--font-family', theme.light.fontFamily);
     root.style.setProperty('--border-radius', theme.light.borderRadius);

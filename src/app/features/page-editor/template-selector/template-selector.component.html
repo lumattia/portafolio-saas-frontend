@@ -55,25 +55,25 @@
 
     @if (templates() && templates()!.totalPages > 1) {
       <div class="pagination">
-        <button
-          type="button"
-          class="pagination-button"
+        <app-button
+          variant="secondary"
+          size="sm"
           [disabled]="!templates()!.hasPrevious"
-          (click)="onPreviousPage()"
+          (onClick)="onPreviousPage()"
         >
           Previous
-        </button>
+        </app-button>
         <span class="page-info">
           Page {{ templates()!.pageIndex }} of {{ templates()!.totalPages }}
         </span>
-        <button
-          type="button"
-          class="pagination-button"
+        <app-button
+          variant="secondary"
+          size="sm"
           [disabled]="!templates()!.hasNext"
-          (click)="onNextPage()"
+          (onClick)="onNextPage()"
         >
           Next
-        </button>
+        </app-button>
       </div>
     }
   }

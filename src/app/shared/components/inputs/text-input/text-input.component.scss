@@ -19,7 +19,13 @@
   margin-left: 2px;
 }
 
+.text-input-field-wrapper {
+  display: flex;
+  align-items: center;
+}
+
 .text-input-field {
+  flex: 1;
   padding: var(--spacing-sm) var(--spacing-md);
   border: 1px solid var(--border-primary);
   border-radius: var(--border-radius-md);
@@ -32,11 +38,11 @@
 .text-input-field:focus {
   outline: none;
   border-color: var(--border-focus);
-  box-shadow: 0 0 0 3px var(--primary-light);
+  box-shadow: var(--shadow-focus);
 }
 
 .text-input-field:hover:not(:disabled) {
-  border-color: var(--tertiary);
+  border-color: var(--border-secondary);
 }
 
 .text-input-field:disabled {

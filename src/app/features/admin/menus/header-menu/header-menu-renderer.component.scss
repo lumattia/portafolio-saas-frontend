@@ -23,7 +23,7 @@
   transition: background-color var(--transition-base);
 
   &:hover {
-    background-color: var(--shadow-xs);
+    background-color: var(--background-hover);
   }
 }
 
@@ -40,7 +40,6 @@
   background-color: var(--background-primary);
   border: 1px solid var(--border-primary);
   border-radius: var(--border-radius-sm);
-  box-shadow: var(--shadow-md);
   z-index: var(--z-index-dropdown);
   padding: var(--spacing-sm) 0;
 }
@@ -54,6 +53,6 @@
   transition: background-color var(--transition-base);
 
   &:hover {
-    background-color: var(--shadow-xs);
+    background-color: var(--background-hover);
   }
 }

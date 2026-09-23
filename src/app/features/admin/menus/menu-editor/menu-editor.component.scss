@@ -1,5 +1,5 @@
 .menu-editor {
-  background: var(--surface-color);
+  background: var(--background-secondary);
   padding: var(--spacing-xl);
   min-height: 100vh;
 
@@ -46,7 +46,7 @@
     align-items: center;
     gap: var(--spacing-sm);
     padding: var(--spacing-sm);
-    background: var(--surface-color);
+    background: var(--background-secondary);
     border: 1px solid var(--border-primary);
     border-radius: var(--border-radius-sm);
   }
@@ -104,6 +104,6 @@
 }
 
 .modal-content {
-  background: var(--surface-color);
+  background: var(--background-secondary);
   min-width: var(--width-lg);
 }

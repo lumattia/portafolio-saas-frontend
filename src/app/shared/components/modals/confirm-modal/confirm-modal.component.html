@@ -1,7 +1,9 @@
   <div class="modal-content">
     <div class="modal-header">
       <h3>{{ translatedTitle }}</h3>
-      <button class="close-btn" (click)="onCancel()">×</button>
+      <app-button variant="icon" (onClick)="onCancel()">
+        <app-icon name="close" size="md" />
+      </app-button>
     </div>
     <p>{{ translatedMessage }}</p>
     <div class="modal-actions">
