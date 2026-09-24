@@ -1,7 +1,6 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
-import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
-import { filter } from 'rxjs/operators';
 import { SectionRendererComponent } from '../../../page-editor/section-renderer/section-renderer.component';
 import { PageRenderer } from '../../../../core/models/page.model';
 import { PageService } from '../../../../core/services/page.service';
@@ -16,7 +15,6 @@ import { PageService } from '../../../../core/services/page.service';
 export class PortfolioPageComponent implements OnInit {
   private readonly pageService = inject(PageService);
   private readonly route = inject(ActivatedRoute);
-  private readonly router = inject(Router);
   private readonly location = inject(Location);
   readonly loading = signal(true);
   readonly error = signal<string | null>(null);
@@ -24,9 +22,7 @@ export class PortfolioPageComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadPublishedContent();
-    this.router.events.pipe(
-      filter(event => event instanceof NavigationEnd)
-    ).subscribe(() => {
+    this.route.url.subscribe(() => {
       this.loadPublishedContent();
     });
   }

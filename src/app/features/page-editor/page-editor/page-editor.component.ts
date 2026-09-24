@@ -1,7 +1,7 @@
 import { Component, inject, computed, signal, OnInit } from '@angular/core';
 import { CommonModule, Location } from '@angular/common';
 import { PageService } from '../../../core/services/page.service';
-import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { SectionRendererComponent } from '../section-renderer/section-renderer.component';
 import { SectionEditorComponent } from '../section-editor/section-editor.component';
 import { PageRenderer, PageRequest, SectionRenderer, SectionRequest } from '../../../core/models/page.model';
@@ -14,7 +14,6 @@ import { PageSettingsComponent } from '../page-settings/page-settings.component'
 import { ChangeTrackingService } from '../../../core/services/change-tracking.service';
 import { CanDeactivateComponent } from '../../../core/guards/unsaved-changes.guard';
 import { ButtonComponent } from '../../../shared/components/button/button.component';
-import { filter } from 'rxjs';
 
 @Component({
   selector: 'app-page-editor',
@@ -26,7 +25,6 @@ import { filter } from 'rxjs';
 export class PageEditorComponent implements OnInit, CanDeactivateComponent {
   private readonly pageService = inject(PageService);
   private readonly route = inject(ActivatedRoute);
-  private readonly router = inject(Router);
   private readonly location = inject(Location);
   private readonly sidenavService = inject(SidenavService);
   private readonly modalService = inject(ModalService);
@@ -47,9 +45,7 @@ export class PageEditorComponent implements OnInit, CanDeactivateComponent {
 
   ngOnInit(): void {
     this.loadPage();
-      this.router.events.pipe(
-      filter(event => event instanceof NavigationEnd)
-    ).subscribe(() => {
+    this.route.url.subscribe(() => {
       this.loadPage();
     });
   }
