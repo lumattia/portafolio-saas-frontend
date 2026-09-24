@@ -26,11 +26,9 @@
 </ng-template>
 @if (viewModeService.isAdminMode()) {
   <footer class="footer">
-  <div class="footer-header">
-    <app-button variant="icon" (onClick)="openMenuEditor()" title="Editar menú footer">
-      <app-icon name="edit" size="sm" />
-    </app-button>
-  </div>
+  <app-button class="edit-btn" variant="icon" (onClick)="openMenuEditor()" title="Editar menú footer">
+    <app-icon name="edit" size="sm" />
+  </app-button>
   <ng-container
     *ngTemplateOutlet="menuRenderer; context: { items: menu()?.menuItems }">
   </ng-container>

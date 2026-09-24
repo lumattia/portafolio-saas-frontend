@@ -58,14 +58,6 @@
     flex: 1;
   }
 
-  .expand-button {
-    transition: transform var(--transition-base) ease;
-
-    &.expanded {
-      transform: rotate(90deg);
-    }
-  }
-
   .menu-text {
     font-weight: var(--font-weight-medium);
   }

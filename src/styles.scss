@@ -224,6 +224,10 @@ code {
   }
 }
 
+.rotate {
+  transition: transform var(--transition-base);
+  transform: rotate(90deg) !important;
+}
 /* === Modal Shared Classes === */
 .modal-content {
   background-color: var(--background-primary);

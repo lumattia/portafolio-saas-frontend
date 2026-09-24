@@ -1,37 +1,39 @@
 <ng-template #menuRenderer let-items="items">
-  <nav class="header-menu-renderer">
-    @for (item of items; track item.id) {
-      <div class="menu-item-wrapper" (mouseenter)="item.toggled = true" (mouseleave)="item.toggled = false">
-        <a [smartLink]="item" class="menu-item">
-          {{ item.text }}
-          @if (item.subMenuItems.length > 0) {
-            <span class="dropdown-arrow">▼</span>
-          }
-        </a>
-        @if (item.toggled && item.subMenuItems.length > 0) {
-          <div class="dropdown-menu">
-            @for (child of item.subMenuItems; track child.id) {
-              <a
-                [smartLink]="child"
-                class="dropdown-item">
-                {{ child.text }}
-              </a>
+  <div class="menu-scroll-container">
+    <nav class="header-menu-renderer">
+      @for (item of items; track item.id) {
+        <div class="menu-item-wrapper" (mouseenter)="item.toggled = true" (mouseleave)="item.toggled = false">
+          <a [smartLink]="item" class="menu-item">
+            {{ item.text }}
+            @if (item.subMenuItems.length > 0) {
+              <app-icon name="chevron-right" size="sm" [class.rotate]="item.toggled" />
             }
-          </div>
-        }
-      </div>
-    }
-  </nav>
+          </a>
+          @if (item.toggled && item.subMenuItems.length > 0) {
+            <div class="dropdown-menu">
+              @for (child of item.subMenuItems; track child.id) {
+                <a [smartLink]="child" class="dropdown-item">
+                  {{ child.text }}
+                </a>
+              }
+            </div>
+          }
+        </div>
+      }
+    </nav>
+  </div>
 </ng-template>
+
 @if (viewModeService.isAdminMode()) {
-  <app-button variant="icon" (onClick)="openMenuEditor()" title="Editar menú header">
-    <app-icon name="edit" size="sm" />
-  </app-button>
-  <ng-container
-    *ngTemplateOutlet="menuRenderer; context: { items: menu()?.menuItems }">
-  </ng-container>
-}@else if(menu()?.menuItems?.length){
-  <ng-container
-    *ngTemplateOutlet="menuRenderer; context: { items: menu()?.menuItems }">
-  </ng-container>
+  <header class="header">
+    <ng-container *ngTemplateOutlet="menuRenderer; context: { items: menu()?.menuItems }"></ng-container>
+
+    <app-button class="edit-btn" variant="icon" (onClick)="openMenuEditor()" title="Editar menú header">
+      <app-icon name="edit" size="sm" />
+    </app-button>
+  </header>
+} @else if (menu()?.menuItems?.length) {
+  <header class="header">
+    <ng-container *ngTemplateOutlet="menuRenderer; context: { items: menu()?.menuItems }"></ng-container>
+  </header>
 }

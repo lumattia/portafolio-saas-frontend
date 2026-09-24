@@ -20,14 +20,8 @@
           <div class="menu-item" draggable="true" (dragstart)="onDragStart($event, i, null)">
             <div class="menu-item-content">
               @if(item.subMenuItems.length>0){
-                <app-button
-                  variant="icon"
-                  size="sm"
-                  class="expand-button"
-                  (onClick)="item.toggled = !item.toggled"
-                  [class.expanded]="item.toggled"
-                >
-                  <app-icon name="chevron-right" size="sm" />
+                <app-button variant="icon" size="sm" (onClick)="item.toggled = !item.toggled">
+                  <app-icon name="chevron-right" size="sm" [class.rotate]="item.toggled"/>
                 </app-button>
               }
               <span class="menu-text">{{ item.text }}</span>

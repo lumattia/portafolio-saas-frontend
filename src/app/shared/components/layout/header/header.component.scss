@@ -1,15 +1,18 @@
 .shared-header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  gap: var(--spacing-md);
   padding: var(--spacing-md) var(--spacing-lg);
   background: var(--background-secondary);
   border-bottom: 1px solid var(--border-primary);
 
   .header-left {
     display: flex;
+    width: 100%;
     align-items: center;
     gap: var(--spacing-md);
+    min-width: 0;
+    flex: 1;
 
     .brand {
       font-size: var(--font-size-lg);
@@ -23,6 +26,7 @@
     display: flex;
     align-items: center;
     gap: var(--spacing-md);
+    flex-shrink: 0;
   }
 }
 

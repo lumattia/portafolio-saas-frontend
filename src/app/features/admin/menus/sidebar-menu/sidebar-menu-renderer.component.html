@@ -9,11 +9,7 @@
             <span class="menu-item-text">{{ item.text }}</span>
           </div>
           @if (item.subMenuItems.length > 0) {
-            <span
-              class="menu-item-expand-icon"
-              [class.expanded]="item.toggled">
-              ▶
-            </span>
+            <app-icon name="chevron-right" size="sm" [class.rotate]="item.toggled" />
           }
         </a>
         @if (item.toggled && item.subMenuItems.length > 0) {
@@ -34,11 +30,9 @@
 </ng-template>
 @if (viewModeService.isAdminMode()) {
   <aside class="sidebar desktop-only">
-    <div class="sidebar-header">
-      <app-button variant="icon" (onClick)="openMenuEditor()" title="Editar menú header">
-        <app-icon name="edit" size="sm" />
-      </app-button>
-    </div>
+    <app-button class="edit-btn" variant="icon" (onClick)="openMenuEditor()" title="Editar menú header">
+      <app-icon name="edit" size="sm" />
+    </app-button>
     <ng-container
       *ngTemplateOutlet="menuRenderer; context: { items: menu()?.menuItems }">
     </ng-container>

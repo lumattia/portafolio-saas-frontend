@@ -2,10 +2,22 @@
   display: contents;
 }
 .footer {
+  position: relative;
   background: var(--background-secondary);
   border-top: 1px solid var(--border-primary);
-  padding: 0;
-  flex-shrink: 0;
+  padding: var(--spacing-xl);
+}
+
+.edit-btn {
+  z-index: 10;
+  position: absolute;
+  left: var(--spacing-xl);
+  top: 0;
+  transform: translateY(-100%);
+  background: inherit;
+  border: 1px solid var(--border-primary);
+  border-bottom: none;
+  border-radius: var(--radius-md, 8px) var(--radius-md, 8px) 0 0;
 }
 
 .footer-menu-renderer {
@@ -13,7 +25,6 @@
   grid-template-columns: repeat(auto-fit, minmax(var(--width-sm), 1fr));
   gap: var(--spacing-2xl);
   width: var(--width-full);
-  padding: var(--spacing-2xl);
 }
 
 .menu-column {
