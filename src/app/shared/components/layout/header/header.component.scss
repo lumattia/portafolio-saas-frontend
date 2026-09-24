@@ -32,7 +32,6 @@
 
 .user-card-container {
   position: relative;
-  width: var(--width-sm);
 }
 
 .user-card,
@@ -48,7 +47,7 @@
   cursor: pointer;
   transition: background var(--transition-base);
   height: var(--height-sm);
-  width: var(--width-full);
+  width: var(--width-sm); /* Ancho fijo exacto */
 
   &:hover {
     background: var(--background-hover);
@@ -94,15 +93,16 @@
     color: var(--text-primary);
     font-size: var(--font-size-sm);
     white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 100%;
+    /* Efecto mask para texto largo */
+    mask-image: linear-gradient(to right, black 60%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to right, black 60%, transparent 100%);
   }
 }
 
 .popup-menu {
   display: flex;
   flex-direction: column;
+  align-items: start;
   gap: var(--spacing-xs);
 }
 
