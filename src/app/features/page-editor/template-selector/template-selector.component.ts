@@ -2,17 +2,16 @@ import { Component, inject, signal, input, OnInit, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SectionTemplateService } from '../../../core/services/section-template.service';
 import { SectionTemplateDto } from '../../../core/models/section-template.model';
-import { IdName, PagedList } from '../../../core/models/common.models';
+import { hasNext, hasPrevious, IdName, PagedList } from '../../../core/models/common.models';
 import { SelectInputComponent } from '../../../shared/components/inputs/select-input/select-input.component';
 import { TextInputComponent } from "../../../shared/components/inputs/text-input/text-input.component";
 import { ButtonComponent } from "../../../shared/components/button/button.component";
-import { IconComponent } from "../../../shared/components/icon/icon.component";
 import { SectionRenderer } from '../../../core/models/page.model';
 
 @Component({
   selector: 'app-template-selector',
   standalone: true,
-  imports: [CommonModule, SelectInputComponent, TextInputComponent, ButtonComponent, IconComponent],
+  imports: [CommonModule, SelectInputComponent, TextInputComponent, ButtonComponent],
   templateUrl: './template-selector.component.html',
   styleUrls: ['./template-selector.component.scss'],
 })
@@ -31,6 +30,13 @@ export class TemplateSelectorComponent implements OnInit {
   readonly isLoading = signal(false);
   readonly categoryOptions = signal<IdName[]>([]);
   @Input() parentSectionId: string | undefined= undefined;
+
+  hasPrevious():boolean{
+    return hasPrevious(this.templates())
+  }
+  hasNext():boolean{
+    return hasNext(this.templates())
+  }
   ngOnInit(): void {
     this.loadTemplates();
     this.loadCategoryOption();
@@ -54,7 +60,6 @@ export class TemplateSelectorComponent implements OnInit {
         {
           pageIndex: this.currentPage(),
           pageSize: this.pageSize(),
-          isDescending: false,
         }
       )
       .subscribe({
@@ -78,14 +83,14 @@ export class TemplateSelectorComponent implements OnInit {
   }
 
   onNextPage(): void {
-    if (this.templates()?.hasNext) {
+    if (hasNext()) {
       this.currentPage.update((page) => page + 1);
       this.loadTemplates();
     }
   }
 
   onPreviousPage(): void {
-    if (this.templates()?.hasPrevious) {
+    if (hasPrevious()) {
       this.currentPage.update((page) => page - 1);
       this.loadTemplates();
     }

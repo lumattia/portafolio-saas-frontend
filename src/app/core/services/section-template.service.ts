@@ -30,10 +30,8 @@ export class SectionTemplateService {
     if (parameters) {
       params = params.set('pageIndex', parameters.pageIndex.toString());
       params = params.set('pageSize', parameters.pageSize.toString());
-      if (parameters.sortBy) {
-        params = params.set('sortBy', parameters.sortBy);
-      }
-      params = params.set('isDescending', parameters.isDescending.toString());
+      if (parameters.sortBy)  params = params.set('sortBy', parameters.sortBy);
+      if (parameters.isDescending) params.set('isDescending', parameters.isDescending.toString());
     }
 
     return this.http.get<PagedList<SectionTemplateDto>>(this.apiUrl, { params });

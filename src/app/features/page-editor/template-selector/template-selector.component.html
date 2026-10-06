@@ -57,7 +57,7 @@
         <app-button
           variant="secondary"
           size="sm"
-          [disabled]="!templates()!.hasPrevious"
+          [disabled]="hasPrevious()"
           (onClick)="onPreviousPage()"
         >
           Previous
@@ -68,7 +68,7 @@
         <app-button
           variant="secondary"
           size="sm"
-          [disabled]="!templates()!.hasNext"
+          [disabled]="hasNext()"
           (onClick)="onNextPage()"
         >
           Next
