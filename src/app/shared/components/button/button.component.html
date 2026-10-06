@@ -4,5 +4,9 @@
   [class]="getClasses()"
   (click)="handleClick($event)"
 >
+  @if (icon()) {
+    <app-icon [name]="icon()!" [size]="size()" />
+  }
   <ng-content />
+
 </button>

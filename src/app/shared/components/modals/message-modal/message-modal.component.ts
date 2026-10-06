@@ -1,13 +1,12 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ButtonComponent } from '../../button/button.component';
-import { IconComponent } from '../../icon/icon.component';
 import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-generic-error-modal',
   standalone: true,
-  imports: [CommonModule, ButtonComponent, IconComponent, TranslatePipe],
+  imports: [CommonModule, ButtonComponent, TranslatePipe],
   templateUrl: './message-modal.component.html',
   styleUrls: ['./message-modal.component.scss']
 })

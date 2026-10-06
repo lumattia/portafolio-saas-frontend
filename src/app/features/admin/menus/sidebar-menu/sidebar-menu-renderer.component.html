@@ -30,8 +30,7 @@
 </ng-template>
 @if (viewModeService.isAdminMode()) {
   <aside class="sidebar desktop-only">
-    <app-button class="edit-btn" variant="icon" (onClick)="openMenuEditor()" title="Editar menú header">
-      <app-icon name="edit" size="sm" />
+    <app-button class="edit-btn" icon="edit" size="sm" variant="icon" (onClick)="openMenuEditor()" title="Editar menú header">
     </app-button>
     <ng-container
       *ngTemplateOutlet="menuRenderer; context: { items: menu()?.menuItems }">

@@ -2,12 +2,11 @@ import { Component, Input, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { ButtonComponent } from '../../button/button.component';
-import { IconComponent } from '../../icon/icon.component';
 
 @Component({
   selector: 'app-confirm-modal',
   standalone: true,
-  imports: [CommonModule, TranslatePipe, ButtonComponent, IconComponent],
+  imports: [CommonModule, TranslatePipe, ButtonComponent],
   templateUrl: './confirm-modal.component.html',
   styleUrls: ['./confirm-modal.component.scss']
 })

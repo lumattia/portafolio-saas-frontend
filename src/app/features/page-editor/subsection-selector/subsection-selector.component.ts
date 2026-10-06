@@ -5,12 +5,11 @@ import { SectionRenderer } from '../../../core/models/page.model';
 import { SidenavService } from '../../../core/services/sidenav.service';
 import { TemplateSelectorComponent } from '../template-selector/template-selector.component';
 import { EDITOR_COMPONENT_MAP } from '../../../core/constants/component-maps';
-import { IconComponent } from "../../../shared/components/icon/icon.component";
 
 @Component({
   selector: 'app-subsection-selector',
   standalone: true,
-  imports: [CommonModule, ButtonComponent, IconComponent],
+  imports: [CommonModule, ButtonComponent],
   templateUrl: './subsection-selector.component.html',
   styleUrls: ['./subsection-selector.component.scss'],
 })

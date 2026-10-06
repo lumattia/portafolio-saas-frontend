@@ -1,10 +1,11 @@
 import { Component, input, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { IconComponent } from '../icon/icon.component';
 
 @Component({
   selector: 'app-button',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, IconComponent],
   templateUrl: './button.component.html',
   styleUrls: ['./button.component.scss'],
 })
@@ -14,6 +15,7 @@ export class ButtonComponent {
   readonly disabled = input(false);
   readonly type = input<'button' | 'submit' | 'reset'>('button');
   readonly active = input(false);
+  readonly icon = input<string | null>(null);
   readonly onClick = output<MouseEvent>();
 
   getClasses(): string {

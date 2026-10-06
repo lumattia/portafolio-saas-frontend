@@ -3,13 +3,12 @@ import { CommonModule } from '@angular/common';
 import { MenuType } from '../../../../core/models/menu.model';
 import { SmartLinkDirective } from "../../../../core/utils/smartLink.directive";
 import { ButtonComponent } from "../../../../shared/components/button/button.component";
-import { IconComponent } from "../../../../shared/components/icon/icon.component";
 import { MenuRendererComponent } from '../menu-renderer.component';
 
 @Component({
   selector: 'app-footer-menu-renderer',
   standalone: true,
-  imports: [CommonModule, SmartLinkDirective, ButtonComponent, IconComponent],
+  imports: [CommonModule, SmartLinkDirective, ButtonComponent],
   templateUrl: './footer-menu-renderer.component.html',
   styleUrls: ['./footer-menu-renderer.component.scss']
 })

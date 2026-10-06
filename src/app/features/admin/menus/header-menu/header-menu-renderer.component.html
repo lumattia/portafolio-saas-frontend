@@ -28,8 +28,7 @@
   <header class="header">
     <ng-container *ngTemplateOutlet="menuRenderer; context: { items: menu()?.menuItems }"></ng-container>
 
-    <app-button class="edit-btn" variant="icon" (onClick)="openMenuEditor()" title="Editar menú header">
-      <app-icon name="edit" size="sm" />
+    <app-button class="edit-btn" variant="icon" icon="edit" size="sm" (onClick)="openMenuEditor()" title="Editar menú header">
     </app-button>
   </header>
 } @else if (menu()?.menuItems?.length) {

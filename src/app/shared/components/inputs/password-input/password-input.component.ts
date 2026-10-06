@@ -2,12 +2,11 @@ import { Component, Input } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { TextInputComponent } from '../text-input/text-input.component';
 import { ButtonComponent } from '../../button/button.component';
-import { IconComponent } from '../../icon/icon.component';
 
 @Component({
   selector: 'app-password-input',
   standalone: true,
-  imports: [TextInputComponent, ButtonComponent, IconComponent, ReactiveFormsModule],
+  imports: [TextInputComponent, ButtonComponent, ReactiveFormsModule],
   templateUrl: './password-input.component.html',
   styleUrls: ['./password-input.component.scss'],
 })

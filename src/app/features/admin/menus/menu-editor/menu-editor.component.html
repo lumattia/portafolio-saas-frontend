@@ -5,8 +5,7 @@
       <app-button variant="primary" (onClick)="saveMenu()" [disabled]="!hasUnsavedChanges()">
         Guardar
       </app-button>
-      <app-button variant="icon" (onClick)="attemptClose()" title="Cerrar">
-        <app-icon name="close" size="md" />
+      <app-button variant="icon" icon="close" size="md" (onClick)="attemptClose()" title="Cerrar">
       </app-button>
     </div>
   </div>
@@ -30,14 +29,11 @@
               }
             </div>
             <div class="menu-actions">
-              <app-button variant="icon" size="sm" (onClick)="addChildItem(item)" title="Add submenu">
-                <app-icon name="add" size="sm" />
+              <app-button variant="icon" icon="add" size="sm" (onClick)="addChildItem(item)" title="Add submenu">
               </app-button>
-              <app-button variant="icon" size="sm" (onClick)="openEditModal(null, item)">
-                <app-icon name="edit" size="sm" />
+              <app-button variant="icon" icon="edit" size="sm" (onClick)="openEditModal(null, item)">
               </app-button>
-              <app-button variant="icon" size="sm" (onClick)="deleteItem(null, item)">
-                <app-icon name="delete" size="sm" />
+              <app-button variant="icon" icon="delete" size="sm" (onClick)="deleteItem(null, item)">
               </app-button>
             </div>
           </div>
@@ -52,11 +48,9 @@
                     }
                   </div>
                   <div class="menu-actions">
-                    <app-button variant="icon" size="sm" (onClick)="openEditModal(item, child)">
-                      <app-icon name="edit" size="sm" />
+                    <app-button variant="icon" icon="edit" size="sm" (onClick)="openEditModal(item, child)">
                     </app-button>
-                    <app-button variant="icon" size="sm" (onClick)="deleteItem(item, child)">
-                      <app-icon name="delete" size="sm" />
+                    <app-button variant="icon" icon="delete" size="sm" (onClick)="deleteItem(item, child)">
                     </app-button>
                   </div>
                 </div>
