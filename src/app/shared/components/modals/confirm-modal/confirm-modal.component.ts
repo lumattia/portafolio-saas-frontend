@@ -1,4 +1,4 @@
-import { Component, Input, ChangeDetectorRef } from '@angular/core';
+import { Component, input, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { ButtonComponent } from '../../button/button.component';
@@ -8,31 +8,22 @@ import { ButtonComponent } from '../../button/button.component';
   standalone: true,
   imports: [CommonModule, TranslatePipe, ButtonComponent],
   templateUrl: './confirm-modal.component.html',
-  styleUrls: ['./confirm-modal.component.scss']
+  styleUrls: ['./confirm-modal.component.scss'],
 })
 export class ConfirmModalComponent {
-  @Input() title = 'Confirmar';
-  @Input() message = '¿Deseas continuar?';
-  @Input() messageParams: any = {};
+  private translate = inject(TranslateService);
 
-  // These will be injected by ModalService
+  title = input<string>('Confirmar');
+  message = input<string>('¿Deseas continuar?');
+  messageParams = input<Record<string, any>>({});
+
   close?: (result?: any) => void;
   dismiss?: (reason?: any) => void;
 
-  translatedTitle = '';
-  translatedMessage = '';
-
-  constructor(private cdr: ChangeDetectorRef, private translate: TranslateService) {}
-
-  ngOnChanges() {
-    this.translateText();
-    this.cdr.detectChanges();
-  }
-
-  private translateText() {
-    this.translatedTitle = this.translate.instant(this.title);
-    this.translatedMessage = this.translate.instant(this.message, this.messageParams);
-  }
+  translatedTitle = computed(() => this.translate.instant(this.title()));
+  translatedMessage = computed(() =>
+    this.translate.instant(this.message(), this.messageParams())
+  );
 
   onConfirm(): void {
     this.close?.(true);

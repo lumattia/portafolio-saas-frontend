@@ -1,59 +1,90 @@
-import { Component, Input, Output, EventEmitter, OnInit, WritableSignal } from '@angular/core';
+import { Component, OnInit, input, model, computed, effect } from '@angular/core';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-text-input',
   standalone: true,
-  imports: [ReactiveFormsModule,TranslatePipe],
+  imports: [ReactiveFormsModule, TranslatePipe],
   templateUrl: './text-input.component.html',
   styleUrls: ['./text-input.component.scss'],
 })
 export class TextInputComponent implements OnInit {
-  @Input() labelKey = '';
-  @Input() placeholderKey = '';
-  @Input() control: FormControl | null = null;
-  @Input() value: any = null;
-  @Input() signal?: WritableSignal<string>;
-  @Input() type = 'text';
-  @Input() required = false;
-  @Input() disabled = false;
-  @Input() readonly = false;
-  @Input() minLength?: number;
-  @Input() maxLength?: number;
-  @Input() pattern?: RegExp;
-  @Input() errorKey = '';
-  @Input() showDirtyIndicator = false;
+  value = model<any>(null);
 
-  @Output() valueChange = new EventEmitter<any>();
+  labelKey = input<string>('');
+  placeholderKey = input<string>('');
+  controlInput = input<FormControl | null>(null, { alias: 'control' });
+  type = input<string>('text');
+  required = input<boolean>(false);
+  disabled = input<boolean>(false);
+  readonly = input<boolean>(false);
+  minLength = input<number | undefined>(undefined);
+  maxLength = input<number | undefined>(undefined);
+  pattern = input<RegExp | undefined>(undefined);
+  errorKey = input<string>('');
+  showDirtyIndicator = input<boolean>(false);
 
-  ngOnInit(): void {
-    if (!this.control) {
-      const validators = [];
-      if (this.required) {
-        validators.push(Validators.required);
-      }
-      if (this.minLength !== undefined) {
-        validators.push(Validators.minLength(this.minLength));
-      }
-      if (this.maxLength !== undefined) {
-        validators.push(Validators.maxLength(this.maxLength));
-      }
-      if (this.pattern) {
-        validators.push(Validators.pattern(this.pattern));
-      }
+  control!: FormControl;
 
-      const initialValue = this.signal ? this.signal() : this.value;
-      this.control = new FormControl(initialValue, validators);
+  private readonly validators = computed(() => {
+    const v = [];
+    if (this.required()) {
+      v.push(Validators.required);
     }
+    const min = this.minLength();
+    if (min !== undefined) {
+      v.push(Validators.minLength(min));
+    }
+    const max = this.maxLength();
+    if (max !== undefined) {
+      v.push(Validators.maxLength(max));
+    }
+    const pat = this.pattern();
+    if (pat) {
+      v.push(Validators.pattern(pat));
+    }
+    return v;
+  });
+
+  constructor() {
+    effect(() => {
+      if (this.control) {
+        this.control.setValidators(this.validators());
+        this.control.updateValueAndValidity({ emitEvent: false });
+      }
+    });
+
+    effect(() => {
+      const newVal = this.value();
+      if (this.control && newVal !== this.control.value) {
+        this.control.setValue(newVal, { emitEvent: false });
+      }
+    });
+
+    effect(() => {
+      if (this.control) {
+        if (this.disabled() && this.control.enabled) {
+          this.control.disable({ emitEvent: false });
+        } else if (!this.disabled() && this.control.disabled) {
+          this.control.enable({ emitEvent: false });
+        }
+      }
+    });
   }
 
-  get isRequired(): boolean {
-    return this.control?.hasValidator(Validators.required) ?? false;
+  ngOnInit(): void {
+    this.control = this.controlInput() ?? new FormControl(this.value(), this.validators());
+
+    this.control.valueChanges.subscribe((val: any) => {
+      if (val !== this.value()) {
+        this.value.set(val);
+      }
+    });
   }
 
   get isDirty(): boolean {
-    return this.showDirtyIndicator && !!this.control?.dirty;
+    return this.showDirtyIndicator() && !!this.control?.dirty;
   }
 
   get shouldShowError(): boolean {
@@ -65,42 +96,38 @@ export class TextInputComponent implements OnInit {
     if (!this.control || !this.shouldShowError) return null;
 
     if (this.control.hasError('required')) {
-      return { key: this.errorKey || 'validation.required' };
+      return { key: this.errorKey() || 'validation.required' };
     }
     if (this.control.hasError('minlength')) {
       const errorDetails = this.control.getError('minlength');
       return {
-        key: this.errorKey || 'validation.minLength',
-        params: { minLength: errorDetails.requiredLength }
+        key: this.errorKey() || 'validation.minLength',
+        params: { minLength: errorDetails.requiredLength },
       };
     }
     if (this.control.hasError('maxlength')) {
       const errorDetails = this.control.getError('maxlength');
       return {
-        key: this.errorKey || 'validation.maxLength',
-        params: { maxLength: errorDetails.requiredLength }
+        key: this.errorKey() || 'validation.maxLength',
+        params: { maxLength: errorDetails.requiredLength },
       };
     }
     if (this.control.hasError('pattern')) {
-      return { key: this.errorKey || 'validation.pattern' };
+      return { key: this.errorKey() || 'validation.pattern' };
     }
     if (this.control.hasError('email')) {
-      return { key: this.errorKey || 'validation.email' };
+      return { key: this.errorKey() || 'validation.email' };
     }
 
-    return { key: this.errorKey || 'validation.invalid' };
+    return { key: this.errorKey() || 'validation.invalid' };
   }
 
   onValueChange(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    const newValue = input.value;
-    this.control!.setValue(newValue);
-    this.value = newValue;
-
-    if (this.signal) {
-      this.signal.set(newValue);
-    }
-
-    this.valueChange.emit(newValue);
+    const inputEl = event.target as HTMLInputElement;
+    const newValue = inputEl.value;
+    this.control.setValue(newValue);
+    this.control.markAsDirty();
+    this.control.markAsTouched();
+    this.value.set(newValue);
   }
 }

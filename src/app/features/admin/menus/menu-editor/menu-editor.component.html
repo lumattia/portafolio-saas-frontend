@@ -73,8 +73,8 @@
         <app-button variant="icon" (onClick)="closeModal()">×</app-button>
       </div>
       <div class="modal-body">
-        <app-text-input [labelKey]="'Text'" [placeholderKey]="'Menu item text'" [signal]="newItemText"></app-text-input>
-        <app-text-input [labelKey]="'URL (optional)'" [placeholderKey]="'https://example.com or /page-slug'" [signal]="newItemUrl"></app-text-input>
+        <app-text-input [labelKey]="'Text'" [placeholderKey]="'Menu item text'" [(value)]="newItemText"></app-text-input>
+        <app-text-input [labelKey]="'URL (optional)'" [placeholderKey]="'https://example.com or /page-slug'" [(value)]="newItemUrl"></app-text-input>
       </div>
       <div class="modal-footer">
         <app-button variant="primary" (onClick)="saveItem()">

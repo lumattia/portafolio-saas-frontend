@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, OnInit, Renderer2, ElementRef, inject, ViewChild, SimpleChanges } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, Renderer2, ElementRef, inject, ViewChild, SimpleChanges, model, input, effect, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -14,22 +14,22 @@ export class NumberInputComponent implements OnInit {
   private renderer = inject(Renderer2);
   @ViewChild('inputEl', { static: true }) inputEl!: ElementRef<HTMLInputElement>;
 
-  @Input() labelKey = '';
-  @Input() placeholderKey = '';
-  @Input() control: FormControl | null = null;
-  @Input() value: number | null = null;
-  @Input() decimalPlaces = 0;
-  @Input() unit = '';
-  @Input() required = false;
-  @Input() disabled = false;
-  @Input() readonly = false;
-  @Input() min?: number;
-  @Input() max?: number;
-  @Input() errorKey = '';
-  @Input() showDirtyIndicator = false;
-  @Input() autoClamp = false;
+  value = model<number | null>(null);
+  labelKey = input<string>('');
+  placeholderKey = input<string>('');
+  controlInput = input<FormControl | null>(null, { alias: 'control' });
+  decimalPlaces = input<number>(0);
+  unit = input<string>('');
+  required = input<boolean>(false);
+  disabled = input<boolean>(false);
+  readonly = input<boolean>(false);
+  min = input<number | undefined>(undefined);
+  max = input<number | undefined>(undefined);
+  errorKey = input<string>('');
+  showDirtyIndicator = input<boolean>(false);
+  autoClamp = input<boolean>(false);
 
-  @Output() valueChange = new EventEmitter<number | null>();
+  control!: FormControl;
 
   private _lastValidRawString = '';
 
@@ -41,57 +41,48 @@ export class NumberInputComponent implements OnInit {
   get lastValidRawString(): string {
     return this._lastValidRawString;
   }
-  ngOnInit(): void {
-    if (!this.control) {
-     this.control = new FormControl(this.value ?? null, this.buildValidators());
-    }
-    this.lastValidRawString = this.control.value;
-  }
-  ngOnChanges(changes: SimpleChanges): void {
-    // 1. Si cambian las reglas de validación y ya existe el FormControl
-    if (this.control && (changes['min'] || changes['max'] || changes['required'])) {
-      this.control.setValidators(this.buildValidators());
-      this.control.updateValueAndValidity();
-      if (this.autoClamp) {
-        this.processClamp();
-        this.emitNewValue();
-      }
-      // Si se activa autoClamp, re-evaluar el límite actual con las nuevas reglas
-    }
 
-    // 2. Si el padre cambia la propiedad [value] desde fuera
-    if (changes['value'] && !changes['value'].firstChange) {
-      const newVal = changes['value'].currentValue;
-      if (newVal !== this.control?.value) {
+  readonly step = computed(() => {
+    const decimals = this.decimalPlaces();
+    return decimals > 0 ? `0.${'0'.repeat(decimals - 1)}1` : '1';
+  });
+
+  private readonly validators = computed(() => {
+    const v = [];
+    if (this.required()) v.push(Validators.required);
+    if (this.min() !== undefined) v.push(Validators.min(this.min()!));
+    if (this.max() !== undefined) v.push(Validators.max(this.max()!));
+    return v;
+  });
+
+  constructor() {
+    effect(() => {
+      if (this.control) {
+        this.control.setValidators(this.validators());
+        this.control.updateValueAndValidity();
+        if (this.autoClamp()) {
+          this.processClamp();
+          this.emitNewValue();
+        }
+      }
+    });
+
+    effect(() => {
+      const newVal = this.value();
+      if (this.control && newVal !== this.control.value) {
         this.lastValidRawString = newVal !== null && newVal !== undefined ? newVal.toString() : '';
-        this.control?.setValue(newVal, { emitEvent: false });
-        this.renderer.setProperty(this.inputEl.nativeElement, 'value', newVal);
+        this.control.setValue(newVal, { emitEvent: false });
       }
-    }
-  }
-  private buildValidators() {
-    const validators = [];
-    if (this.required) validators.push(Validators.required);
-    if (this.min !== undefined) validators.push(Validators.min(this.min));
-    if (this.max !== undefined) validators.push(Validators.max(this.max));
-    return validators;
-  }
-  get isRequired(): boolean {
-    return this.control?.hasValidator(Validators.required) ?? false;
+    });
   }
 
-  get step(): string {
-    return this.decimalPlaces > 0 ? `0.${'0'.repeat(this.decimalPlaces - 1)}1` : '1';
-  }
-
-  get displayValue(): string {
-    const val = this.control?.value;
-    if (val === null || val === undefined) return '';
-    return this.decimalPlaces > 0 ? val.toFixed(this.decimalPlaces) : val.toString();
+  ngOnInit(): void {
+    this.control = this.controlInput() ?? new FormControl(this.value() ?? null, this.validators());
+    this.lastValidRawString = this.control.value?.toString() ?? '';
   }
 
   get isDirty(): boolean {
-    return this.showDirtyIndicator && !!this.control?.dirty;
+    return this.showDirtyIndicator() && !!this.control?.dirty;
   }
 
   get shouldShowError(): boolean {
@@ -103,30 +94,21 @@ export class NumberInputComponent implements OnInit {
     if (!this.control || !this.shouldShowError) return null;
 
     if (this.control.hasError('required')) {
-      return { key: this.errorKey || 'validation.required' };
+      return { key: this.errorKey() || 'validation.required' };
     }
     if (this.control.hasError('min')) {
-      const errorDetails = this.control.getError('min');
-      return {
-        key: this.errorKey || 'validation.min',
-        params: { min: errorDetails.min }
-      };
+      const details = this.control.getError('min');
+      return { key: this.errorKey() || 'validation.min', params: { min: details.min } };
     }
-
     if (this.control.hasError('max')) {
-      const errorDetails = this.control.getError('max');
-      return {
-        key: this.errorKey || 'validation.max',
-        params: { max: errorDetails.max }
-      };
+      const details = this.control.getError('max');
+      return { key: this.errorKey() || 'validation.max', params: { max: details.max } };
     }
-
-    return { key: this.errorKey || 'validation.invalid' };
+    return { key: this.errorKey() || 'validation.invalid' };
   }
 
   onKeyDown(event: KeyboardEvent): void {
-    if (this.disabled || this.readonly) return;
-
+    if (this.disabled() || this.readonly()) return;
     if (event.key === 'ArrowUp') {
       event.preventDefault();
       this.stepBy(1);
@@ -137,37 +119,34 @@ export class NumberInputComponent implements OnInit {
   }
 
   onWheel(event: WheelEvent): void {
-    if (this.disabled || this.readonly) return;
+    if (this.disabled() || this.readonly()) return;
     if (document.activeElement !== this.inputEl.nativeElement) return;
-
     event.preventDefault();
-    const direction = event.deltaY < 0 ? 1 : -1;
-    this.stepBy(direction);
+    this.stepBy(event.deltaY < 0 ? 1 : -1);
   }
 
-private stepBy(direction: number): void {
-  // Calcular el incremento según los decimales (ej: 0.1 si decimalPlaces = 1)
-  const step = this.decimalPlaces > 0 ? Math.pow(10, -this.decimalPlaces) : 1;
+  private stepBy(direction: number): void {
+    const decimals = this.decimalPlaces();
+    const stepVal = decimals > 0 ? Math.pow(10, -decimals) : 1;
+    let currentVal = parseFloat(this.lastValidRawString);
 
-  let currentVal = parseFloat(this.lastValidRawString);
+    if (isNaN(currentVal)) {
+      const minVal = this.min();
+      currentVal = minVal !== undefined && minVal > 0 ? minVal : 0;
+    } else {
+      currentVal += direction * stepVal;
+    }
 
-  let min = this.control?.getError('min')?.min;
-  if (isNaN(currentVal)) {
-    currentVal = min !== undefined && min > 0 ? min : 0;
-  } else {
-    currentVal += direction * step;
+    if (decimals > 0) {
+      currentVal = parseFloat(currentVal.toFixed(decimals));
+    }
+
+    this.lastValidRawString = currentVal.toString();
+    this.control?.setValue(this.lastValidRawString);
+    this.processClamp();
+    this.emitNewValue();
   }
 
-  // Corregir imprecisiones de coma flotante en JavaScript (ej. 0.1 + 0.2 = 0.30000000000000004)
-  if (this.decimalPlaces > 0) {
-    currentVal = parseFloat(currentVal.toFixed(this.decimalPlaces));
-  }
-
-  this.lastValidRawString = currentVal.toString();
-  this.control?.setValue(this.lastValidRawString)
-  this.processClamp();
-  this.emitNewValue();
-}
   onValueChange(event: Event): void {
     if (this.lastValidRawString === '-' || this.lastValidRawString === '+') {
       this.lastValidRawString = '';
@@ -176,8 +155,8 @@ private stepBy(direction: number): void {
   }
 
   onInput(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    const rawValue = input.value;
+    const inputEl = event.target as HTMLInputElement;
+    const rawValue = inputEl.value;
 
     if (rawValue === '' || rawValue === '-' || rawValue === '+') {
       this.lastValidRawString = rawValue;
@@ -196,21 +175,17 @@ private stepBy(direction: number): void {
   }
 
   private processClamp(): void {
-    if (!this.autoClamp) return;
+    if (!this.autoClamp()) return;
 
     const numericValue = parseFloat(this.lastValidRawString);
     if (isNaN(numericValue)) return;
 
     let finalValue = numericValue;
-    const effectiveMin = this.control?.getError('min')?.min;
-    const effectiveMax = this.control?.getError('max')?.max;
+    const effectiveMin = this.min();
+    const effectiveMax = this.max();
 
-    if (effectiveMin !== undefined && finalValue < effectiveMin) {
-      finalValue = effectiveMin;
-    }
-    if (effectiveMax !== undefined && finalValue > effectiveMax) {
-      finalValue = effectiveMax;
-    }
+    if (effectiveMin !== undefined && finalValue < effectiveMin) finalValue = effectiveMin;
+    if (effectiveMax !== undefined && finalValue > effectiveMax) finalValue = effectiveMax;
 
     if (finalValue !== numericValue) {
       this.lastValidRawString = finalValue.toString();
@@ -218,10 +193,11 @@ private stepBy(direction: number): void {
   }
 
   private isValidPattern(val: string): boolean {
-    if (this.decimalPlaces === 0) {
+    const decimals = this.decimalPlaces();
+    if (decimals === 0) {
       return /^[-+]?\d*$/.test(val);
     }
-    const regex = new RegExp(`^[-+]?\\d*(\\.\\d{0,${this.decimalPlaces}})?$`);
+    const regex = new RegExp(`^[-+]?\\d*(\\.\\d{0,${decimals}})?$`);
     return regex.test(val);
   }
 
@@ -229,8 +205,7 @@ private stepBy(direction: number): void {
     const numericValue = parseFloat(this.lastValidRawString);
     const finalValue = isNaN(numericValue) ? null : numericValue;
 
-    this.value = finalValue;
-    this.valueChange.emit(finalValue ?? undefined);
+    this.value.set(finalValue);
     if (this.control?.value !== finalValue) {
       this.control?.setValue(this.lastValidRawString, { emitEvent: false });
     }

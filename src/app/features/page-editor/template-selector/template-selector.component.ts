@@ -1,4 +1,4 @@
-import { Component, inject, signal, input, OnInit, Input } from '@angular/core';
+import { Component, inject, signal, input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SectionTemplateService } from '../../../core/services/section-template.service';
 import { SectionTemplateDto } from '../../../core/models/section-template.model';
@@ -22,21 +22,25 @@ export class TemplateSelectorComponent implements OnInit {
   dismiss!: (reason?: any) => void;
 
   readonly searchQuery = signal('');
-  readonly selectedCategory = signal<number|null>(null);
+  readonly selectedCategory = signal<number | null>(null);
   readonly currentPage = signal(1);
   readonly pageSize = signal(12);
 
   readonly templates = signal<PagedList<SectionTemplateDto> | null>(null);
   readonly isLoading = signal(false);
   readonly categoryOptions = signal<IdName[]>([]);
-  @Input() parentSectionId: string | undefined= undefined;
 
-  hasPrevious():boolean{
-    return hasPrevious(this.templates())
+  // 1. Refactorizado a Signal Input (100% reactivo)
+  readonly parentSectionId = input<string | undefined>(undefined);
+
+  hasPrevious(): boolean {
+    return hasPrevious(this.templates());
   }
-  hasNext():boolean{
-    return hasNext(this.templates())
+
+  hasNext(): boolean {
+    return hasNext(this.templates());
   }
+
   ngOnInit(): void {
     this.loadTemplates();
     this.loadCategoryOption();
@@ -45,7 +49,7 @@ export class TemplateSelectorComponent implements OnInit {
   loadCategoryOption(): void {
     this.sectionTemplateService.getCategoryTags().subscribe({
       next: (data) => this.categoryOptions.set(data),
-      error: (err) => console.error('Failed to load category options', err)
+      error: (err) => console.error('Failed to load category options', err),
     });
   }
 
@@ -83,14 +87,14 @@ export class TemplateSelectorComponent implements OnInit {
   }
 
   onNextPage(): void {
-    if (hasNext()) {
+    if (this.hasNext()) {
       this.currentPage.update((page) => page + 1);
       this.loadTemplates();
     }
   }
 
   onPreviousPage(): void {
-    if (hasPrevious()) {
+    if (this.hasPrevious()) {
       this.currentPage.update((page) => page - 1);
       this.loadTemplates();
     }
@@ -105,8 +109,8 @@ export class TemplateSelectorComponent implements OnInit {
       isEnabled: true,
       isDeleted: false,
       isPublished: false,
-      parentSectionId: this.parentSectionId,
-      subSections: []
+      parentSectionId: this.parentSectionId(),
+      subSections: [],
     };
     this.close(newSection);
   }

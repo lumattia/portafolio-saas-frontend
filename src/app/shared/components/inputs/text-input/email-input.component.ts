@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, input, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -12,7 +12,7 @@ import { TextInputComponent } from './text-input.component';
   styleUrls: ['./text-input.component.scss'],
 })
 export class EmailInputComponent extends TextInputComponent {
-  @Input() override labelKey:string = 'email.label';
-  @Input() override placeholderKey:string = 'email.placeholder';
-  @Input() override pattern?: RegExp =  /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  override labelKey = input<string>('email.label');
+  override placeholderKey = input<string>('email.placeholder');
+  override pattern = input<RegExp | undefined>( /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/);
 }

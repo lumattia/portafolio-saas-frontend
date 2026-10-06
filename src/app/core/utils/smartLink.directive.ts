@@ -1,40 +1,38 @@
-import { Directive, HostListener, Input, inject } from '@angular/core';
+import { Directive, HostListener, input, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { MenuItemRenderer } from '../models/menu.model';
 
 @Directive({
-  selector: 'a[smartLink]', // Se aplica a cualquier <a smartLink="/ruta"> o <a [smartLink]="url">
+  selector: 'a[smartLink]',
   standalone: true
 })
 export class SmartLinkDirective {
   private router = inject(Router);
 
-  @Input('smartLink') item: MenuItemRenderer | string | undefined | null;
+  item = input<MenuItemRenderer | string | undefined | null>(null, { alias: 'smartLink' });
 
   @HostListener('click', ['$event'])
   onClick(event: MouseEvent): void {
-    if (!this.item) return;
+    const currentItem = this.item();
+    if (!currentItem) return;
 
-    // Caso 1: Se pasó un objeto MenuItemRenderer
-    if (typeof this.item === 'object') {
-      // Si tiene submenús, alteramos su visibilidad y cancelamos la navegación
-      if (this.item.subMenuItems && this.item.subMenuItems.length > 0) {
+    if (typeof currentItem === 'object') {
+      if (currentItem.subMenuItems && currentItem.subMenuItems.length > 0) {
         event.preventDefault();
-        this.item.toggled = !this.item.toggled;
+        currentItem.toggled = !currentItem.toggled;
         return;
       }
 
-      this.navigate(event, this.item.url);
+      this.navigate(event, currentItem.url);
       return;
     }
 
-    this.navigate(event, this.item);
+    this.navigate(event, currentItem);
   }
 
   private navigate(event: MouseEvent, url: string | undefined): void {
     if (!url) return;
 
-    // Respetar comportamientos nativos
     if (event.ctrlKey || event.metaKey || event.button === 1) {
       return;
     }

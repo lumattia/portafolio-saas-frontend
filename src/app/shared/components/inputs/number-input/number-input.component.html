@@ -1,8 +1,8 @@
 <div class="number-input-wrapper">
-  @if (labelKey) {
+  @if (labelKey()) {
   <label class="number-input-label">
-    {{ labelKey | translate }}
-    @if (!readonly && isRequired) {
+    {{ labelKey() | translate }}
+    @if (!readonly() && required()) {
       <span class="required-mark">*</span>
     }
   </label>
@@ -12,9 +12,9 @@
       #inputEl
       type="text"
       [formControl]="control!"
-      [placeholder]="placeholderKey ? (placeholderKey | translate) : ''"
-      [attr.disabled]="disabled"
-      [readonly]="readonly"
+      [placeholder]="placeholderKey() ? (placeholderKey() | translate) : ''"
+      [attr.disabled]="disabled()"
+      [readonly]="readonly()"
       class="number-input-field"
       [class.error]="shouldShowError"
       [class.dirty]="isDirty"
@@ -23,8 +23,8 @@
       (keydown)="onKeyDown($event)"
       (wheel)="onWheel($event)"
     />
-    @if (unit) {
-      <span class="number-input-unit">{{ unit }}</span>
+    @if (unit()) {
+      <span class="number-input-unit">{{ unit() }}</span>
     }
   </div>
   @if (shouldShowError && errorMessage) {

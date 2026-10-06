@@ -1,22 +1,23 @@
 <div class="text-input-wrapper">
-  @if (labelKey) {
-  <label class="text-input-label">
-    {{ labelKey | translate }}
-    @if (!readonly && isRequired) {
-      <span class="required-mark">*</span>
-    }
-  </label>
-}
+  @if (labelKey()) {
+    <label class="text-input-label">
+      {{ labelKey() | translate }}
+      @if (!readonly() && required()) {
+        <span class="required-mark">*</span>
+      }
+    </label>
+  }
   <div class="text-input-field-wrapper">
     <input
-      [type]="type"
-      [formControl]="control!"
-      [placeholder]="placeholderKey ? (placeholderKey | translate) : ''"
-      [attr.disabled]="disabled"
-      [readonly]="readonly"
+      [type]="type()"
+      [formControl]="control"
+      [placeholder]="placeholderKey() ? (placeholderKey() | translate) : ''"
+      [attr.disabled]="disabled() || readonly() ? true : null"
+      [readonly]="readonly()"
       class="text-input-field"
       [class.error]="shouldShowError"
       [class.dirty]="isDirty"
+      (input)="onValueChange($event)"
       (change)="onValueChange($event)"
     />
     <ng-content select="[suffix]"></ng-content>

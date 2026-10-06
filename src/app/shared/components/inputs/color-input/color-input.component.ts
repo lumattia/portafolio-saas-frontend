@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
+import { Component, OnInit, input, model, computed, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -11,41 +11,66 @@ import { TranslatePipe } from '@ngx-translate/core';
   styleUrls: ['./color-input.component.scss'],
 })
 export class ColorInputComponent implements OnInit {
-  @Input() labelKey = '';
-  @Input() control: FormControl | null = null;
-  @Input() value: string | null = null;
-  @Input() required = false;
-  @Input() disabled = false;
-  @Input() readonly = false;
-  @Input() errorKey = '';
-  @Input() showDirtyIndicator = false;
+  value = model<string | null>(null);
 
-  @Output() valueChange = new EventEmitter<string>();
+  labelKey = input<string>('');
+  controlInput = input<FormControl | null>(null, { alias: 'control' });
+  required = input<boolean>(false);
+  disabled = input<boolean>(false);
+  readonly = input<boolean>(false);
+  errorKey = input<string>('');
+  showDirtyIndicator = input<boolean>(false);
 
-  private hexColorRegex = /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/;
+  control!: FormControl;
+
+  private readonly hexColorRegex = /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/;
+
+  private readonly validators = computed(() => {
+    const v = [Validators.pattern(this.hexColorRegex)];
+    if (this.required()) {
+      v.push(Validators.required);
+    }
+    return v;
+  });
+
+  constructor() {
+    effect(() => {
+      if (this.control) {
+        this.control.setValidators(this.validators());
+        this.control.updateValueAndValidity({ emitEvent: false });
+      }
+    });
+
+    effect(() => {
+      const newVal = this.value();
+      if (this.control && newVal !== this.control.value) {
+        this.control.setValue(newVal ?? '#000000', { emitEvent: false });
+      }
+    });
+
+    effect(() => {
+      if (this.control) {
+        if (this.disabled() && this.control.enabled) {
+          this.control.disable({ emitEvent: false });
+        } else if (!this.disabled() && this.control.disabled) {
+          this.control.enable({ emitEvent: false });
+        }
+      }
+    });
+  }
 
   ngOnInit(): void {
-    if (!this.control) {
-      const validators = [];
-      if (this.required) {
-        validators.push(Validators.required);
+    this.control = this.controlInput() ?? new FormControl(this.value() ?? '#000000', this.validators());
+
+    this.control.valueChanges.subscribe((val: string | null) => {
+      if (val !== this.value()) {
+        this.value.set(val);
       }
-      validators.push(Validators.pattern(this.hexColorRegex));
-
-      this.control = new FormControl(this.value ?? '#000000', validators);
-    }
-  }
-
-  get isRequired(): boolean {
-    return this.control?.hasValidator(Validators.required) ?? false;
-  }
-
-  get isValid(): boolean {
-    return this.hexColorRegex.test(this.control?.value || '');
+    });
   }
 
   get isDirty(): boolean {
-    return this.showDirtyIndicator && !!this.control?.dirty;
+    return this.showDirtyIndicator() && !!this.control?.dirty;
   }
 
   get shouldShowError(): boolean {
@@ -57,20 +82,22 @@ export class ColorInputComponent implements OnInit {
     if (!this.control || !this.shouldShowError) return null;
 
     if (this.control.hasError('required')) {
-      return { key: this.errorKey || 'validation.required' };
+      return { key: this.errorKey() || 'validation.required' };
     }
     if (this.control.hasError('pattern')) {
-      return { key: this.errorKey || 'validation.pattern' };
+      return { key: this.errorKey() || 'validation.pattern' };
     }
 
-    return { key: this.errorKey || 'validation.invalid' };
+    return { key: this.errorKey() || 'validation.invalid' };
   }
 
   onValueChange(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    const newValue = input.value;
-    this.control!.setValue(newValue);
-    this.value = newValue;
-    this.valueChange.emit(newValue);
+    const inputEl = event.target as HTMLInputElement;
+    const newValue = inputEl.value;
+
+    this.control.setValue(newValue);
+    this.control.markAsDirty();
+    this.control.markAsTouched();
+    this.value.set(newValue);
   }
 }

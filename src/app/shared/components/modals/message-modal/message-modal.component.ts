@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ButtonComponent } from '../../button/button.component';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -8,15 +8,14 @@ import { TranslatePipe } from '@ngx-translate/core';
   standalone: true,
   imports: [CommonModule, ButtonComponent, TranslatePipe],
   templateUrl: './message-modal.component.html',
-  styleUrls: ['./message-modal.component.scss']
+  styleUrls: ['./message-modal.component.scss'],
 })
 export class MessageModalComponent {
-  @Input() title = 'Confirmar';
-  @Input() message = '¿Deseas continuar?';
-  @Input() translateParams: any = {};
-  @Input() type: 'error' | 'warning' | 'info' = 'error';
+  title = input<string>('Confirmar');
+  message = input<string>('¿Deseas continuar?');
+  translateParams = input<Record<string, any>>({});
+  type = input<'error' | 'warning' | 'info'>('error');
 
-  // These will be injected by ModalService
   close?: (result?: any) => void;
   dismiss?: (reason?: any) => void;
 

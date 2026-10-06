@@ -2,17 +2,17 @@
   <label class="checkbox-input-label">
     <input
       type="checkbox"
-      [checked]="control!.value"
-      [disabled]="disabled || readonly"
-      [attr.readonly]="readonly"
+      [checked]="control.value"
+      [disabled]="disabled() || readonly()"
+      [attr.readonly]="readonly()"
       class="checkbox-input-field"
       [class.error]="shouldShowError"
       [class.dirty]="isDirty"
       (change)="onValueChange($event)"
     />
     <span class="checkbox-text">
-      {{ labelKey | translate }}
-      @if (!readonly && isRequired) {
+      {{ labelKey() | translate }}
+      @if (!readonly() && required()) {
         <span class="required-mark">*</span>
       }
     </span>

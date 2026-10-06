@@ -1,12 +1,12 @@
-  <div class="modal-content">
-    <div class="modal-header">
-      <h3>{{ translatedTitle }}</h3>
-      <app-button variant="icon" icon="close" size="md" (onClick)="onCancel()">
-      </app-button>
-    </div>
-    <p>{{ translatedMessage }}</p>
-    <div class="modal-actions">
-      <app-button (onClick)="onCancel()">{{ 'confirmModal.cancel' | translate }}</app-button>
-      <app-button variant="danger" (onClick)="onConfirm()">{{ 'confirmModal.confirm' | translate }}</app-button>
-    </div>
+<div class="modal-content">
+  <div class="modal-header">
+    <h3>{{ translatedTitle() }}</h3>
+    <app-button variant="icon" icon="close" size="md" (onClick)="onCancel()">
+    </app-button>
   </div>
+  <p>{{ translatedMessage() }}</p>
+  <div class="modal-actions">
+    <app-button (onClick)="onCancel()">{{ 'confirmModal.cancel' | translate }}</app-button>
+    <app-button variant="danger" (onClick)="onConfirm()">{{ 'confirmModal.confirm' | translate }}</app-button>
+  </div>
+</div>
