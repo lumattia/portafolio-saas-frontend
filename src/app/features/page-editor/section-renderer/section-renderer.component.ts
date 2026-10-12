@@ -1,4 +1,4 @@
-import { Component, computed, inject, input, output } from '@angular/core';
+import { Component, input, model, ModelSignal, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RENDER_COMPONENT_MAP } from '../../../core/constants/component-maps';
 import { SectionRenderer } from '../../../core/models/page.model';
@@ -11,9 +11,9 @@ import { SectionRenderer } from '../../../core/models/page.model';
   styleUrls: ['./section-renderer.component.scss'],
 })
 export class SectionRendererComponent {
-  section = input.required<SectionRenderer>();
+  section = model.required<SectionRenderer>();
   isSelected = input<boolean>(false);
-  select = output<string>();
+  select = output<ModelSignal<SectionRenderer>>();
   disableInteraction = input<boolean>(false);
 
   readonly componentMap = RENDER_COMPONENT_MAP;

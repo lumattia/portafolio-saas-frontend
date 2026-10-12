@@ -1,4 +1,4 @@
-import { Component, computed, signal } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ImageInputComponent } from '../../../../shared/components/inputs/image-input/image-input.component';
@@ -9,7 +9,6 @@ import { BaseSectionEditorComponent } from '../base-section-editor.component';
 import { CollapsibleComponent } from '../../../../shared/components/collapsible/collapsible.component';
 import { SelectInputComponent } from "../../../../shared/components/inputs/select-input/select-input.component";
 import { ImageTextSectionContent } from './image-text-section.model';
-import { IdName } from '../../../../core/models/common.models';
 
 @Component({
   selector: 'app-image-text-section-editor',

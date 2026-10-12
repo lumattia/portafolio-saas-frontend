@@ -4,7 +4,7 @@
   [class.unSelected]="!isSelected()"
   [class.deleted]="isDeleted"
   [class.disabled]="disableInteraction()"
-  (click)="!disableInteraction() && select.emit(section().id)"
+  (click)="!disableInteraction() && select.emit(section)"
 >
   <ng-container
     *ngComponentOutlet="componentMap[componentSelector]; inputs: { section: section() }"

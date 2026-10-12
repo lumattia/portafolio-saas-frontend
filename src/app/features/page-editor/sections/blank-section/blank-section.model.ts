@@ -1,5 +1,5 @@
 import { BaseSectionContent } from '../base-section.component';
-import { DimensionValue, HeightUnit, WidthUnit } from '../dimension.model';
+import { DimensionValue, HeightUnit, WidthUnit } from '../../../../core/models/dimension.model';
 
 export interface BlankSectionContent extends BaseSectionContent {
   inputs: {};

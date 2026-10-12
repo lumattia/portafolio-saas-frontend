@@ -1,5 +1,5 @@
 import { BaseSectionContent } from '../base-section.component';
-import { DimensionValue, WidthUnit } from '../dimension.model';
+import { DimensionValue, WidthUnit } from '../../../../core/models/dimension.model';
 
 export interface RichTextSectionContent extends BaseSectionContent {
   inputs: {

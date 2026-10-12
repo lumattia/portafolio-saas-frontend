@@ -1,5 +1,5 @@
 <div class="section-editor-content">
-  @if (content && content.inputs) {
+  @if (content.inputs) {
     <div class="field-group">
       <label>Text</label>
       <app-rich-text-input
@@ -11,8 +11,8 @@
   <app-dimension-input
     dimensionType="width"
     [label]="'Width'"
-    [(value)]="content.styles.width.value"
-    [(unit)]="content.styles.width.unit"
+    [(dimension)]="content.styles.width"
+    (dimensionChange)="notifySignal()"
     [autoClamp]="true"
     [sectionId]="section().id"
   />

@@ -1,21 +1,20 @@
-import { Directive, input } from '@angular/core';
-import { SectionRenderer } from '../../../core/models/page.model';
+import { computed, Directive, input, model, ModelSignal } from '@angular/core';
 import { BaseSectionComponent, BaseSectionContent } from './base-section.component';
+import { notifySignal } from '../../../core/utils/notify-signal';
+import { SectionRenderer } from '../../../core/models/page.model';
 
 @Directive()
 export abstract class BaseSectionEditorComponent<T extends BaseSectionContent = BaseSectionContent> extends BaseSectionComponent<T> {
-  override section = input.required<SectionRenderer>();
-  onDelete = input<() => void>();
+  sectionSignal = model.required<ModelSignal<SectionRenderer>>({alias : "section"});
+  get section(){
+    return this.sectionSignal();
+  }
   get content(): T {
     return this.section().contentJson as T;
   }
-
+  onDelete = input<() => void>();
+  protected notifySignal(){notifySignal(this.section)};
   deleteSection(): void {
     this.onDelete()?.();
-  }
-
-  onFileChange(file: File): void {
-    this.section().fileRequest = file;
-    this.section().imageUrl = file.size > 0 ? URL.createObjectURL(file) : '';
   }
 }

@@ -16,10 +16,10 @@ export class ImageTextSectionRenderComponent extends BaseSectionRendererComponen
   override readonly defaultContent = DEFAULT_IMAGE_TEXT_SECTION_CONTENT;
 
   get safeHtml(): SafeHtml {
-    return this.sanitizer.bypassSecurityTrustHtml(this.content.inputs?.text || '');
+    return this.sanitizer.bypassSecurityTrustHtml(this.content.inputs.text || '');
   }
 
   get positionClass(): string {
-    return `${this.content.styles?.imagePosition || 'top-left'}`;
+    return `${this.content.styles.imagePosition || 'top-left'}`;
   }
 }

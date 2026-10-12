@@ -1,4 +1,4 @@
-import { Component, inject, input, output } from '@angular/core';
+import { Component, model, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { EDITOR_COMPONENT_MAP } from '../../../core/constants/component-maps';
 import { ButtonComponent } from "../../../shared/components/button/button.component";
@@ -14,8 +14,8 @@ import { SectionRenderer } from '../../../core/models/page.model';
 export class SectionEditorComponent {
   close!: () => void;
   dismiss!: (reason?: any) => void;
-  section = input.required<SectionRenderer>();
-  onSetDeleteState = input.required<() => void>();
+  section = model.required<SectionRenderer>();
+  onSetDeleteState = output<void>();
   readonly editorMap = EDITOR_COMPONENT_MAP;
 
   get componentSelector(): string {
@@ -23,5 +23,8 @@ export class SectionEditorComponent {
   }
   get isDeleted() {
     return this.section().isDeleted;
+  }
+  triggerDelete(): void {
+    this.onSetDeleteState.emit();
   }
 }

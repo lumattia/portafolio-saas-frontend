@@ -127,13 +127,13 @@ export class PageEditorComponent implements OnInit, CanDeactivateComponent {
     settingRef.componentInstance.slug = this.pageSlug();
   }
 
-  selectSection(section: SectionRenderer): void {
-    this.selectedSection = section;
+  selectSection(section: ModelSignal<SectionRenderer>): void {
+    this.selectedSection = section();
     this.changeTrackingService.markAsChanged();
 
     this.editorSidenavRef = this.sidenavService.open(SectionEditorComponent);
     this.editorSidenavRef.componentInstance.section = section;
-    this.editorSidenavRef.componentInstance.onSetDeleteState = () => this.setDeletedState();
+    this.editorSidenavRef.componentInstance.onSetDeleteState.subscribe(()=>this.setDeletedState());
     this.editorSidenavRef.result.then(() => {
       this.selectedSection = null;
     });
@@ -176,7 +176,7 @@ export class PageEditorComponent implements OnInit, CanDeactivateComponent {
       this.editorSidenavRef?.close()
     }else{
       const modalRef = this.modalService.open(ConfirmModalComponent);
-      modalRef.componentInstance.title = 'Elimnar';
+      modalRef.componentInstance.title = 'Eliminar';
       modalRef.componentInstance.message = 'Esta sección aún no ha sido publicada. Al eliminarla y guardar, se borrará definitivamente y no podrá recuperarse. ¿Deseas continuar?';
       modalRef.result.then((res) => {
         if (res.confirmed) {

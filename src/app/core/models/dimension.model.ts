@@ -5,3 +5,7 @@ export interface DimensionValue<T extends string = string> {
   value: number;
   unit: T;
 }
+export interface BoxDimensions{
+  width: DimensionValue<WidthUnit>;
+  height: DimensionValue<HeightUnit>;
+}

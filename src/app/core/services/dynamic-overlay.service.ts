@@ -87,8 +87,8 @@ export abstract class DynamicOverlayService<TOptions extends BaseOverlayOptions>
     // Create a proxy to intercept property assignments and call setInput for inputs
     const proxy = new Proxy(instance, {
       set(target, prop, value) {
-        // Only try setInput for components, not templates
-        if (viewRef instanceof ComponentRef) {
+
+        if (viewRef instanceof ComponentRef && typeof value !== 'function') {
           try {
             (viewRef as ComponentRef<T>).setInput(prop as string, value);
             return true;

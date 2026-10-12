@@ -16,6 +16,6 @@ export class RichTextSectionRenderComponent extends BaseSectionRendererComponent
   private readonly sanitizer = inject(DomSanitizer);
 
   get safeHtml(): SafeHtml {
-    return this.sanitizer.bypassSecurityTrustHtml(this.content.inputs?.text || '');
+    return this.sanitizer.bypassSecurityTrustHtml(this.content.inputs.text || '');
   }
 }

@@ -1,8 +1,9 @@
-import { Component, input, model, computed } from '@angular/core';
+import { Component, input, model, computed, linkedSignal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NumberInputComponent } from '../inputs/number-input/number-input.component';
 import { SelectInputComponent } from '../inputs/select-input/select-input.component';
 import { IdName } from '../../../core/models/common.models';
+import { DimensionValue } from '../../../core/models/dimension.model';
 
 export type DimensionType = 'width' | 'height';
 
@@ -16,8 +17,7 @@ export type DimensionType = 'width' | 'height';
 export class DimensionInputComponent {
   dimensionType = input.required<DimensionType>();
   label = input<string>('');
-  value = model<number | null>(0);
-  unit = model<string>('px');
+  dimension = model.required<DimensionValue>();
   disabledUnits = input<string[]>([]);
   rangeOverrides = input<Record<string, { min?: number; max?: number }>>({});
   autoClamp = input<boolean>(true);
@@ -72,15 +72,15 @@ export class DimensionInputComponent {
   });
 
   currentMin = computed(() => {
-    const overrides = this.rangeOverrides()[this.unit() as string];
-    const unitKey = this.unit() as keyof typeof this.defaultRanges;
+    const overrides = this.rangeOverrides()[this.dimension().unit as string];
+    const unitKey = this.dimension().unit as keyof typeof this.defaultRanges;
     const defaultRange = this.defaultRanges[unitKey];
     return overrides?.min ?? defaultRange?.min ?? 0;
   });
 
   currentMax = computed(() => {
-    const overrides = this.rangeOverrides()[this.unit() as string];
-    const unitKey = this.unit() as keyof typeof this.defaultRanges;
+    const overrides = this.rangeOverrides()[this.dimension().unit as string];
+    const unitKey = this.dimension().unit as keyof typeof this.defaultRanges;
     const defaultRange = this.defaultRanges[unitKey];
     return overrides?.max ?? defaultRange?.max ?? 1000;
   });
@@ -91,31 +91,18 @@ export class DimensionInputComponent {
 
   onValueChange(newValue: number | null): void {
     if (newValue !== null) {
-      this.value.set(newValue);
-      this.dispatch();
+      this.dimension.update(curr => ({ ...curr, value: newValue }));
     }
   }
 
   onUnitChange(newUnit: string): void {
     const newMax = this.defaultRanges[newUnit]?.max ?? 1000;
-    const currentValue = this.value();
+    const currentValue = this.dimension().value;
+    const targetValue = (currentValue && currentValue > newMax) ? newMax : currentValue;
 
-    // Clamp value to new range if it exceeds (in next tick to avoid ExpressionChangedAfterItHasBeenCheckedError)
-    if (currentValue && currentValue > newMax) {
-      setTimeout(() => {
-        this.value.set(newMax);
-      }, 0);
-    }
-
-    this.unit.set(newUnit);
-    this.dispatch();
-  }
-
-  private dispatch(): void {
-    if (this.sectionId()) {
-      window.dispatchEvent(new CustomEvent('dimension-update', {
-        detail: { sectionId: this.sectionId() }
-      }));
-    }
+    this.dimension.set({
+      value: targetValue,
+      unit: newUnit
+    });
   }
 }

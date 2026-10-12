@@ -57,7 +57,7 @@ export class TextInputComponent implements OnInit {
 
     effect(() => {
       const newVal = this.value();
-      if (this.control && newVal !== this.control.value) {
+      if (this.control && newVal !== this.control.value && !this.controlInput) {
         this.control.setValue(newVal, { emitEvent: false });
       }
     });
@@ -75,7 +75,6 @@ export class TextInputComponent implements OnInit {
 
   ngOnInit(): void {
     this.control = this.controlInput() ?? new FormControl(this.value(), this.validators());
-
     this.control.valueChanges.subscribe((val: any) => {
       if (val !== this.value()) {
         this.value.set(val);

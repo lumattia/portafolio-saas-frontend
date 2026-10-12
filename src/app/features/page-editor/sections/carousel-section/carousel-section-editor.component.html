@@ -1,21 +1,19 @@
 <div class="section-editor-content">
   <app-subsection-selector [section]="section()"></app-subsection-selector>
-  <app-collapsible
-        label="Style"
-      >
-          <app-dimension-input
+  <app-collapsible label="Style">
+    <app-dimension-input
       dimensionType="width"
       [label]="'Width'"
-      [(value)]="content.styles.width.value"
-      [(unit)]="content.styles.width.unit"
+      [(dimension)]="content.styles.width"
+      (dimensionChange)="notifySignal()"
       [autoClamp]="true"
       [sectionId]="section().id"
     />
     <app-dimension-input
       dimensionType="height"
       [label]="'Height'"
-      [(value)]="content.styles.height.value"
-      [(unit)]="content.styles.height.unit"
+      [(dimension)]="content.styles.height"
+      (dimensionChange)="notifySignal()"
       [autoClamp]="true"
     />
     </app-collapsible>
