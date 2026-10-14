@@ -20,9 +20,9 @@ export class BackgroundImageTextSectionRenderComponent extends BaseSectionRender
   }
 
   get backgroundStyle(): { [key: string]: string } {
-    if (this.imageUrl) {
+    if (this.section().media) {
       return {
-        'background-image': `url(${this.imageUrl})`,
+        'background-image': `url(${this.section().media!.url})`,
         'background-size': 'cover',
         'background-position': 'center',
         'background-repeat': 'no-repeat',

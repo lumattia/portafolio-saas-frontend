@@ -21,13 +21,7 @@ export class PageService {
     return this.http.post<PageRenderer>(this.apiUrl, request);
   }
   update(id: string, request: PageRequest): Observable<PageRenderer> {
-    const formData = new FormData();
-    formData.append('json', JSON.stringify(request));
-    request.sections?.forEach(s => {
-      if (s.file) formData.append(`file_${s.id}`, s.file);
-    });
-
-    return this.http.put<PageRenderer>(`${this.apiUrl}/${id}`, formData);
+    return this.http.put<PageRenderer>(`${this.apiUrl}/${id}`, request);
   }
 
   delete(id: string): Observable<void> {

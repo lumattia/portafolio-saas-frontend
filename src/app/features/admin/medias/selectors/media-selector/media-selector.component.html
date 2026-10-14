@@ -1,0 +1,59 @@
+<div class="media-selector">
+  <div class="header">
+    <h2>Select Media</h2>
+    <app-button variant="icon" icon="close" size="md" (onClick)="dismiss('backdrop')">
+    </app-button>
+  </div>
+
+  <div class="filters">
+    <app-text-input
+      [placeholderKey]="'Search media...'"
+      [value]="searchQuery()"
+      (valueChange)="onSearch($event)"
+    />
+    <app-button variant="primary" (onClick)="onUpload()" [disabled]="isUploading()">
+      @if (isUploading()) {
+        Uploading...
+      } @else {
+        <app-icon name="upload" size="sm" />
+        <span>Upload</span>
+      }
+    </app-button>
+  </div>
+
+  @if (isLoading()) {
+    <div class="loading">Loading media...</div>
+  } @else {
+    <div class="media-grid">
+      @for (item of mediaItems(); track item.id) {
+        <div class="media-card" (click)="selectMedia(item)">
+          <div class="media-preview">
+            <img [src]="item.url" [alt]="item.fileName" />
+          </div>
+          <div class="media-info">
+            <h3>{{ item.fileName }}</h3>
+            <div class="media-meta">
+              <span>{{ formatFileSize(item.size) }}</span>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+
+    <div class="pagination">
+      <app-button
+        variant="secondary"
+        [disabled]="pageIndex() === 1"
+        (onClick)="onPreviousPage()">
+        Previous
+      </app-button>
+      <span class="page-info">Page {{ pageIndex() }}</span>
+      <app-button
+        variant="secondary"
+        [disabled]="pageIndex() >= totalPages()"
+        (onClick)="onNextPage()">
+        Next
+      </app-button>
+    </div>
+  }
+</div>

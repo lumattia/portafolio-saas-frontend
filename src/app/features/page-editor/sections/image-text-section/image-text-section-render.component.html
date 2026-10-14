@@ -1,8 +1,14 @@
 <div class="image-text-section-render" [class]="positionClass">
   <div class="section-content">
     <div class="text-container">
-        @if (imageUrl) {
-          <img [src]="imageUrl" alt="Section image" class="section-image" />
+        @if (section().media) {
+          <div
+            class="section-image"
+            [style.width]="content.inputs.media.width | formatDimension"
+            [style.height]="content.inputs.media.height | formatDimension"
+          >
+            <img [src]="section().media!.url" [alt]="section().media!.fileName" />
+          </div>
         }
       @if (content.inputs.text) {
         <div class="rich-text-content" [innerHTML]="safeHtml"></div>

@@ -1,4 +1,5 @@
 import { FileInfoResponse } from "./common.models";
+import { Media } from "./media.model";
 
 export interface PageRequest {
   id?: string;
@@ -12,7 +13,7 @@ export interface SectionRequest {
   id: string;
   sectionTemplateId?: string;
   contentJson: any;
-  file?: File;
+  mediaId?: string;
   isEnabled: boolean;
   isDeleted: boolean;
   order:number;
@@ -40,7 +41,6 @@ export interface SectionRenderer {
   parentSectionId?: string;
   subSections: SectionRenderer[];
   subSectionIndex?: number;
-  file?: FileInfoResponse;
-  fileRequest?: File;
+  media?: Media;
   imageUrl?: string;
 }

@@ -1,6 +1,12 @@
 <div class="image-section-render">
-  @if (imageUrl) {
-    <img [src]="imageUrl" alt="Section image" class="section-image" />
+  @if (section().media) {
+    <img
+      [src]="section().media!.url"
+      [style.width]="content.inputs.media.width | formatDimension"
+      [style.height]="content.inputs.media.height | formatDimension"
+      alt="Section image"
+      class="section-image"
+    />
   } @else {
     <div class="placeholder">No image selected</div>
   }

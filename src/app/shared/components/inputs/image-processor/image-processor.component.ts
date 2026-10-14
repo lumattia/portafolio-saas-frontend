@@ -6,6 +6,7 @@ import { ButtonComponent } from '../../button/button.component';
 import { TranslatePipe } from '@ngx-translate/core';
 import { NumberInputComponent } from "../number-input/number-input.component";
 import { DomSanitizer } from '@angular/platform-browser';
+import { Media } from '../../../../core/models/media.model';
 
 @Component({
   selector: 'app-image-processor',
@@ -23,6 +24,7 @@ export class ImageProcessorComponent implements OnChanges {
 
   // Inputs asignados dinámicamente por tu ModalService
   @Input() imageFile: File | undefined = undefined;
+  @Input() existingMedia: Media | undefined = undefined;
   @Input() originalFormat: 'png' | 'jpeg' | 'bmp' | 'webp' | 'ico' = 'webp';
   @Input({ transform: (v: number | null | undefined) => v ?? 1920 }) maxWidth = 0;
   @Input({ transform: (v: number | null | undefined) => v ?? 1080 }) maxHeight = 1080;

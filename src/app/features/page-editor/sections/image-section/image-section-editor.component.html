@@ -2,13 +2,12 @@
   @if (content.inputs) {
     <div class="field-group">
       <label>Image</label>
-          <app-image-input
-            [existingImageUrl]="imageUrl"
-            [originalFileName]="section().file?.fileName"
+        <app-media-input
+            [(media)]="section().media"
             [maxHeight]="600"
             [minAspectRatio]="0"
             [maxAspectRatio]="6/1"
-            (fileChanged)="onFileChange($event)"
+            [(boxDimension)]="content.inputs.media"
           />
     </div>
     <app-dimension-input

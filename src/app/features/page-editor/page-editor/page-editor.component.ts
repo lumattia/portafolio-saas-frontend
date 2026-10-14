@@ -1,4 +1,4 @@
-import { Component, inject, computed, signal, OnInit } from '@angular/core';
+import { Component, inject, computed, signal, OnInit, ModelSignal } from '@angular/core';
 import { CommonModule, Location } from '@angular/common';
 import { PageService } from '../../../core/services/page.service';
 import { ActivatedRoute } from '@angular/router';
@@ -198,7 +198,7 @@ export class PageEditorComponent implements OnInit, CanDeactivateComponent {
           isEnabled: s.isEnabled,
           isDeleted: s.isDeleted,
           parentSectionId: s.parentSectionId,
-          file: s.fileRequest,
+          mediaId: s.media?.id,
           order: currentIndex++
         };
 
