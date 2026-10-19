@@ -1,12 +1,5 @@
 <header class="shared-header">
   <div class="header-left">
-    <app-button variant="icon" (onClick)="onSidenavClick()" title="Menu">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <line x1="3" y1="12" x2="21" y2="12"></line>
-        <line x1="3" y1="6" x2="21" y2="6"></line>
-        <line x1="3" y1="18" x2="21" y2="18"></line>
-      </svg>
-    </app-button>
     <a routerLink="/" class="brand">Portfolio</a>
     <app-header-menu-renderer/>
   </div>
@@ -51,6 +44,9 @@
             <app-button variant="icon" icon="upload" size="sm" [disabled]="!viewModeService.isAdminMode() || isPublishing()" (onClick)="publishSite()">
               <span>Publicar</span>
             </app-button>
+            <app-button variant="icon" icon="image" size="sm" url="/media-gallery">
+              <span>Gallery</span>
+            </app-button>
             <app-button variant="icon" icon="table" size="sm" [disabled]="true">
               <span>Table</span>
             </app-button>
@@ -83,21 +79,21 @@
         variant="icon"
         [active]="viewModeService.isAdminMode()"
         (onClick)="setViewMode('admin')"
-        icon="edit" size="sm" 
+        icon="edit" size="sm"
         title="Modo Edición">
       </app-button>
       <app-button
         variant="icon"
         [active]="viewModeService.isPreviewMode()"
         (onClick)="setViewMode('preview')"
-        icon="eye" size="sm" 
+        icon="eye" size="sm"
         title="Vista Previa">
       </app-button>
       <app-button
         variant="icon"
         [active]="viewModeService.isSnapshotMode()"
         (onClick)="setViewMode('snapshot')"
-        icon="globe" size="sm" 
+        icon="globe" size="sm"
         title="Vista Publicada">
       </app-button>
     </div>
@@ -105,8 +101,9 @@
       variant="icon"
       [disabled]="!viewModeService.isAdminMode() || isPublishing()"
       (onClick)="publishSite()"
-      [icon]="isPublishing()?'loader':'upload'" size="sm" 
+      [icon]="isPublishing()?'loader':'upload'" size="sm"
       title="Publicar">
     </app-button>
   </app-draggable-toolbar>
 }
+<router-outlet>

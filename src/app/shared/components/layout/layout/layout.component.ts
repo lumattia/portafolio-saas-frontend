@@ -1,27 +1,20 @@
 import { Component, inject, signal, OnInit, ViewChild } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterOutlet } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../../../core/services/auth.service';
 import { ThemeService } from '../../../../core/services/theme.service';
-import { MenuService } from '../../../../core/services/menu.service';
 import { ViewModeService } from '../../../../core/services/view-mode.service';
-import { SidenavService } from '../../../../core/services/sidenav.service';
 import { ThemeConfig } from '../../../../core/models/theme-config.model';
-import { MenuRenderer, MenuType } from '../../../../core/models/menu.model';
 import { PageEditorComponent } from '../../../../features/page-editor/page-editor/page-editor.component';
-import { ButtonComponent } from '../../button/button.component';
-import { IconComponent } from '../../icon/icon.component';
 import { SidebarMenuRendererComponent } from "../../../../features/admin/menus/sidebar-menu/sidebar-menu-renderer.component";
 import { FooterMenuRendererComponent } from "../../../../features/admin/menus/footer-menu/footer-menu-renderer.component";
-import { MenuEditorComponent } from '../../../../features/admin/menus/menu-editor/menu-editor.component';
-import { HeaderComponent } from "../header/header.component";
 import { PortfolioPageComponent } from "../../../../features/portfolio/pages/portfolio-page/portfolio-page.component";
 import { CanDeactivateComponent } from '../../../../core/guards/unsaved-changes.guard';
 
 @Component({
   selector: 'app-layout',
   standalone: true,
-  imports: [CommonModule, PageEditorComponent, SidebarMenuRendererComponent, FooterMenuRendererComponent, HeaderComponent, PortfolioPageComponent],
+  imports: [CommonModule, PageEditorComponent, SidebarMenuRendererComponent, FooterMenuRendererComponent, PortfolioPageComponent, RouterOutlet],
   templateUrl: './layout.component.html',
   styleUrls: ['./layout.component.scss']
 })
@@ -65,10 +58,6 @@ export class LayoutComponent implements OnInit, CanDeactivateComponent {
     root.style.setProperty('--text-secondary-color', theme.light.textSecondaryColor);
     root.style.setProperty('--font-family', theme.light.fontFamily);
     root.style.setProperty('--border-radius', theme.light.borderRadius);
-  }
-
-  toggleSidenav(): void {
-    this.showSidenav.update(v => !v);
   }
 
   canDeactivate(): boolean {

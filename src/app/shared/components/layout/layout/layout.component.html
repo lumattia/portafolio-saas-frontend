@@ -1,13 +1,11 @@
 <div class="layout">
-  <app-header
-    [onSidenavClick]="toggleSidenav">
-  </app-header>
 
   <div class="main-content">
     <app-sidebar-menu-renderer/>
 
     <div class="content-wrapper">
       <main class="content">
+        <router-outlet />
         @if (viewModeService.isAdminMode()) {
           <app-page-editor />
         }@else {
@@ -18,13 +16,4 @@
     </div>
   </div>
 
-  @if (showSidenav()) {
-    <div class="sidenav-overlay mobile-only" (click)="toggleSidenav()"></div>
-    <aside class="sidenav mobile-only">
-      <div class="sidenav-header">
-        <button type="button" class="close-button" (click)="toggleSidenav()">×</button>
-      </div>
-        <app-sidebar-menu-renderer/>
-    </aside>
-  }
 </div>

@@ -1,6 +1,6 @@
 import { Component, input, inject, signal, AfterViewInit, ElementRef, NgZone, HostListener, effect, runInInjectionContext, Injector, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink, Router } from '@angular/router';
+import { RouterLink, Router, RouterOutlet } from '@angular/router';
 import { ThemeToggleComponent } from '../../theme-toggle/theme-toggle.component';
 import { HeaderMenuRendererComponent } from '../../../../features/admin/menus/header-menu/header-menu-renderer.component';
 import { IconComponent } from '../../icon/icon.component';
@@ -16,7 +16,7 @@ import { DraggableToolbarComponent } from '../../draggable-toolbar/draggable-too
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [CommonModule, RouterLink, ThemeToggleComponent, HeaderMenuRendererComponent, IconComponent, ButtonComponent, PopupComponent, DraggableToolbarComponent],
+  imports: [CommonModule, RouterLink, ThemeToggleComponent, HeaderMenuRendererComponent, IconComponent, ButtonComponent, PopupComponent, DraggableToolbarComponent, RouterOutlet],
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss']
 })
@@ -32,7 +32,6 @@ export class HeaderComponent {
 
   @ViewChild(DraggableToolbarComponent) draggableToolbar!: DraggableToolbarComponent;
 
-  readonly onSidenavClick = input<(() => void) | null>(null);
   readonly isPublishing = signal(false);
   readonly isUserCardHighlighting = signal(false);
 
