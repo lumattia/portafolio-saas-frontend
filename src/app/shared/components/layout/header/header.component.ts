@@ -1,4 +1,4 @@
-import { Component, input, inject, signal, AfterViewInit, ElementRef, NgZone, HostListener, effect, runInInjectionContext, Injector, ViewChild } from '@angular/core';
+import { Component, inject, signal, ElementRef, NgZone, Injector, ViewChild, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, Router, RouterOutlet } from '@angular/router';
 import { ThemeToggleComponent } from '../../theme-toggle/theme-toggle.component';
@@ -12,6 +12,8 @@ import { SiteService } from '../../../../core/services/site.service';
 import { ModalService } from '../../../../core/services/modal.service';
 import { MessageModalComponent } from '../../modals/message-modal/message-modal.component';
 import { DraggableToolbarComponent } from '../../draggable-toolbar/draggable-toolbar.component';
+import { ThemeService } from '../../../../core/services/theme.service';
+import { ThemeConfig } from '../../../../core/models/theme-config.model';
 
 @Component({
   selector: 'app-header',
@@ -20,7 +22,7 @@ import { DraggableToolbarComponent } from '../../draggable-toolbar/draggable-too
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss']
 })
-export class HeaderComponent {
+export class HeaderComponent implements OnInit {
   readonly auth = inject(AuthService);
   readonly viewModeService = inject(ViewModeService);
   readonly modalService = inject(ModalService);
@@ -29,11 +31,41 @@ export class HeaderComponent {
   readonly elementRef = inject(ElementRef);
   readonly ngZone = inject(NgZone);
   readonly injector = inject(Injector);
+  readonly themeService = inject(ThemeService);
 
   @ViewChild(DraggableToolbarComponent) draggableToolbar!: DraggableToolbarComponent;
 
   readonly isPublishing = signal(false);
   readonly isUserCardHighlighting = signal(false);
+  readonly theme = signal<ThemeConfig | null>(null);
+
+  ngOnInit(): void {
+    this.loadTheme();
+  }
+
+  private loadTheme(): void {
+    this.themeService.getTheme().subscribe({
+      next: (theme: ThemeConfig) => {
+        this.theme.set(theme);
+        this.applyTheme(theme);
+      },
+      error: (err: any) => {
+        console.error('Failed to load theme', err);
+      },
+    });
+  }
+
+  private applyTheme(theme: ThemeConfig): void {
+    const root = document.documentElement;
+    root.style.setProperty('--primary', theme.light.primaryColor);
+    root.style.setProperty('--secondary', theme.light.secondaryColor);
+    root.style.setProperty('--background-color', theme.light.backgroundColor);
+    root.style.setProperty('--background-secondary', theme.light.surfaceColor);
+    root.style.setProperty('--text-primary', theme.light.textColor);
+    root.style.setProperty('--text-secondary-color', theme.light.textSecondaryColor);
+    root.style.setProperty('--font-family', theme.light.fontFamily);
+    root.style.setProperty('--border-radius', theme.light.borderRadius);
+  }
 
   onToolbarClose(): void {
     this.draggableToolbar.closeToolbar();
