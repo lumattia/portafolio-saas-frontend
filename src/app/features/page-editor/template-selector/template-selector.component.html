@@ -1,8 +1,7 @@
 <div class="template-selector">
   <div class="header">
     <h2>Add Section</h2>
-    <app-button variant="icon" icon="close" size="md" (onClick)="dismiss('backdrop')">
-    </app-button>
+    <app-button variant="icon" icon="close" (onClick)="dismiss('backdrop')"/>
   </div>
 
   <div class="filters">
@@ -23,7 +22,7 @@
     <div class="loading">Loading templates...</div>
   } @else {
     <div class="templates-grid">
-      @for (template of templates()?.list; track template.id) {
+      @for (template of templates(); track template.id) {
         <div class="template-card" (click)="selectTemplate(template)">
           <div class="template-preview">
             @if (template.previewImageUrl) {
@@ -51,29 +50,9 @@
         <div class="no-results">No templates found</div>
       }
     </div>
-
-    @if (templates() && templates()!.totalPages > 1) {
-      <div class="pagination">
-        <app-button
-          variant="secondary"
-          size="sm"
-          [disabled]="hasPrevious()"
-          (onClick)="onPreviousPage()"
-        >
-          Previous
-        </app-button>
-        <span class="page-info">
-          Page {{ templates()!.pageIndex }} of {{ templates()!.totalPages }}
-        </span>
-        <app-button
-          variant="secondary"
-          size="sm"
-          [disabled]="hasNext()"
-          (onClick)="onNextPage()"
-        >
-          Next
-        </app-button>
-      </div>
-    }
+    <app-pagination
+      [page]="pagedParameters()"
+      (pageChanged)="loadTemplates()"
+    />
   }
 </div>

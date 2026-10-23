@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, OnInit, Renderer2, ElementRef, inject, ViewChild, SimpleChanges, model, input, effect, computed } from '@angular/core';
+import { Component, OnInit, Renderer2, ElementRef, inject, ViewChild, model, input, effect, computed, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -28,7 +28,8 @@ export class NumberInputComponent implements OnInit {
   errorKey = input<string>('');
   showDirtyIndicator = input<boolean>(false);
   autoClamp = input<boolean>(false);
-
+  autoClampOnBlur = input<boolean>(false);
+  blur = output<void>();
   control!: FormControl;
 
   private _lastValidRawString = '';
@@ -60,7 +61,7 @@ export class NumberInputComponent implements OnInit {
       if (this.control) {
         this.control.setValidators(this.validators());
         this.control.updateValueAndValidity();
-        if (this.autoClamp()) {
+        if (this.autoClamp() && !this.autoClampOnBlur()) {
           this.processClamp();
           this.emitNewValue();
         }
@@ -147,12 +148,6 @@ export class NumberInputComponent implements OnInit {
     this.emitNewValue();
   }
 
-  onValueChange(event: Event): void {
-    if (this.lastValidRawString === '-' || this.lastValidRawString === '+') {
-      this.lastValidRawString = '';
-    }
-    this.emitNewValue();
-  }
 
   onInput(event: Event): void {
     const inputEl = event.target as HTMLInputElement;
@@ -174,8 +169,8 @@ export class NumberInputComponent implements OnInit {
     this.emitNewValue();
   }
 
-  private processClamp(): void {
-    if (!this.autoClamp()) return;
+  private processClamp(onBlur = false): void {
+    if (!this.autoClamp() || !this.autoClampOnBlur() === onBlur) return;
 
     const numericValue = parseFloat(this.lastValidRawString);
     if (isNaN(numericValue)) return;
@@ -204,10 +199,15 @@ export class NumberInputComponent implements OnInit {
   private emitNewValue(): void {
     const numericValue = parseFloat(this.lastValidRawString);
     const finalValue = isNaN(numericValue) ? null : numericValue;
-
     this.value.set(finalValue);
     if (this.control?.value !== finalValue) {
       this.control?.setValue(this.lastValidRawString, { emitEvent: false });
     }
+  }
+
+  onBlur(){
+     this.processClamp(true);
+    this.emitNewValue();
+    this.blur.emit();
   }
 }

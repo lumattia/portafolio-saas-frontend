@@ -19,15 +19,15 @@
       [class.error]="shouldShowError"
       [class.dirty]="isDirty"
       (input)="onInput($event)"
-      (change)="onValueChange($event)"
       (keydown)="onKeyDown($event)"
       (wheel)="onWheel($event)"
+      (blur)="onBlur()"
     />
     @if (unit()) {
       <span class="number-input-unit">{{ unit() }}</span>
     }
   </div>
-  @if (shouldShowError && errorMessage) {
+  @if (shouldShowError && errorMessage && !autoClamp()) {
     <span class="number-input-error"> {{ errorMessage.key | translate: errorMessage.params }} </span>
   }
 </div>

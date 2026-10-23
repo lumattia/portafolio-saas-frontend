@@ -1,0 +1,45 @@
+<div class="pagination">
+  <span></span>
+  <div class="page-inputs">
+    <app-button
+      variant="secondary"
+      [disabled]="pageIndex <= 1"
+      (onClick)="onPrevious()"
+    >
+      <
+    </app-button>
+
+    <div class="page-inputs">
+      <app-number-input
+        [value]="pageIndex"
+        (valueChange)="onIndexChange($event)"
+        [min]="1"
+        [max]="totalPages"
+        [autoClamp]="true"
+        [autoClampOnBlur]="true"
+        (blur)="emit()"
+      />
+      <span>of {{ totalPages }}</span>
+    </div>
+
+    <app-button
+      variant="secondary"
+      [disabled]="pageIndex >= totalPages"
+      (onClick)="onNext()"
+    >
+      >
+    </app-button>
+  </div>
+
+  <div class="page-inputs">
+    <app-number-input
+      [value]="page().pageSize"
+      (valueChange)="onSizeChange($event)"
+      [min]="5"
+      [max]="20"
+      [autoClamp]="true"
+      [autoClampOnBlur]="true"
+      (blur)="emit()"
+    />
+  </div>
+</div>

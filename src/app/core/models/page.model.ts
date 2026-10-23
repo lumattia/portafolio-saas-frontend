@@ -1,4 +1,3 @@
-import { FileInfoResponse } from "./common.models";
 import { Media } from "./media.model";
 
 export interface PageRequest {
