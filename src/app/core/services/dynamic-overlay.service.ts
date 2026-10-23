@@ -9,6 +9,7 @@ export interface OverlayRef<T> {
 
 export interface BaseOverlayOptions {
   disableBackdropClick?: boolean;
+  stackMode?: 'existing' | 'new';
 }
 
 interface InternalOverlayRef<T> extends OverlayRef<T> {
@@ -19,7 +20,9 @@ interface InternalOverlayRef<T> extends OverlayRef<T> {
 @Injectable()
 export abstract class DynamicOverlayService<TOptions extends BaseOverlayOptions> {
   protected container: HTMLElement | null = null;
+  private containers: Map<string, HTMLElement> = new Map();
   private activeOverlays: Map<ComponentRef<any> | EmbeddedViewRef<any>, OverlayRef<any>> = new Map();
+  private nextZIndex = 1000;
 
   constructor(
     protected appRef: ApplicationRef,
@@ -30,6 +33,22 @@ export abstract class DynamicOverlayService<TOptions extends BaseOverlayOptions>
   protected abstract configureContainerStyles(container: HTMLElement, options?: TOptions): void;
 
   private ensureContainer(options?: TOptions): HTMLElement {
+    const stackMode = options?.stackMode ?? 'new'; // Default to 'new'
+
+    if (stackMode === 'new') {
+      // Create a new container for this overlay
+      const containerId = `${this.containerId}-${this.nextZIndex}`;
+      const container = document.createElement('div');
+      container.id = containerId;
+      container.style.zIndex = `${this.nextZIndex++}`;
+      this.configureContainerStyles(container, options);
+      this.setupBackdropClickHandler(container, options);
+      document.body.appendChild(container);
+      this.containers.set(containerId, container);
+      return container;
+    }
+
+    // Use existing container
     if (!this.container) {
       this.container = document.createElement('div');
       this.container.id = this.containerId;
@@ -131,19 +150,19 @@ export abstract class DynamicOverlayService<TOptions extends BaseOverlayOptions>
       result: resultPromise,
       resolve: resolveFn!,
       reject: rejectFn!,
-      close: (result?: any) => this.closeOverlay(viewRef, { confirmed: true, data: result }),
-      dismiss: (reason?: any) => this.closeOverlay(viewRef, { confirmed: false, reason })
+      close: (result?: any) => this.closeOverlay(viewRef, container, { confirmed: true, data: result }),
+      dismiss: (reason?: any) => this.closeOverlay(viewRef, container, { confirmed: false, reason })
     };
 
     this.activeOverlays.set(viewRef, overlayRef);
     return overlayRef;
   }
 
-  private closeOverlay<T>(viewRef: ComponentRef<T> | EmbeddedViewRef<any>, output: any): void {
+  private closeOverlay<T>(viewRef: ComponentRef<T> | EmbeddedViewRef<any>, container: HTMLElement, output: any): void {
     const ref = this.activeOverlays.get(viewRef) as InternalOverlayRef<T>;
     if (ref) {
       ref.resolve(output);
-      this.destroyOverlay(viewRef);
+      this.destroyOverlay(viewRef, container);
     }
 
     if (this.activeOverlays.size === 0 && this.container) {
@@ -151,7 +170,7 @@ export abstract class DynamicOverlayService<TOptions extends BaseOverlayOptions>
     }
   }
 
-  private destroyOverlay<T>(viewRef: ComponentRef<T> | EmbeddedViewRef<any>): void {
+  private destroyOverlay<T>(viewRef: ComponentRef<T> | EmbeddedViewRef<any>, container: HTMLElement): void {
     if (viewRef instanceof ComponentRef) {
       this.appRef.detachView(viewRef.hostView);
     } else {
@@ -165,9 +184,9 @@ export abstract class DynamicOverlayService<TOptions extends BaseOverlayOptions>
       element = viewRef.rootNodes[0] as HTMLElement;
     }
 
-    if (element && this.container) {
-      if (this.container.contains(element)) {
-        this.container.removeChild(element);
+    if (element && container) {
+      if (container.contains(element)) {
+        container.removeChild(element);
       }
     }
 
@@ -175,6 +194,13 @@ export abstract class DynamicOverlayService<TOptions extends BaseOverlayOptions>
       viewRef.destroy();
     }
     this.activeOverlays.delete(viewRef);
+
+    // Remove container if it was created with stackMode 'new'
+    if (container !== this.container && container.parentElement) {
+      document.body.removeChild(container);
+      this.containers.delete(container.id);
+    }
+
     if (this.activeOverlays.size === 0 && this.container) {
       document.body.removeChild(this.container);
       this.container = null;
