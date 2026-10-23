@@ -56,10 +56,9 @@ export class TextInputComponent implements OnInit {
     });
 
     effect(() => {
-      const newVal = this.value();
-      if (this.control && newVal !== this.control.value && !this.controlInput) {
-        this.control.setValue(newVal, { emitEvent: false });
-      }
+      this.control.setValue(this.value());
+      this.control.markAsDirty();
+      this.control.markAsTouched();
     });
 
     effect(() => {
@@ -124,9 +123,6 @@ export class TextInputComponent implements OnInit {
   onValueChange(event: Event): void {
     const inputEl = event.target as HTMLInputElement;
     const newValue = inputEl.value;
-    this.control.setValue(newValue);
-    this.control.markAsDirty();
-    this.control.markAsTouched();
     this.value.set(newValue);
   }
 }

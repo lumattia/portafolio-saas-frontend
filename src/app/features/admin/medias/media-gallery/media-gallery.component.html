@@ -1,0 +1,71 @@
+<div class="media-gallery">
+  <div class="gallery-header">
+    <h1>Media Gallery</h1>
+    <div class="header-actions">
+      <div class="search-bar">
+        <input
+          type="text"
+          [value]="searchQuery()"
+          (input)="searchQuery.set($any($event.target).value)"
+          (keyup.enter)="onSearch()"
+          placeholder="Search media..."
+          class="search-input"
+        />
+        <app-button variant="secondary" (onClick)="onSearch()">Search</app-button>
+      </div>
+      <div class="sort-control">
+        <app-select-input
+          [options]="sortOptions()"
+          [(value)]="pagedParameters().sortBy"
+          [showSearch]="false"
+          (valueChange)="loadMedia()"
+        />
+        <app-button variant="icon" icon="sort" (onClick)="onSortChanged()" />
+      </div>
+      <app-button variant="primary" (onClick)="onUpload()">
+        <app-icon name="upload" size="sm" />
+        <span>Upload New</span>
+      </app-button>
+    </div>
+  </div>
+
+  @if (error()) {
+    <div class="error-message">{{ error() }}</div>
+  }
+
+  @if (loading()) {
+    <div class="loading">Loading...</div>
+  }
+
+  @if (!loading() && media().length === 0) {
+    <div class="empty-state">No media found</div>
+  }
+
+  @if (!loading() && media().length > 0) {
+    <div class="media-grid">
+      @for (item of media(); track item.id) {
+        <div class="media-item" (click)="openMediaDetail(item)">
+          @if (item.mediaType === MediaType.Image) {
+            <img [src]="item.url" [alt]="item.fileName" class="media-preview" />
+          } @else {
+            <div class="file-preview">
+              <app-icon name="file" size="lg" />
+              <span>{{ item.fileName }}</span>
+            </div>
+          }
+          <div class="media-info">
+            <div class="media-name" [title]="item.fileName">{{ item.fileName }}</div>
+            <div class="media-meta">
+              <span>{{ formatFileSize(item.size) }}</span>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+
+    <app-pagination
+      [page]="pagedParameters()"
+      (pageChanged)="loadMedia()"
+    />
+  }
+</div>

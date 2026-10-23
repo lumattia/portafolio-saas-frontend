@@ -4,15 +4,16 @@ import { MediaService } from '../../../../../core/services/media.service';
 import { Media, MediaType } from '../../../../../core/models/media.model';
 import { IconComponent } from '../../../../../shared/components/icon/icon.component';
 import { TextInputComponent } from '../../../../../shared/components/inputs/text-input/text-input.component';
-import { PagedList } from '../../../../../core/models/common.models';
+import { PagedList, PagedParameters } from '../../../../../core/models/common.models';
 import { ButtonComponent } from '../../../../../shared/components/button/button.component';
 import { ModalService } from '../../../../../core/services/modal.service';
 import { ImageProcessorComponent } from '../../../../../shared/components/inputs/image-processor/image-processor.component';
+import { PaginationComponent } from '../../../../../shared/components/pagination/pagination.component';
 
 @Component({
   selector: 'app-media-selector',
   standalone: true,
-  imports: [CommonModule, ButtonComponent, IconComponent, TextInputComponent],
+  imports: [CommonModule, ButtonComponent, IconComponent, TextInputComponent, PaginationComponent],
   templateUrl: './media-selector.component.html',
   styleUrls: ['./media-selector.component.scss'],
 })
@@ -26,11 +27,9 @@ export class MediaSelectorComponent implements OnInit {
   @Input() mediaType: MediaType = MediaType.Image;
 
   readonly searchQuery = signal('');
-  readonly pageIndex = signal(1);
-  readonly pageSize = signal(20);
-  readonly totalPages = signal(20);
 
   readonly mediaItems = signal<Media[]>([]);
+  readonly pagedParameters = signal<PagedParameters>(PagedParameters.default(12));
   readonly isLoading = signal(false);
   readonly selectedMedia = signal<Media | null>(null);
   readonly isUploading = signal(false);
@@ -44,12 +43,11 @@ export class MediaSelectorComponent implements OnInit {
     this.mediaService.getMedia(
       this.searchQuery() || undefined,
       this.mediaType.toString(),
-      this.pageIndex(),
-      this.pageSize()
+      this.pagedParameters()
     ).subscribe({
       next: (response: PagedList<Media>) => {
         this.mediaItems.set(response.list);
-        this.totalPages.set(response.totalPages);
+        this.pagedParameters().fromPagedList(response)
         this.isLoading.set(false);
       },
       error: () => this.isLoading.set(false),
@@ -58,21 +56,10 @@ export class MediaSelectorComponent implements OnInit {
 
   onSearch(query: string): void {
     this.searchQuery.set(query);
-    this.pageIndex.set(1);
+    this.pagedParameters().pageIndex = 1;
     this.loadMedia();
   }
 
-  onNextPage(): void {
-    this.pageIndex.update((page) => page + 1);
-    this.loadMedia();
-  }
-
-  onPreviousPage(): void {
-    if (this.pageIndex() > 1) {
-      this.pageIndex.update((page) => page - 1);
-      this.loadMedia();
-    }
-  }
 
   selectMedia(item: Media): void {
     this.selectedMedia.set(item);
@@ -86,10 +73,23 @@ export class MediaSelectorComponent implements OnInit {
     input.onchange = (event: any) => {
       const file = event.target.files[0];
       if (file) {
-        this.uploadFile(file);
+        this.openImageProcessor(file);
       }
     };
     input.click();
+  }
+
+  openImageProcessor(file: File): void {
+    const modalRef = this.modalService.open(ImageProcessorComponent);
+
+    modalRef.componentInstance.imageFile = file;
+
+    modalRef.result.then((result: any) => {
+      if (result?.data) {
+        const processedFile = result.data as File;
+        this.uploadFile(processedFile);
+      }
+    });
   }
 
   uploadFile(file: File): void {

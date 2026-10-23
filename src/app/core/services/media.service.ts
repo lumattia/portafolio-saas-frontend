@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { Media } from '../models/media.model';
-import { PagedList } from '../models/common.models';
+import { PagedList, PagedParameters } from '../models/common.models';
 
 @Injectable({
   providedIn: 'root'
@@ -11,10 +11,16 @@ import { PagedList } from '../models/common.models';
 export class MediaService {
   constructor(private http: HttpClient) {}
 
-  getMedia(searchTerm?: string, mediaType?: string, pageIndex: number = 1, pageSize: number = 20): Observable<PagedList<Media>> {
-    let params: any = { pageIndex, pageSize };
-    if (searchTerm) params.searchTerm = searchTerm;
-    if (mediaType) params.mediaType = mediaType;
+  getMedia(searchTerm?: string, mediaType?: string, parameters?: PagedParameters): Observable<PagedList<Media>> {
+    let params = new HttpParams();
+    if (searchTerm) params = params.set('searchTerm', searchTerm);
+    if (mediaType) params = params.set('mediaType', mediaType);
+    if (parameters) {
+      params = params.set('pageIndex', parameters.pageIndex.toString());
+      params = params.set('pageSize', parameters.pageSize.toString());
+      if (parameters.sortBy)  params = params.set('sortBy', parameters.sortBy);
+      if (parameters.isDescending) params.set('isDescending', parameters.isDescending.toString());
+    }
 
     return this.http.get<PagedList<Media>>(`${environment.apiUrl}/admin/media`, { params });
   }

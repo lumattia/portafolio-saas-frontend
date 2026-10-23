@@ -1,8 +1,7 @@
 <div class="media-selector">
   <div class="header">
     <h2>Select Media</h2>
-    <app-button variant="icon" icon="close" size="md" (onClick)="dismiss('backdrop')">
-    </app-button>
+    <app-button variant="icon" icon="close" (onClick)="dismiss('backdrop')"/>
   </div>
 
   <div class="filters">
@@ -40,20 +39,9 @@
       }
     </div>
 
-    <div class="pagination">
-      <app-button
-        variant="secondary"
-        [disabled]="pageIndex() === 1"
-        (onClick)="onPreviousPage()">
-        Previous
-      </app-button>
-      <span class="page-info">Page {{ pageIndex() }}</span>
-      <app-button
-        variant="secondary"
-        [disabled]="pageIndex() >= totalPages()"
-        (onClick)="onNextPage()">
-        Next
-      </app-button>
-    </div>
+    <app-pagination
+      [page]="pagedParameters()"
+      (pageChanged)="loadMedia()"
+    />
   }
 </div>

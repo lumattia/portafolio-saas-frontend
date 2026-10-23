@@ -1,82 +1,81 @@
 <div class="modal-box-embedded">
-
   <div class="modal-header">
     <h3>{{'shared.imageInput.processorTitle' | translate}}</h3>
-    <button class="close-btn" (click)="onCancelClick()">✕</button>
+    <app-button variant="icon" icon="close" (onClick)="onCancelClick()"/>
   </div>
-    <div class="cropper-container">
-      <image-cropper
-        [imageFile]="imageFile"
-        [maintainAspectRatio]="!!fixedAspectRatio"
-        [aspectRatio]="fixedAspectRatio"
-        (cropperChange)="onCropChange($event)"
-        (imageCropped)="onCrop($event)"
-        [format]="format()"
-        [imageQuality]="quality()"
-        [onlyScaleDown]="true"
-        [resizeToWidth]="cropWidth()"
-        [resizeToHeight]="cropHeight()"
-        output="blob"
-        >
-      </image-cropper>
-    </div>
 
-    <div class="validation-alert error" *ngIf="!isRatioValid()">
+  <div class="cropper-container">
+    <image-cropper
+      [imageFile]="imageFile"
+      [maintainAspectRatio]="!!fixedAspectRatio"
+      [aspectRatio]="fixedAspectRatio"
+      (cropperChange)="onCropChange($event)"
+      (imageCropped)="onCrop($event)"
+      [format]="format()"
+      [imageQuality]="quality()"
+      [onlyScaleDown]="true"
+      [resizeToWidth]="cropWidth()"
+      [resizeToHeight]="cropHeight()"
+      output="blob"
+    />
+  </div>
+
+  @if (!isRatioValid()) {
+    <div class="validation-alert error">
       ⚠️ <strong>{{ ratioInstructionMessage() | translate}}</strong>
       <span class="d-block text-muted small">
         {{'shared.imageInput.ratio' | translate:{actual:currentCropRatio().toFixed(2), min:minAspectRatio.toFixed(2), max:maxAspectRatio.toFixed(2)} }}
       </span>
     </div>
+  }
 
-    <div class="controls-grid">
-      <div class="input-group">
-        <label>Max Width (px)</label>
-
-        <app-number-input
-          [value]="cropWidth()"
-          (valueChange)="cropWidth.set($event || 1)"
-          [max]="maxWidth"
-          [min]="1"
-          [autoClamp]="true"
-        />
-      </div>
-      <div class="input-group">
-        <label>Max Height (px)</label>
-        <app-number-input
-          [value]="cropHeight()"
-          (valueChange)="cropHeight.set($event || 1)"
-          [max]="maxHeight"
-          [min]="1"
-          [autoClamp]="true"
-        />
-      </div>
-      <div class="input-group">
-        <label>{{'shared.imageInput.finalQuality' | translate:{quality: (quality())} }}</label>
-        <input type="range" [ngModel]="quality()" (ngModelChange)="quality.set($event)" min="1" max="100" step="1">
-      </div>
+  <div class="controls-grid">
+    <app-text-input [(value)]="fileName" labelKey="File Name"/>
+    <div class="input-group">
+      <app-number-input
+          labelKey="Max Width (px)"
+          [(value)]="cropWidth"
+        [max]="maxWidth"
+        [min]="1"
+        [autoClamp]="true"
+      />
     </div>
+    <div class="input-group">
+      <app-number-input
+         labelKey="Max Height (px)"
+          [(value)]="cropHeight"
+        [max]="maxHeight"
+        [min]="1"
+        [autoClamp]="true"
+      />
+    </div>
+    <div class="input-group">
+      <label>{{'shared.imageInput.finalQuality' | translate:{quality: (quality())} }}</label>
+        <input type="range" [value]="quality()" (input)="quality.set($any($event.target).value)" min="1" max="100" step="1">
+      </div>
+  </div>
 
-    <div class="result-preview-box">
-      <h4>{{'shared.imageInput.preview' | translate}}</h4>
+  <div class="result-preview-box">
+    <h4>{{'shared.imageInput.preview' | translate}}</h4>
 
     <div class="info-item" [class.error]="!isFileSizeValid()">
       <span class="label">{{ `Result size: ${(this.resultFileSizeKB() / 1024).toFixed(2)}MB (max: ${(this.maxFileSizeKB / 1024).toFixed(2)}MB)` }}</span>
     </div>
     @if (resultImageSize(); as size) {
-    <div class="info-item">
-      <span class="label">
-        W x H: {{ size.width }} × {{ size.height }}
-      </span>
-    </div>
-  }
-      <div class="preview-info">
-        <img [src]="safeUrl()">
+      <div class="info-item">
+        <span class="label">
+          W x H: {{ size.width }} × {{ size.height }}
+        </span>
       </div>
+    }
+    <div class="preview-info">
+      <img [src]="safeUrl()" />
     </div>
+  </div>
 
-    <div class="modal-footer">
-      <app-button variant="secondary" (onClick)="onCancelClick()">{{'shared.cancel' | translate}}</app-button>
-      <app-button variant="danger" (onClick)="removeImage()">{{'shared.remove' | translate}}</app-button>
-      <app-button (onClick)="saveImage()" [disabled]="!isFormValid()">{{'shared.save' | translate}}</app-button>
-    </div>
+  <div class="modal-footer">
+    <app-button variant="secondary" (onClick)="onCancelClick()">{{'shared.cancel' | translate}}</app-button>
+    <app-button variant="secondary" (onClick)="onChangeImage()">{{'shared.change' | translate}}</app-button>
+    <app-button (onClick)="saveImage()" [disabled]="!isFormValid()">{{'shared.save' | translate}}</app-button>
+  </div>
 </div>

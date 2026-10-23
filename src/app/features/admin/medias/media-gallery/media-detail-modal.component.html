@@ -1,0 +1,45 @@
+<div class="media-detail-modal">
+  <div class="modal-header">
+    <h2>Media Details</h2>
+    <app-button variant="icon" icon="close" (onClick)="dismiss()"/>
+  </div>
+
+  <div class="modal-content">
+    <div class="preview-section">
+      <img [src]="media.url" [alt]="media.fileName" />
+    </div>
+
+    <div class="info-section">
+      <div class="info-item">
+        <label>File Name</label>
+        <span>{{ media.fileName }}</span>
+      </div>
+
+      <div class="info-item">
+        <label>Size</label>
+        <span>{{ formatFileSize(media.size) }}</span>
+      </div>
+
+      <div class="info-item">
+        <label>Created</label>
+        <span>{{ formatDate(media.createdAt) }}</span>
+      </div>
+
+      <div class="info-item">
+        <label>Updated</label>
+        <span>{{ formatDate(media.updatedAt) }}</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-footer">
+    <app-button variant="primary" (onClick)="onUpdate()">Update</app-button>
+    <app-button variant="danger" (onClick)="onDelete()" [disabled]="isDeleting()">
+      @if (isDeleting()) {
+        Deleting...
+      } @else {
+        Delete
+      }
+    </app-button>
+  </div>
+</div>
