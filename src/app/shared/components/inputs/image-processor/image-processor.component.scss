@@ -1,33 +1,4 @@
-.modal-box-embedded {
-  background-color: var(--background-primary);
-  border-radius: var(--border-radius-lg);
-  box-shadow: var(--shadow-md);
-  width: 95%;
-  max-width: 600px;
-  margin: var(--spacing-xl) auto;
-  display: flex;
-  flex-direction: column;
-  overflow-y: auto;
-  border: 1px solid var(--border-primary);
-  font-family: system-ui, -apple-system, sans-serif;
-  max-height: 90vh;
-}
 
-.modal-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: var(--spacing-md) var(--spacing-lg);
-  border-bottom: 1px solid var(--border-primary);
-  background-color: var(--background-alt);
-
-  h3 {
-    margin: 0;
-    font-size: var(--font-size-lg);
-    color: var(--text-primary);
-    font-weight: var(--font-weight-semibold);
-  }
-}
 
 .cropper-container {
   flex-shrink: 0;
@@ -84,15 +55,6 @@ input[type="range"] {
   width: 100%;
   cursor: pointer;
   accent-color: var(--primary);
-}
-
-.modal-footer {
-  display: flex;
-  justify-content: flex-end;
-  gap: var(--spacing-md);
-  padding: var(--spacing-md) var(--spacing-lg);
-  border-top: 1px solid var(--border-primary);
-  background-color: var(--background-alt);
 }
 
 .preview-info {

@@ -4,8 +4,10 @@
     <app-button variant="icon" icon="close" size="md" (onClick)="onCancel()">
     </app-button>
   </div>
-  <p>{{ translatedMessage() }}</p>
-  <div class="modal-actions">
+  <div class="modal-body">
+    <p>{{ translatedMessage() }}</p>
+  </div>
+  <div class="modal-footer">
     <app-button (onClick)="onCancel()">{{ 'confirmModal.cancel' | translate }}</app-button>
     <app-button variant="danger" (onClick)="onConfirm()">{{ 'confirmModal.confirm' | translate }}</app-button>
   </div>
