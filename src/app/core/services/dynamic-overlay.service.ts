@@ -9,104 +9,71 @@ export interface OverlayRef<T> {
 
 export interface BaseOverlayOptions {
   disableBackdropClick?: boolean;
-  stackMode?: 'existing' | 'new';
 }
 
-interface InternalOverlayRef<T> extends OverlayRef<T> {
-  resolve: (value: any) => void;
-  reject: (reason: any) => void;
-}
+// Global z-index counter shared across all overlay services
+let globalNextZIndex = 1000;
 
 @Injectable()
 export abstract class DynamicOverlayService<TOptions extends BaseOverlayOptions> {
-  protected container: HTMLElement | null = null;
-  private containers: Map<string, HTMLElement> = new Map();
-  private activeOverlays: Map<ComponentRef<any> | EmbeddedViewRef<any>, OverlayRef<any>> = new Map();
-  private nextZIndex = 1000;
-
   constructor(
     protected appRef: ApplicationRef,
     protected injector: EnvironmentInjector,
     private containerId: string
-  ) {  }
+  ) {}
 
   protected abstract configureContainerStyles(container: HTMLElement, options?: TOptions): void;
 
-  private ensureContainer(options?: TOptions): HTMLElement {
-    const stackMode = options?.stackMode ?? 'new'; // Default to 'new'
-
-    if (stackMode === 'new') {
-      // Create a new container for this overlay
-      const containerId = `${this.containerId}-${this.nextZIndex}`;
-      const container = document.createElement('div');
-      container.id = containerId;
-      container.style.zIndex = `${this.nextZIndex++}`;
-      this.configureContainerStyles(container, options);
-      this.setupBackdropClickHandler(container, options);
-      document.body.appendChild(container);
-      this.containers.set(containerId, container);
-      return container;
-    }
-
-    // Use existing container
-    if (!this.container) {
-      this.container = document.createElement('div');
-      this.container.id = this.containerId;
-      this.configureContainerStyles(this.container, options);
-      this.setupBackdropClickHandler(this.container, options);
-      document.body.appendChild(this.container);
-    }
-    return this.container;
-  }
-
-  private setupBackdropClickHandler(container: HTMLElement, options?: TOptions): void {
-    if (options?.disableBackdropClick) return;
-
-    let startedInside = false;
-
-    container.addEventListener('pointerdown', (event: PointerEvent) => {
-      startedInside = event.target !== container;
-    });
-
-    container.addEventListener('pointerup', (event: PointerEvent) => {
-      if (!startedInside && event.target === container) {
-        this.closeAll();
-      }
-      startedInside = false;
-    });
+  private createContainer(options?: TOptions): HTMLElement {
+    const container = document.createElement('div');
+    container.id = `${this.containerId}-${globalNextZIndex}`;
+    container.style.zIndex = `${globalNextZIndex++}`;
+    this.configureContainerStyles(container, options);
+    document.body.appendChild(container);
+    return container;
   }
 
   open<T>(content: Type<T> | TemplateRef<any>, options?: TOptions): OverlayRef<T> {
-    const container = this.ensureContainer(options);
+    const container = this.createContainer(options);
+    const { element, instance, viewRef } = this.createContent(content);
 
-    let element: HTMLElement;
-    let instance: any;
-    let viewRef: ComponentRef<T> | EmbeddedViewRef<any>;
+    container.appendChild(element);
+    container.style.pointerEvents = 'auto';
 
+    const proxy = this.createProxy(instance, viewRef);
+    const overlayRef = this.createOverlayRef(container, viewRef, proxy, options);
+
+    this.attachBackdropHandler(container, overlayRef.dismiss, options);
+    instance.close = overlayRef.close;
+    instance.dismiss = overlayRef.dismiss;
+    return overlayRef;
+  }
+
+  private createContent<T>(content: Type<T> | TemplateRef<any>): { element: HTMLElement; instance: any; viewRef: ComponentRef<T> | EmbeddedViewRef<any> } {
     if (content instanceof TemplateRef) {
-      // Handle TemplateRef
       const embeddedViewRef = content.createEmbeddedView({});
-      viewRef = embeddedViewRef;
       this.appRef.attachView(embeddedViewRef);
-      element = embeddedViewRef.rootNodes[0] as HTMLElement;
-      instance = {};
-    } else {
-      // Handle Component Type
-      const componentRef = createComponent(content, {
-        environmentInjector: this.injector
-      });
-      viewRef = componentRef;
-      element = (componentRef.hostView as any).rootNodes[0] as HTMLElement;
-      this.appRef.attachView(componentRef.hostView);
-      instance = componentRef.instance as any;
+      return {
+        element: embeddedViewRef.rootNodes[0] as HTMLElement,
+        instance: {},
+        viewRef: embeddedViewRef
+      };
     }
 
-    container!.appendChild(element);
+    const componentRef = createComponent(content, {
+      environmentInjector: this.injector
+    });
+    this.appRef.attachView(componentRef.hostView);
+    return {
+      element: (componentRef.hostView as any).rootNodes[0] as HTMLElement,
+      instance: componentRef.instance as any,
+      viewRef: componentRef
+    };
+  }
 
-    // Create a proxy to intercept property assignments and call setInput for inputs
-    const proxy = new Proxy(instance, {
+  private createProxy<T>(instance: any, viewRef: ComponentRef<T> | EmbeddedViewRef<any>): any {
+    return new Proxy(instance, {
       set(target, prop, value) {
-
         if (viewRef instanceof ComponentRef && typeof value !== 'function') {
           try {
             (viewRef as ComponentRef<T>).setInput(prop as string, value);
@@ -123,91 +90,72 @@ export abstract class DynamicOverlayService<TOptions extends BaseOverlayOptions>
         return target[prop];
       }
     });
+  }
 
-    if (container) {
-      container.style.pointerEvents = 'auto';
-    }
-
-    let resolveFn: (value: any) => void;
-    let rejectFn: (reason: any) => void;
-
+  private createOverlayRef<T>(
+    container: HTMLElement,
+    viewRef: ComponentRef<T> | EmbeddedViewRef<any>,
+    proxy: any,
+    options?: TOptions
+  ): OverlayRef<T> {
+    let resolveFn!: (value: any) => void;
     const resultPromise = new Promise<any>((resolve) => {
       resolveFn = resolve;
     });
 
-    instance.close = (result?: any) => {
-      const ref = this.activeOverlays.get(viewRef) as InternalOverlayRef<T>;
-      if (ref) ref.close(result);
+    let isDestroyed = false;
+
+    const destroy = () => {
+      if (isDestroyed) return;
+      isDestroyed = true;
+
+
+      if (viewRef instanceof ComponentRef) {
+        this.appRef.detachView(viewRef.hostView);
+        viewRef.destroy();
+      } else {
+        this.appRef.detachView(viewRef);
+      }
+
+      if (container.parentElement) {
+        document.body.removeChild(container);
+      }
     };
 
-    instance.dismiss = (reason?: any) => {
-      const ref = this.activeOverlays.get(viewRef) as InternalOverlayRef<T>;
-      if (ref) ref.dismiss(reason);
+    const close = (result?: any) => {
+      if (isDestroyed) return;
+      resolveFn({ confirmed: true, data: result });
+      destroy();
     };
 
-    const overlayRef: InternalOverlayRef<T> = {
+    const dismiss = (reason?: any) => {
+      if (isDestroyed) return;
+      resolveFn({ confirmed: false, reason });
+      destroy();
+    };
+
+    return {
       componentInstance: proxy,
       result: resultPromise,
-      resolve: resolveFn!,
-      reject: rejectFn!,
-      close: (result?: any) => this.closeOverlay(viewRef, container, { confirmed: true, data: result }),
-      dismiss: (reason?: any) => this.closeOverlay(viewRef, container, { confirmed: false, reason })
+      close,
+      dismiss
     };
-
-    this.activeOverlays.set(viewRef, overlayRef);
-    return overlayRef;
   }
 
-  private closeOverlay<T>(viewRef: ComponentRef<T> | EmbeddedViewRef<any>, container: HTMLElement, output: any): void {
-    const ref = this.activeOverlays.get(viewRef) as InternalOverlayRef<T>;
-    if (ref) {
-      ref.resolve(output);
-      this.destroyOverlay(viewRef, container);
-    }
+  private attachBackdropHandler(container: HTMLElement, dismiss: (reason?: any) => void, options?: TOptions): void {
+    if (options?.disableBackdropClick) return;
 
-    if (this.activeOverlays.size === 0 && this.container) {
-      this.container.style.pointerEvents = 'none';
-    }
-  }
+    let startedInside = false;
 
-  private destroyOverlay<T>(viewRef: ComponentRef<T> | EmbeddedViewRef<any>, container: HTMLElement): void {
-    if (viewRef instanceof ComponentRef) {
-      this.appRef.detachView(viewRef.hostView);
-    } else {
-      this.appRef.detachView(viewRef);
-    }
+    container.addEventListener('pointerdown', (event: PointerEvent) => {
+      startedInside = event.target !== container;
+    });
 
-    let element: HTMLElement;
-    if (viewRef instanceof ComponentRef) {
-      element = (viewRef.hostView as any).rootNodes[0] as HTMLElement;
-    } else {
-      element = viewRef.rootNodes[0] as HTMLElement;
-    }
-
-    if (element && container) {
-      if (container.contains(element)) {
-        container.removeChild(element);
+    container.addEventListener('pointerup', (event: PointerEvent) => {
+      if (!startedInside && event.target === container) {
+        dismiss('backdrop click');
       }
-    }
-
-    if (viewRef instanceof ComponentRef) {
-      viewRef.destroy();
-    }
-    this.activeOverlays.delete(viewRef);
-
-    // Remove container if it was created with stackMode 'new'
-    if (container !== this.container && container.parentElement) {
-      document.body.removeChild(container);
-      this.containers.delete(container.id);
-    }
-
-    if (this.activeOverlays.size === 0 && this.container) {
-      document.body.removeChild(this.container);
-      this.container = null;
-    }
-  }
-
-  closeAll(): void {
-    this.activeOverlays.forEach((ref) => ref.dismiss('close all'));
+      startedInside = false;
+    });
   }
 }
