@@ -22,7 +22,6 @@ export class TextInputComponent implements OnInit {
   minLength = input<number | undefined>(undefined);
   maxLength = input<number | undefined>(undefined);
   pattern = input<RegExp | undefined>(undefined);
-  errorKey = input<string>('');
   showDirtyIndicator = input<boolean>(false);
 
   control!: FormControl;
@@ -94,30 +93,30 @@ export class TextInputComponent implements OnInit {
     if (!this.control || !this.shouldShowError) return null;
 
     if (this.control.hasError('required')) {
-      return { key: this.errorKey() || 'validation.required' };
+      return { key: 'validation.required' };
     }
     if (this.control.hasError('minlength')) {
       const errorDetails = this.control.getError('minlength');
       return {
-        key: this.errorKey() || 'validation.minLength',
+        key: 'validation.minLength',
         params: { minLength: errorDetails.requiredLength },
       };
     }
     if (this.control.hasError('maxlength')) {
       const errorDetails = this.control.getError('maxlength');
       return {
-        key: this.errorKey() || 'validation.maxLength',
+        key: 'validation.maxLength',
         params: { maxLength: errorDetails.requiredLength },
       };
     }
     if (this.control.hasError('pattern')) {
-      return { key: this.errorKey() || 'validation.pattern' };
+      return { key: 'validation.pattern' };
     }
     if (this.control.hasError('email')) {
-      return { key: this.errorKey() || 'validation.email' };
+      return { key: 'validation.email' };
     }
 
-    return { key: this.errorKey() || 'validation.invalid' };
+    return { key: 'validation.invalid' };
   }
 
   onValueChange(event: Event): void {

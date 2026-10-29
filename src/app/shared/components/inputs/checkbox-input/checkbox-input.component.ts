@@ -17,7 +17,6 @@ export class CheckboxInputComponent implements OnInit {
   required = input<boolean>(false);
   disabled = input<boolean>(false);
   readonly = input<boolean>(false);
-  errorKey = input<string>('');
   showDirtyIndicator = input<boolean>(false);
 
   control!: FormControl;
@@ -75,10 +74,10 @@ export class CheckboxInputComponent implements OnInit {
     if (!this.control || !this.shouldShowError) return null;
 
     if (this.control.hasError('required')) {
-      return { key: this.errorKey() || 'validation.required' };
+      return { key: 'validation.required' };
     }
 
-    return { key: this.errorKey() || 'validation.invalid' };
+    return { key: 'validation.invalid' };
   }
 
   onValueChange(event: Event): void {

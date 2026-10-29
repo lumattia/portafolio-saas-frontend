@@ -25,7 +25,6 @@ export class NumberInputComponent implements OnInit {
   readonly = input<boolean>(false);
   min = input<number | undefined>(undefined);
   max = input<number | undefined>(undefined);
-  errorKey = input<string>('');
   showDirtyIndicator = input<boolean>(false);
   autoClamp = input<boolean>(false);
   autoClampOnBlur = input<boolean>(false);
@@ -95,17 +94,17 @@ export class NumberInputComponent implements OnInit {
     if (!this.control || !this.shouldShowError) return null;
 
     if (this.control.hasError('required')) {
-      return { key: this.errorKey() || 'validation.required' };
+      return { key: 'validation.required' };
     }
     if (this.control.hasError('min')) {
       const details = this.control.getError('min');
-      return { key: this.errorKey() || 'validation.min', params: { min: details.min } };
+      return { key: 'validation.min', params: { min: details.min } };
     }
     if (this.control.hasError('max')) {
       const details = this.control.getError('max');
-      return { key: this.errorKey() || 'validation.max', params: { max: details.max } };
+      return { key: 'validation.max', params: { max: details.max } };
     }
-    return { key: this.errorKey() || 'validation.invalid' };
+    return { key: 'validation.invalid' };
   }
 
   onKeyDown(event: KeyboardEvent): void {

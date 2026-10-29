@@ -18,7 +18,6 @@ export class ColorInputComponent implements OnInit {
   required = input<boolean>(false);
   disabled = input<boolean>(false);
   readonly = input<boolean>(false);
-  errorKey = input<string>('');
   showDirtyIndicator = input<boolean>(false);
 
   control!: FormControl;
@@ -82,13 +81,13 @@ export class ColorInputComponent implements OnInit {
     if (!this.control || !this.shouldShowError) return null;
 
     if (this.control.hasError('required')) {
-      return { key: this.errorKey() || 'validation.required' };
+      return { key: 'validation.required' };
     }
     if (this.control.hasError('pattern')) {
-      return { key: this.errorKey() || 'validation.pattern' };
+      return { key: 'validation.pattern' };
     }
 
-    return { key: this.errorKey() || 'validation.invalid' };
+    return { key: 'validation.invalid' };
   }
 
   onValueChange(event: Event): void {

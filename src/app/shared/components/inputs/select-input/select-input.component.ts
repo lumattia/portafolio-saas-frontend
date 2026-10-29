@@ -24,7 +24,6 @@ export class SelectInputComponent implements OnInit {
   required = input<boolean>(false);
   disabled = input<boolean>(false);
   readonly = input<boolean>(false);
-  errorKey = input<string>('');
   showSearch = input<boolean>(true);
   showDirtyIndicator = input<boolean>(false);
   showClearButton = input<boolean>(true);
@@ -118,10 +117,10 @@ export class SelectInputComponent implements OnInit {
     if (!this.control || !this.shouldShowError) return null;
 
     if (this.control.hasError('required')) {
-      return { key: this.errorKey() || 'validation.required' };
+      return { key: 'validation.required' };
     }
 
-    return { key: this.errorKey() || 'validation.invalid' };
+    return { key: 'validation.invalid' };
   }
 
   get hasValue(): boolean {
