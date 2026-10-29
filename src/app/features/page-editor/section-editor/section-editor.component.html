@@ -1,16 +1,20 @@
 <div class="section-editor">
   <div class="editor-header">
     <h3>Edit Section</h3>
-    <app-button variant="icon" icon="close" size="md" (onClick)="close()">
-    </app-button>
+    <app-button variant="icon" icon="close" size="md" (onClick)="close()"/>
   </div>
 
   <div class="editor-content">
-      <ng-container
-       *ngComponentOutlet="editorMap[componentSelector]; inputs: {
-            section: section,
-            onDelete: triggerDelete.bind(this)
-        }"
+    @if(section().isDeleted) {
+       <div class="info-message">
+      <p>This section will disappear once published.</p>
+    </div>
+    }
+    <ng-container
+      *ngComponentOutlet="editorMap[componentSelector]; inputs: {
+          section: section,
+          onDelete: triggerDelete.bind(this)
+      }"
     ></ng-container>
   </div>
 </div>

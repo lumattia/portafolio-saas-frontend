@@ -5,7 +5,7 @@
     <app-text-input
       labelKey="Title"
       placeholderKey="Page title"
-      [control]="titleControl"
+      [(value)]="title"
     />
   </div>
 
@@ -13,7 +13,7 @@
     <app-text-input
       labelKey="Slug"
       placeholderKey="page-slug"
-      [control]="slugControl"
+      [(value)]="slug"
     />
   </div>
 
@@ -22,7 +22,7 @@
       labelKey="Meta Description"
       placeholderKey="SEO meta description"
       type="text"
-      [control]="metaDescriptionControl"
+      [(value)]="metaDescription"
     />
   </div>
 

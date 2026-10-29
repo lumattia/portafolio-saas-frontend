@@ -1,4 +1,4 @@
-import { Component, inject, input, output, OnInit } from '@angular/core';
+import { Component, inject, input, output, OnInit, model } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormControl } from '@angular/forms';
 import { TextInputComponent } from '../../../shared/components/inputs/text-input/text-input.component';
@@ -17,12 +17,12 @@ import { MessageModalComponent } from '../../../shared/components/modals/message
   templateUrl: './page-settings.component.html',
   styleUrls: ['./page-settings.component.scss']
 })
-export class PageSettingsComponent implements OnInit {
+export class PageSettingsComponent {
   close!: () => void;
   dismiss!: (reason?: any) => void;
-  title = input<string>('');
-  slug = input<string>('');
-  metaDescription = input<string>('');
+  title = model<string>('');
+  slug = model<string>('');
+  metaDescription = model<string>('');
   pageId = input<string>('');
 
   private readonly pageService = inject(PageService);
@@ -30,21 +30,11 @@ export class PageSettingsComponent implements OnInit {
   private readonly location = inject(Location);
   private readonly modalService = inject(ModalService);
 
-  titleControl = new FormControl('');
-  slugControl = new FormControl('');
-  metaDescriptionControl = new FormControl('');
-
-  ngOnInit(): void {
-    this.titleControl.setValue(this.title());
-    this.slugControl.setValue(this.slug());
-    this.metaDescriptionControl.setValue(this.metaDescription());
-  }
-
   save(): void {
     const request: PageRequest = {
-      title: this.titleControl.value || '',
-      slug: this.slugControl.value || '',
-      metaDescription: this.metaDescriptionControl.value || '',
+      title: this.title() || '',
+      slug: this.slug() || '',
+      metaDescription: this.metaDescription() || '',
       sections: undefined
     };
 

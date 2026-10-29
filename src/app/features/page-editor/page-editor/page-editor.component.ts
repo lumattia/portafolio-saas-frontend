@@ -113,8 +113,8 @@ export class PageEditorComponent implements OnInit, CanDeactivateComponent {
     settingRef.componentInstance.slug = this.pageSlug();
 
     settingRef.result.then(() => {
-      this.pageTitle.set(settingRef.componentInstance.titleControl.value);
-      this.pageSlug.set(settingRef.componentInstance.slugControl.value);
+      this.pageTitle.set(settingRef.componentInstance.title());
+      this.pageSlug.set(settingRef.componentInstance.slug());
     });
   }
 
