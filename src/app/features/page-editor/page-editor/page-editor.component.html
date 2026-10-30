@@ -37,7 +37,7 @@
           <app-section-renderer
             [section]="section"
             [isSelected]="selectedSection?.id === section.id"
-            (select)="selectSection($event)"
+            (select)="selectSection(section)"
           />
         } @empty {
           <div class="empty-state">

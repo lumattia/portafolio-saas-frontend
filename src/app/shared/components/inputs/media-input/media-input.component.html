@@ -11,14 +11,12 @@
             dimensionType="width"
             [label]="'Width'"
             [(dimension)]="boxDimension().width"
-            (dimensionChange)="notifySignal(boxDimension)"
             [autoClamp]="true"
           />
           <app-dimension-input
             dimensionType="height"
             [label]="'Height'"
             [(dimension)]="boxDimension().height"
-            (dimensionChange)="notifySignal(boxDimension)"
             [autoClamp]="true"
           />
         </div>

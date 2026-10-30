@@ -1,4 +1,4 @@
-import { Component, model, output } from '@angular/core';
+import { Component, input, model, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { EDITOR_COMPONENT_MAP } from '../../../core/constants/component-maps';
 import { ButtonComponent } from "../../../shared/components/button/button.component";
@@ -14,7 +14,7 @@ import { SectionRenderer } from '../../../core/models/page.model';
 export class SectionEditorComponent {
   close!: () => void;
   dismiss!: (reason?: any) => void;
-  section = model.required<SectionRenderer>();
+  section = input.required<SectionRenderer>();
   onSetDeleteState = output<void>();
   readonly editorMap = EDITOR_COMPONENT_MAP;
 

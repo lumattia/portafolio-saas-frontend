@@ -1,10 +1,12 @@
 <div
-  class="section-renderer renderer"
+  class="section-renderer"
   [class.selected]="isSelected()"
   [class.unSelected]="!isSelected()"
   [class.deleted]="isDeleted"
   [class.disabled]="disableInteraction()"
-  (click)="!disableInteraction() && select.emit(section)"
+  (click)="!disableInteraction() && select.emit()"
+  [style.width]="section().contentJson?.styles?.width | formatDimension"
+  [style.height]="section().contentJson?.styles?.height | formatDimension"
 >
   <ng-container
     *ngComponentOutlet="componentMap[componentSelector]; inputs: { section: section() }"

@@ -1,4 +1,4 @@
-import { Component, inject, computed, signal, OnInit, ModelSignal } from '@angular/core';
+import { Component, inject, computed, signal, OnInit } from '@angular/core';
 import { CommonModule, Location } from '@angular/common';
 import { PageService } from '../../../core/services/page.service';
 import { ActivatedRoute } from '@angular/router';
@@ -127,10 +127,9 @@ export class PageEditorComponent implements OnInit, CanDeactivateComponent {
     settingRef.componentInstance.slug = this.pageSlug();
   }
 
-  selectSection(section: ModelSignal<SectionRenderer>): void {
-    this.selectedSection = section();
+  selectSection(section: SectionRenderer): void {
+    this.selectedSection = section;
     this.changeTrackingService.markAsChanged();
-
     this.editorSidenavRef = this.sidenavService.open(SectionEditorComponent);
     this.editorSidenavRef.componentInstance.section = section;
     this.editorSidenavRef.componentInstance.onSetDeleteState.subscribe(()=>this.setDeletedState());
@@ -138,7 +137,6 @@ export class PageEditorComponent implements OnInit, CanDeactivateComponent {
       this.selectedSection = null;
     });
   }
-
   savePage(): void {
     this.loading.set(true)
 

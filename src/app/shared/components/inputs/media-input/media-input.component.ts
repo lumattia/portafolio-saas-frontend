@@ -5,7 +5,6 @@ import { ModalService } from '../../../../core/services/modal.service';
 import { MediaSelectorComponent } from '../../../../features/admin/medias/selectors/media-selector/media-selector.component';
 import { DimensionInputComponent } from '../../dimension-input/dimension-input.component';
 import { BoxDimensions, DimensionValue } from '../../../../core/models/dimension.model';
-import { notifySignal } from '../../../../core/utils/notify-signal';
 import { ButtonComponent } from '../../button/button.component';
 
 @Component({
@@ -27,7 +26,6 @@ export class MediaInputComponent {
   maxAspectRatio = input<number>();
   fixedAspectRatio = input<number>();
   readonly = input<boolean>(false);
-  protected notifySignal = notifySignal;
   private formatDimension(dim?: DimensionValue | null): string {
     if (!dim || dim.unit === 'auto') return 'auto';
     return `${dim.value ?? 0}${dim.unit}`;

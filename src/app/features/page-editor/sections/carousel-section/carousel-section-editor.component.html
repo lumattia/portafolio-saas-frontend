@@ -5,7 +5,6 @@
       dimensionType="width"
       [label]="'Width'"
       [(dimension)]="content.styles.width"
-      (dimensionChange)="notifySignal()"
       [autoClamp]="true"
       [sectionId]="section().id"
     />
@@ -13,7 +12,6 @@
       dimensionType="height"
       [label]="'Height'"
       [(dimension)]="content.styles.height"
-      (dimensionChange)="notifySignal()"
       [autoClamp]="true"
     />
     </app-collapsible>
