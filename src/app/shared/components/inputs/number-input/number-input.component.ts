@@ -1,7 +1,8 @@
-import { Component, OnInit, Renderer2, ElementRef, inject, ViewChild, model, input, effect, computed, output } from '@angular/core';
+import { Component, Renderer2, ElementRef, inject, ViewChild, input, computed, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
+import { BaseInputComponent } from '../base-input.component';
 
 @Component({
   selector: 'app-number-input',
@@ -10,26 +11,17 @@ import { TranslatePipe } from '@ngx-translate/core';
   templateUrl: './number-input.component.html',
   styleUrls: ['./number-input.component.scss'],
 })
-export class NumberInputComponent implements OnInit {
+export class NumberInputComponent extends BaseInputComponent {
   private renderer = inject(Renderer2);
   @ViewChild('inputEl', { static: true }) inputEl!: ElementRef<HTMLInputElement>;
 
-  value = model<number | null>(null);
-  labelKey = input<string>('');
   placeholderKey = input<string>('');
-  controlInput = input<FormControl | null>(null, { alias: 'control' });
   decimalPlaces = input<number>(0);
   unit = input<string>('');
-  required = input<boolean>(false);
-  disabled = input<boolean>(false);
-  readonly = input<boolean>(false);
   min = input<number | undefined>(undefined);
   max = input<number | undefined>(undefined);
-  showDirtyIndicator = input<boolean>(false);
   autoClamp = input<boolean>(false);
   autoClampOnBlur = input<boolean>(false);
-  blur = output<void>();
-  control!: FormControl;
 
   private _lastValidRawString = '';
 
@@ -47,7 +39,7 @@ export class NumberInputComponent implements OnInit {
     return decimals > 0 ? `0.${'0'.repeat(decimals - 1)}1` : '1';
   });
 
-  private readonly validators = computed(() => {
+  protected override readonly validators = computed(() => {
     const v = [];
     if (this.required()) v.push(Validators.required);
     if (this.min() !== undefined) v.push(Validators.min(this.min()!));
@@ -56,54 +48,26 @@ export class NumberInputComponent implements OnInit {
   });
 
   constructor() {
-    effect(() => {
-      if (this.control) {
-        this.control.setValidators(this.validators());
-        this.control.updateValueAndValidity();
-        if (this.autoClamp() && !this.autoClampOnBlur()) {
-          this.processClamp();
-          this.emitNewValue();
-        }
-      }
-    });
-
+    super();
     effect(() => {
       const newVal = this.value();
       if (this.control && newVal !== this.control.value) {
         this.lastValidRawString = newVal !== null && newVal !== undefined ? newVal.toString() : '';
-        this.control.setValue(newVal, { emitEvent: false });
       }
     });
   }
 
-  ngOnInit(): void {
-    this.control = this.controlInput() ?? new FormControl(this.value() ?? null, this.validators());
+  override ngOnInit(): void {
+    super.ngOnInit();
     this.lastValidRawString = this.control.value?.toString() ?? '';
   }
 
-  get isDirty(): boolean {
-    return this.showDirtyIndicator() && !!this.control?.dirty;
-  }
-
-  get shouldShowError(): boolean {
-    if (!this.control) return false;
-    return this.control.invalid && (this.control.dirty || this.control.touched);
-  }
-
   get errorMessage(): { key: string; params?: any } | null {
-    if (!this.control || !this.shouldShowError) return null;
+    if (!this.shouldShowError) return null;
 
-    if (this.control.hasError('required')) {
-      return { key: 'validation.required' };
-    }
-    if (this.control.hasError('min')) {
-      const details = this.control.getError('min');
-      return { key: 'validation.min', params: { min: details.min } };
-    }
-    if (this.control.hasError('max')) {
-      const details = this.control.getError('max');
-      return { key: 'validation.max', params: { max: details.max } };
-    }
+    if (this.control.hasError('required')) return { key: 'validation.required' };
+    if (this.control.hasError('min')) return { key: 'validation.min', params: { min: this.control.getError('min').min } };
+    if (this.control.hasError('max')) return { key: 'validation.max', params: { max: this.control.getError('max').max } };
     return { key: 'validation.invalid' };
   }
 
@@ -144,9 +108,8 @@ export class NumberInputComponent implements OnInit {
     this.lastValidRawString = currentVal.toString();
     this.control?.setValue(this.lastValidRawString);
     this.processClamp();
-    this.emitNewValue();
+    this.onValueChange();
   }
-
 
   onInput(event: Event): void {
     const inputEl = event.target as HTMLInputElement;
@@ -154,7 +117,7 @@ export class NumberInputComponent implements OnInit {
 
     if (rawValue === '' || rawValue === '-' || rawValue === '+') {
       this.lastValidRawString = rawValue;
-      this.emitNewValue();
+      this.onValueChange();
       return;
     }
 
@@ -165,7 +128,7 @@ export class NumberInputComponent implements OnInit {
 
     this.lastValidRawString = rawValue;
     this.processClamp();
-    this.emitNewValue();
+    this.onValueChange();
   }
 
   private processClamp(onBlur = false): void {
@@ -195,7 +158,7 @@ export class NumberInputComponent implements OnInit {
     return regex.test(val);
   }
 
-  private emitNewValue(): void {
+  override onValueChange(): void {
     const numericValue = parseFloat(this.lastValidRawString);
     const finalValue = isNaN(numericValue) ? null : numericValue;
     this.value.set(finalValue);
@@ -204,9 +167,9 @@ export class NumberInputComponent implements OnInit {
     }
   }
 
-  onBlur(){
-     this.processClamp(true);
-    this.emitNewValue();
-    this.blur.emit();
+  override onBlur(): void {
+    this.processClamp(true);
+    this.onValueChange();
+    super.onBlur();
   }
 }

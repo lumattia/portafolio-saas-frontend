@@ -176,7 +176,6 @@ export class ImageProcessorComponent implements OnChanges {
     input.onchange = (event: any) => {
       const file = event.target.files[0];
       if (file) {
-        console.log(file)
         this.imageFile = file;
         this.fileName.set(file.name);
         this.cropCoords.set(null);

@@ -16,6 +16,7 @@
     [class.error]="shouldShowError"
     [class.dirty]="isDirty"
     (click)="toggleDropdown()"
+    (blur)="onBlur()"
   >
     <span class="select-trigger-text">
       @if (selectedOptionName()) {
@@ -55,7 +56,7 @@
             <li
               class="select-option"
               [class.selected]="control.value === option.id"
-              (click)="selectOption(option)"
+              (click)="onValueChange(option.id)"
             >
              @if (option.flag) {
                 {{ option.flag }}

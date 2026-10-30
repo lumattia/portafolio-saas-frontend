@@ -30,6 +30,7 @@
       placeholder="#000000"
       (input)="onValueChange($event)"
       (change)="onValueChange($event)"
+      (blur)="onBlur()"
     />
   </div>
   @if (shouldShowError && errorMessage) {

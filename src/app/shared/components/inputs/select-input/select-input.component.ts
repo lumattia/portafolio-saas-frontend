@@ -1,8 +1,9 @@
-import { Component, OnInit, input, model, computed, effect, HostListener, inject, ElementRef, signal } from '@angular/core';
+import { Component, input, computed, HostListener, inject, ElementRef, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { IdName } from '../../../../core/models/common.models';
+import { BaseInputComponent } from '../base-input.component';
 
 @Component({
   selector: 'app-select-input',
@@ -11,36 +12,26 @@ import { IdName } from '../../../../core/models/common.models';
   templateUrl: './select-input.component.html',
   styleUrls: ['./select-input.component.scss'],
 })
-export class SelectInputComponent implements OnInit {
+export class SelectInputComponent extends BaseInputComponent {
   private translateService = inject(TranslateService);
   private elementRef = inject(ElementRef);
 
-  value = model<any>(null);
-
-  labelKey = input<string>('');
   placeholderKey = input<string>('');
-  controlInput = input<FormControl | null>(null, { alias: 'control' });
   options = input<IdName[]>([]);
-  required = input<boolean>(false);
-  disabled = input<boolean>(false);
-  readonly = input<boolean>(false);
   showSearch = input<boolean>(true);
-  showDirtyIndicator = input<boolean>(false);
   showClearButton = input<boolean>(true);
-
-  control!: FormControl;
 
   isDropdownOpen = signal(false);
   searchTerm = signal('');
 
-  private readonly validators = computed(() => {
+  protected override readonly validators = computed(() => {
     return this.required() ? [Validators.required] : [];
   });
 
   translatedOptions = computed(() => {
     return this.options().map((opt) => ({
       ...opt,
-      name: this.translateService.instant(opt.name || ''),
+      name: this.translateService.instant(opt.name),
     }));
   });
 
@@ -55,7 +46,6 @@ export class SelectInputComponent implements OnInit {
     const normalizedSearch = normalizeText(search);
 
     return optionsList.filter((opt) => {
-      if (!opt.name) return false;
       const normalizedOptionName = normalizeText(opt.name.toLowerCase());
       return normalizedOptionName.includes(normalizedSearch);
     });
@@ -68,58 +58,10 @@ export class SelectInputComponent implements OnInit {
     return selectedOption ? selectedOption.name : '';
   });
 
-  constructor() {
-    effect(() => {
-      if (this.control) {
-        this.control.setValidators(this.validators());
-        this.control.updateValueAndValidity({ emitEvent: false });
-      }
-    });
-
-    effect(() => {
-      const newVal = this.value();
-      if (this.control && newVal !== this.control.value) {
-        this.control.setValue(newVal, { emitEvent: false });
-      }
-    });
-
-    effect(() => {
-      if (this.control) {
-        if (this.disabled() && this.control.enabled) {
-          this.control.disable({ emitEvent: false });
-        } else if (!this.disabled() && this.control.disabled) {
-          this.control.enable({ emitEvent: false });
-        }
-      }
-    });
-  }
-
-  ngOnInit(): void {
-    this.control = this.controlInput() ?? new FormControl(this.value(), this.validators());
-
-    this.control.valueChanges.subscribe((val: any) => {
-      if (val !== this.value()) {
-        this.value.set(val);
-      }
-    });
-  }
-
-  get isDirty(): boolean {
-    return this.showDirtyIndicator() && !!this.control?.dirty;
-  }
-
-  get shouldShowError(): boolean {
-    if (!this.control) return false;
-    return this.control.invalid && (this.control.dirty || this.control.touched);
-  }
-
   get errorMessage(): { key: string; params?: any } | null {
-    if (!this.control || !this.shouldShowError) return null;
+    if (!this.shouldShowError) return null;
 
-    if (this.control.hasError('required')) {
-      return { key: 'validation.required' };
-    }
-
+    if (this.control.hasError('required')) return { key: 'validation.required' };
     return { key: 'validation.invalid' };
   }
 
@@ -149,11 +91,7 @@ export class SelectInputComponent implements OnInit {
     this.isDropdownOpen.set(false);
   }
 
-  selectOption(option: IdName): void {
-    const newValue = option.id;
-    this.control.setValue(newValue);
-    this.control.markAsDirty();
-    this.control.markAsTouched();
+  override onValueChange(newValue: any): void {
     this.value.set(newValue);
     this.closeDropdown();
   }
@@ -165,9 +103,6 @@ export class SelectInputComponent implements OnInit {
 
   clearSelection(event: MouseEvent): void {
     event.stopPropagation();
-    this.control.setValue(null);
-    this.control.markAsDirty();
-    this.control.markAsTouched();
     this.value.set(null);
   }
 }
