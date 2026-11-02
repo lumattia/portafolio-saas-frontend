@@ -2,7 +2,6 @@
   display: contents;
 }
 .section-renderer {
-  flex:1;
   position: relative;
   border: 2px solid transparent;
   border-radius: var(--border-radius-md);
@@ -38,11 +37,5 @@
     &:hover {
       border-color: transparent;
     }
-  }
-
-  ::ng-deep * {
-      height: 100%;
-    max-width: var(--width-full) !important;
-    box-sizing: border-box !important;
   }
 }
