@@ -2,7 +2,7 @@
   @if (labelKey()) {
     <label class="text-input-label">
       {{ labelKey() | translate }}
-      @if (!readonly() && required()) {
+      @if (!readonly() && isRequired) {
         <span class="required-mark">*</span>
       }
     </label>

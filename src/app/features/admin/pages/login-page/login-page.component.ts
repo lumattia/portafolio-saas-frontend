@@ -3,7 +3,7 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../../core/services/auth.service';
 import { ButtonComponent } from '../../../../shared/components/button/button.component';
-import { EmailInputComponent } from '../../../../shared/components/inputs/text-input/email-input.component';
+import { EmailInputComponent, emailPattern } from '../../../../shared/components/inputs/text-input/email-input.component';
 import { PasswordInputComponent } from '../../../../shared/components/inputs/password-input/password-input.component';
 import { ViewModeService } from '../../../../core/services/view-mode.service';
 
@@ -24,7 +24,7 @@ export class LoginPageComponent {
   readonly loading = signal(false);
 
   readonly form = this.fb.nonNullable.group({
-    email: ['', [Validators.required, Validators.email]],
+    email: ['', [Validators.required, Validators.pattern(emailPattern)]],
     password: ['', Validators.required],
   });
 

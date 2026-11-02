@@ -1,5 +1,5 @@
 import { OnInit, input, model, effect, Directive, Signal, output } from '@angular/core';
-import { FormControl, ValidatorFn } from '@angular/forms';
+import { FormControl, ValidatorFn, Validators } from '@angular/forms';
 
 @Directive()
 export abstract class BaseInputComponent implements OnInit {
@@ -18,18 +18,20 @@ export abstract class BaseInputComponent implements OnInit {
   protected defaultValue: any = null;
 
   constructor() {
-    effect(() => {
-      if (this.control) {
-        this.control.setValidators(this.validators());
-        this.control.updateValueAndValidity({ emitEvent: false });
-      }
-    });
+    if(this.controlInput()) {
+      effect(() => {
+        if (this.control) {
+          this.control.setValidators(this.validators());
+          this.control.updateValueAndValidity({ emitEvent: false });
+        }
+      });
+      effect(() => {
+        this.control.setValue(this.value() ?? this.defaultValue);
+        this.control.markAsDirty();
+        this.control.markAsTouched();
+      });
+    }
 
-    effect(() => {
-      this.control.setValue(this.value() ?? this.defaultValue);
-      this.control.markAsDirty();
-      this.control.markAsTouched();
-    });
 
     effect(() => {
       if (this.disabled() && this.control.enabled) {
@@ -51,7 +53,9 @@ export abstract class BaseInputComponent implements OnInit {
   get shouldShowError(): boolean {
     return this.control.invalid && (this.control.dirty || this.control.touched);
   }
-
+  get isRequired(): boolean {
+    return this.control?.hasValidator(Validators.required) ?? false;
+  }
   onValueChange(event: any): void {
     const inputEl = event.target as HTMLInputElement;
     const newValue = inputEl.value;

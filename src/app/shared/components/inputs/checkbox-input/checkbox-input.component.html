@@ -12,7 +12,7 @@
     />
     <span class="checkbox-text">
       {{ labelKey() | translate }}
-      @if (!readonly() && required()) {
+      @if (!readonly() && isRequired) {
         <span class="required-mark">*</span>
       }
     </span>
