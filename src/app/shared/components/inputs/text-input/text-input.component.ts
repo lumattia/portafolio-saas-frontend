@@ -16,6 +16,7 @@ export class TextInputComponent extends BaseInputComponent {
   minLength = input<number | undefined>(undefined);
   maxLength = input<number | undefined>(undefined);
   pattern = input<RegExp | undefined>(undefined);
+  autocomplete = input<string | undefined>(undefined);
 
    protected override readonly validators = computed(() => {
     const v = [];

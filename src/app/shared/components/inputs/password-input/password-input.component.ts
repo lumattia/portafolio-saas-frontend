@@ -20,6 +20,7 @@ export class PasswordInputComponent {
   minLength = input<number>(8);
   maxLength = input<number | undefined>(undefined);
   pattern = input<RegExp | undefined>(undefined);
+  autocomplete = input<string>('current-password');
 
   showPassword = signal<boolean>(false);
 

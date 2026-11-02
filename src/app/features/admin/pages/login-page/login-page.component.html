@@ -1,7 +1,7 @@
 <div class="login-card">
   <h1>Entrar a mis proyectos</h1>
   <p class="hint">Usa el email y la contraseña que te dieron.</p>
-  <div>
+  <form [formGroup]="form">
     <app-email-input
       labelKey="Tu email"
       placeholderKey="nombre@ejemplo.com"
@@ -19,8 +19,8 @@
       <p class="error">Email o contraseña incorrectos.</p>
     }
     <br>
-    <app-button [disabled]="loading() || form.invalid" (onClick)="submit()">
+    <app-button type="submit" [disabled]="loading() || form.invalid" (onClick)="submit()">
       {{ loading() ? 'Entrando…' : 'Entrar' }}
     </app-button>
-  </div>
+  </form>
 </div>
