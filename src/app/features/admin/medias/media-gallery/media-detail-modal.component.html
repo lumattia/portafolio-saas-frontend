@@ -30,12 +30,46 @@
         <span>{{ formatDate(media.updatedAt) }}</span>
       </div>
     </div>
+
+    <app-collapsible
+      [(checked)]="showUsageDetails"
+      [disabled]="media.usageCount == 0"
+      [label]="'Usage Details' + (media.usageCount > 0 ? ' (' + media.usageCount + ')' : '')"
+      (changed)="onUsageToggle($event)"
+    >
+      @if (isLoading()) {
+        <div class="usage-loading">Loading usage details...</div>
+      } @else if (usageError()) {
+        <div class="usage-empty">{{ usageError() }}</div>
+      } @else if (usageDetails().length === 0) {
+        <div class="usage-empty">This media is not used anywhere, please recalculate.</div>
+      } @else {
+        <div class="usage-list">
+          @for (item of usageDetails(); track item.entityId) {
+            <a [href]="item.routePath" class="usage-item" target="_blank">
+              <div class="usage-item-info">
+                <span class="usage-item-type">{{ item.entityType }}</span>
+                <span class="usage-item-title">{{ item.title }}</span>
+              </div>
+              <span>→</span>
+            </a>
+          }
+        </div>
+      }
+    </app-collapsible>
   </div>
 
   <div class="modal-footer">
+    <app-button variant="secondary" (onClick)="recalculateUsage()" [disabled]="isLoading()">
+      @if (isLoading()) {
+        Recalculating...
+      } @else {
+        Recalculate Usage
+      }
+    </app-button>
     <app-button variant="primary" (onClick)="onUpdate()">Update</app-button>
-    <app-button variant="danger" (onClick)="onDelete()" [disabled]="isDeleting()">
-      @if (isDeleting()) {
+    <app-button variant="danger" (onClick)="onDelete()" [disabled]="media.usageCount > 0 || isLoading()">
+      @if (isLoading()) {
         Deleting...
       } @else {
         Delete

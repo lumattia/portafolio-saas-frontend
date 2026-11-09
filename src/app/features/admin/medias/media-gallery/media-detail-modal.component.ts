@@ -1,16 +1,17 @@
 import { Component, inject, Input, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Media } from '../../../../core/models/media.model';
+import { Media, MediaUsageDetail } from '../../../../core/models/media.model';
 import { ButtonComponent } from '../../../../shared/components/button/button.component';
 import { ModalService } from '../../../../core/services/modal.service';
 import { ImageProcessorComponent } from '../../../../shared/components/inputs/image-processor/image-processor.component';
 import { ConfirmModalComponent } from '../../../../shared/components/modals/confirm-modal/confirm-modal.component';
 import { MediaService } from '../../../../core/services/media.service';
+import { CollapsibleComponent } from '../../../../shared/components/collapsible/collapsible.component';
 
 @Component({
   selector: 'app-media-detail-modal',
   standalone: true,
-  imports: [CommonModule, ButtonComponent],
+  imports: [CommonModule, ButtonComponent, CollapsibleComponent],
   templateUrl: './media-detail-modal.component.html',
   styleUrls: ['./media-detail-modal.component.scss']
 })
@@ -23,7 +24,10 @@ export class MediaDetailModalComponent {
 
   @Input() media!: Media;
 
-  readonly isDeleting = signal(false);
+  readonly isLoading = signal(false);
+  readonly showUsageDetails = signal(false);
+  readonly usageDetails = signal<MediaUsageDetail[]>([]);
+  readonly usageError = signal<string | null>(null);
 
   formatDate(date: string): string {
     return new Date(date).toLocaleDateString();
@@ -35,6 +39,16 @@ export class MediaDetailModalComponent {
     const sizes = ['Bytes', 'KB', 'MB', 'GB'];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
     return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
+  }
+
+  get canDelete(): boolean {
+    return this.media.usageCount === 0;
+  }
+
+  onUsageToggle(isExpanded: boolean): void {
+    if (isExpanded && this.usageDetails().length === 0 && !this.usageError()) {
+      this.loadUsageDetails();
+    }
   }
 
   onUpdate(): void {
@@ -81,16 +95,46 @@ export class MediaDetailModalComponent {
 
     modalRef.result.then((result) => {
       if (result?.data) {
-        this.isDeleting.set(true);
+        this.isLoading.set(true);
         this.mediaService.deleteMedia(this.media.id).subscribe({
           next: () => {
-            this.isDeleting.set(false);
+            this.isLoading.set(false);
             this.close({ deleted: true });
           },
           error: () => {
-            this.isDeleting.set(false);
+            this.isLoading.set(false);
           }
         });
+      }
+    });
+  }
+
+  loadUsageDetails(): void {
+    this.isLoading.set(true);
+    this.usageError.set(null);
+    this.mediaService.getMediaUsageDetails(this.media.id).subscribe({
+      next: (details) => {
+        this.isLoading.set(false);
+        this.usageDetails.set(details);
+      },
+      error: () => {
+        this.isLoading.set(false);
+        this.usageError.set('Failed to load usage details');
+      }
+    });
+  }
+
+  recalculateUsage(): void {
+    this.isLoading.set(true);
+    this.mediaService.recalculateUsageCount(this.media.id).subscribe({
+      next: (data) => {
+        this.media.usageCount = data;
+        this.usageDetails.set([]);
+        this.showUsageDetails.set(false);
+        this.isLoading.set(false);
+      },
+      error: () => {
+        this.isLoading.set(false);
       }
     });
   }

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { Media } from '../models/media.model';
+import { Media, MediaUsageDetail } from '../models/media.model';
 import { PagedList, PagedParameters } from '../models/common.models';
 
 @Injectable({
@@ -18,8 +18,8 @@ export class MediaService {
     if (parameters) {
       params = params.set('pageIndex', parameters.pageIndex.toString());
       params = params.set('pageSize', parameters.pageSize.toString());
-      if (parameters.sortBy)  params = params.set('sortBy', parameters.sortBy);
-      if (parameters.isDescending) params.set('isDescending', parameters.isDescending.toString());
+      if (parameters.sortBy) params = params.set('sortBy', parameters.sortBy);
+      if (parameters.isDescending) params = params.set('isDescending', parameters.isDescending.toString());
     }
 
     return this.http.get<PagedList<Media>>(`${environment.apiUrl}/admin/media`, { params });
@@ -41,5 +41,13 @@ export class MediaService {
 
   deleteMedia(id: string): Observable<void> {
     return this.http.delete<void>(`${environment.apiUrl}/admin/media/${id}`);
+  }
+
+  getMediaUsageDetails(id: string): Observable<MediaUsageDetail[]> {
+    return this.http.get<MediaUsageDetail[]>(`${environment.apiUrl}/admin/media/${id}/usage`);
+  }
+
+  recalculateUsageCount(id: string): Observable<number> {
+    return this.http.post<number>(`${environment.apiUrl}/admin/media/${id}/recalculate-usage`, null);
   }
 }

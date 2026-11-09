@@ -12,4 +12,11 @@ export interface Media {
   mediaType: MediaType;
   createdAt: string;
   updatedAt: string;
+  usageCount: number;
+}
+export interface MediaUsageDetail {
+  entityType: string;
+  entityId: string;
+  title: string;
+  routePath: string;
 }

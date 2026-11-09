@@ -1,0 +1,9 @@
+<div class="sort-control">
+  <app-select-input
+    [options]="options()"
+    [(value)]="value().sortBy"
+    [showSearch]="false"
+    (valueChange)="emit()"
+  />
+  <app-button variant="icon" [icon]="sortIcon" (onClick)="onSortChanged()" />
+</div>

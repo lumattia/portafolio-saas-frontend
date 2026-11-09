@@ -9,12 +9,12 @@ import { PagedList, PagedParameters, IdName } from '../../../../core/models/comm
 import { MediaDetailModalComponent } from './media-detail-modal.component';
 import { ImageProcessorComponent } from '../../../../shared/components/inputs/image-processor/image-processor.component';
 import { PaginationComponent } from '../../../../shared/components/pagination/pagination.component';
-import { SelectInputComponent } from '../../../../shared/components/inputs/select-input/select-input.component';
+import { SortComponent } from '../../../../shared/components/sort/sort.component';
 
 @Component({
   selector: 'app-media-gallery',
   standalone: true,
-  imports: [CommonModule, ButtonComponent, IconComponent, PaginationComponent, SelectInputComponent],
+  imports: [CommonModule, ButtonComponent, IconComponent, PaginationComponent, SortComponent],
   templateUrl: './media-gallery.component.html',
   styleUrls: ['./media-gallery.component.scss']
 })
@@ -31,6 +31,7 @@ export class MediaGalleryComponent implements OnInit {
     { id: 'updatedAt', name: 'Updated' },
     { id: 'createdAt', name: 'Created' },
     { id: 'fileName', name: 'Name' },
+    { id: 'usageCount', name: 'Usage' },
     { id: 'size', name: 'Size' }
   ]);
 
@@ -61,11 +62,6 @@ export class MediaGalleryComponent implements OnInit {
 
   onSearch(): void {
     this.pagedParameters().pageIndex = 1;
-    this.loadMedia();
-  }
-
-  onSortChanged(): void {
-    this.pagedParameters().isDescending = !this.pagedParameters().isDescending;
     this.loadMedia();
   }
 

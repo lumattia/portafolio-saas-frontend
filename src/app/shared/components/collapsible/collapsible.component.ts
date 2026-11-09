@@ -1,4 +1,4 @@
-import { Component, input, output, model } from '@angular/core';
+import { Component, input, output, model, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -13,7 +13,13 @@ export class CollapsibleComponent {
   label = input('');
   disabled = input(false);
   changed = output<boolean>();
-
+  constructor() {
+    effect(() => {
+      if (this.disabled()) {
+        this.checked.set(false);
+      }
+    });
+  }
   toggle(): void {
     this.checked.set(!this.checked());
     this.changed.emit(this.checked());

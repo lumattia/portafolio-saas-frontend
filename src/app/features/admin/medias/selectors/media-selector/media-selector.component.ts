@@ -112,13 +112,4 @@ export class MediaSelectorComponent implements OnInit {
     const i = Math.floor(Math.log(bytes) / Math.log(k));
     return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
   }
-
-  // TODO: Future features to add:
-  // - FileSelector component for non-image files
-  // - MediaSelector that shows available selector types (ImageSelector, FileSelector, etc.)
-  // - Different view layouts for file types
-  // - Drag and drop functionality
-  // - Advanced filtering options
-  // - Media usage tracker
-  // - Bulk operations
 }
