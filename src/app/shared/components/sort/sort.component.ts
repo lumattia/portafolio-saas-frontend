@@ -3,12 +3,11 @@ import { CommonModule } from '@angular/common';
 import { IdName, PagedParameters } from '../../../core/models/common.models';
 import { SelectInputComponent } from '../../../shared/components/inputs/select-input/select-input.component';
 import { ButtonComponent } from "../../../shared/components/button/button.component";
-import { IconComponent } from "../../../shared/components/icon/icon.component";
 
 @Component({
   selector: 'app-sort',
   standalone: true,
-  imports: [CommonModule, SelectInputComponent, ButtonComponent, IconComponent],
+  imports: [CommonModule, SelectInputComponent, ButtonComponent],
   templateUrl: './sort.component.html',
   styleUrls: ['./sort.component.scss'],
 })
