@@ -156,8 +156,7 @@
   }
 }
 
-.no-results,
-.loading {
+.no-results {
   grid-column: 1 / -1;
   text-align: center;
   padding: var(--spacing-2xl);

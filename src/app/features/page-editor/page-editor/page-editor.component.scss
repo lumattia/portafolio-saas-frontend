@@ -2,12 +2,6 @@
   flex-grow: 1;
   max-width: 1200px;
 }
-.loading-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-}
 
 .create-page-prompt {
   display: flex;
@@ -48,15 +42,6 @@
 .action-buttons {
   display: flex;
   gap: var(--spacing-sm);
-}
-
-.empty-state {
-  text-align: center;
-  padding: var(--spacing-2xl);
-  color: var(--text-secondary);
-  h2 {
-    margin: 0 0 var(--spacing-sm) 0;
-  }
 }
 
 .add-section-container {

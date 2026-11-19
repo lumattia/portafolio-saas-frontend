@@ -3,17 +3,13 @@
   max-width: 1200px;
 }
 
-.loading-container,
 .error-container {
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
   font-size: var(--font-size-lg);
-
-  &.error-container {
-    color: var(--error);
-  }
+  color: var(--error);
 }
 
 .page-content {

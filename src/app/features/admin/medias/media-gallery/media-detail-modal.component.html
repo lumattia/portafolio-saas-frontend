@@ -38,11 +38,11 @@
       (changed)="onUsageToggle($event)"
     >
       @if (isLoading()) {
-        <div class="usage-loading">Loading usage details...</div>
+        <div class="loading">Loading usage details...</div>
       } @else if (usageError()) {
-        <div class="usage-empty">{{ usageError() }}</div>
+        <div class="empty-state">{{ usageError() }}</div>
       } @else if (usageDetails().length === 0) {
-        <div class="usage-empty">This media is not used anywhere, please recalculate.</div>
+        <div class="empty-state">This media is not used anywhere, please recalculate.</div>
       } @else {
         <div class="usage-list">
           @for (item of usageDetails(); track item.entityId) {

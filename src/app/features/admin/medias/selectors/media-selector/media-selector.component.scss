@@ -62,14 +62,6 @@
     gap: var(--spacing-sm);
   }
 
-  .loading {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex: 1;
-    color: var(--text-secondary);
-  }
-
   .media-grid {
     flex: 1;
     overflow-y: auto;
