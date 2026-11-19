@@ -28,7 +28,7 @@
   </nav>
 
 </ng-template>
-@if (viewModeService.isAdminMode()) {
+@if (viewModeService.isDraftMode()) {
   <aside class="sidebar desktop-only">
     <app-button class="edit-btn" icon="edit" size="sm" variant="icon" (onClick)="openMenuEditor()" title="Editar menú header">
     </app-button>

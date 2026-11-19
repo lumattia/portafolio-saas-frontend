@@ -24,7 +24,7 @@
   </div>
 </ng-template>
 
-@if (viewModeService.isAdminMode()) {
+@if (viewModeService.isDraftMode()) {
   <header class="header">
     <ng-container *ngTemplateOutlet="menuRenderer; context: { items: menu()?.menuItems }"></ng-container>
 

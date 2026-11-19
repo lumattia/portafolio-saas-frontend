@@ -1,7 +1,7 @@
 import { Injectable, effect, inject, signal } from '@angular/core';
 import { AuthService } from './auth.service';
 import { ChangeTrackingService } from './change-tracking.service';
-export const VIEW_MODES = ['admin', 'preview', 'snapshot'] as const;
+export const VIEW_MODES = ['draft', 'snapshot', 'published'] as const;
 export type ViewMode = (typeof VIEW_MODES)[number] | null;
 
 @Injectable({ providedIn: 'root' })
@@ -42,7 +42,7 @@ export class ViewModeService {
       this.viewMode.set(stored as ViewMode);
     }else{
       if (this.auth.isAuthenticated()) {
-        this.viewMode.set('admin');
+        this.viewMode.set('draft');
       } else {
         this.viewMode.set('snapshot');
       }
@@ -50,7 +50,7 @@ export class ViewModeService {
   }
 
   setViewMode(mode: ViewMode): void {
-    if (this.isAdminMode()) {
+    if (this.isDraftMode()) {
       this.changeTrackingService.deployMessage().then((canChange) => {
         if (canChange) {
           this.changeTrackingService.reset();
@@ -67,11 +67,11 @@ export class ViewModeService {
     this.saveViewMode(mode);
   }
 
-  isAdminMode(): boolean {
-    return this.viewMode() === 'admin';
+  isDraftMode(): boolean {
+    return this.viewMode() === 'draft';
   }
-  isPreviewMode(): boolean {
-    return this.viewMode() === 'preview';
+  isPublishedMode(): boolean {
+    return this.viewMode() === 'published';
   }
 
   isSnapshotMode(): boolean {

@@ -37,7 +37,7 @@ export class LoginPageComponent {
     this.auth.login(email, password).subscribe({
       next: () => {
         this.loading.set(false);
-        this.viewMode.setViewMode('admin');
+        this.viewMode.setViewMode('draft');
         this.router.navigate(['/']);
       },
       error: () => {

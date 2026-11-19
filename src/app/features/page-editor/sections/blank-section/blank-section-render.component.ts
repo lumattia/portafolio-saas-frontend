@@ -16,6 +16,6 @@ export class BlankSectionRenderComponent extends BaseSectionRendererComponent<Bl
   override readonly defaultContent = DEFAULT_BLANK_SECTION_CONTENT;
 
   get isEditMode(): boolean {
-    return this.viewModeService.isAdminMode();
+    return this.viewModeService.isDraftMode();
   }
 }

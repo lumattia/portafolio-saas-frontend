@@ -51,7 +51,7 @@ export class LayoutComponent implements OnInit, CanDeactivateComponent {
     if (hash && hash.startsWith('draft-')) {
       const sectionId = hash.replace('draft-', '');
       if (sectionId) {
-        this.viewModeService.setViewMode('admin');
+        this.viewModeService.setViewMode('draft');
         return;
       }
     }
@@ -60,13 +60,13 @@ export class LayoutComponent implements OnInit, CanDeactivateComponent {
     if (hash && hash.includes('-') && !hash.startsWith('draft-')) {
       const [versionId, snapshotId] = hash.split('-');
       if (versionId && snapshotId) {
-        this.viewModeService.setViewMode('preview');
+        this.viewModeService.setViewMode('published');
         return;
       }
     }
   }
 
   canDeactivate(): boolean {
-    return this.viewModeService.isAdminMode() && this.pageEditorComponent.canDeactivate();
+    return this.viewModeService.isDraftMode() && this.pageEditorComponent.canDeactivate();
   }
 }

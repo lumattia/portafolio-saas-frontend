@@ -24,7 +24,7 @@
     }
   </nav>
 </ng-template>
-@if (viewModeService.isAdminMode()) {
+@if (viewModeService.isDraftMode()) {
   <footer class="footer">
   <app-button class="edit-btn" variant="icon" icon="edit" size="sm" (onClick)="openMenuEditor()" title="Editar menú footer">
   </app-button>

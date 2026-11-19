@@ -13,7 +13,7 @@ export class MenuService {
   private readonly publishedApiUrl = `${environment.apiUrl}/public/published/menu`;
 
   getMenu(type: MenuType): Observable<MenuRenderer | null> {
-    const url = `${this.viewMode.isAdminMode() ? this.adminApiUrl : this.publishedApiUrl}/${type}`;
+    const url = `${this.viewMode.isDraftMode() ? this.adminApiUrl : this.publishedApiUrl}/${type}`;
     return this.http.get<MenuRenderer | null>(url);
   }
 

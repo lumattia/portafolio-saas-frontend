@@ -6,7 +6,7 @@
     <div class="content-wrapper">
       <main class="content">
         <router-outlet />
-        @if (viewModeService.isAdminMode()) {
+        @if (viewModeService.isDraftMode()) {
           <app-page-editor />
         }@else {
           <app-portfolio-page />

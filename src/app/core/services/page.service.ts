@@ -13,7 +13,7 @@ export class PageService {
   private readonly publishedApiUrl = `${environment.apiUrl}/public/published`;
 
   getByIdentifier(identifier?: string): Observable<PageRenderer> {
-    const url = `${this.viewMode.isAdminMode() ? this.apiUrl : this.publishedApiUrl}/${identifier}`;
+    const url = `${this.viewMode.isDraftMode() ? this.apiUrl : this.publishedApiUrl}/${identifier}`;
     return this.http.get<PageRenderer>(url);
   }
 
