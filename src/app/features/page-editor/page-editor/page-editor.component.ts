@@ -4,7 +4,7 @@ import { PageService } from '../../../core/services/page.service';
 import { ActivatedRoute } from '@angular/router';
 import { SectionRendererComponent } from '../section-renderer/section-renderer.component';
 import { SectionEditorComponent } from '../section-editor/section-editor.component';
-import { PageRenderer, PageRequest, SectionRenderer, SectionRequest } from '../../../core/models/page.model';
+import { PageRenderer, SectionRenderer, SectionRequest } from '../../../core/models/page.model';
 import { ModalService } from '../../../core/services/modal.service';
 import { TemplateSelectorComponent } from '../template-selector/template-selector.component';
 import { SidenavService } from '../../../core/services/sidenav.service';
@@ -78,14 +78,7 @@ export class PageEditorComponent implements OnInit, CanDeactivateComponent {
   }
 
   undoDelete(): void {
-    const slug = this.pageSlug();
-    const request: PageRequest = {
-      title: this.pageTitle(),
-      slug: slug,
-      metaDescription: '',
-      sections: undefined
-    };
-    this.pageService.update(this.internalPageId(), request).subscribe({
+    this.pageService.undoDelete(this.internalPageId()).subscribe({
       next: () => {
         this.pageIsDeleted.set(false);
       },

@@ -12,15 +12,9 @@ export class MediaService {
   constructor(private http: HttpClient) {}
 
   getMedia(searchTerm?: string, mediaType?: string, parameters?: PagedParameters): Observable<PagedList<Media>> {
-    let params = new HttpParams();
+    let params = parameters?.toHttpParams() ?? new HttpParams();
     if (searchTerm) params = params.set('searchTerm', searchTerm);
     if (mediaType) params = params.set('mediaType', mediaType);
-    if (parameters) {
-      params = params.set('pageIndex', parameters.pageIndex.toString());
-      params = params.set('pageSize', parameters.pageSize.toString());
-      if (parameters.sortBy) params = params.set('sortBy', parameters.sortBy);
-      if (parameters.isDescending) params = params.set('isDescending', parameters.isDescending.toString());
-    }
 
     return this.http.get<PagedList<Media>>(`${environment.apiUrl}/admin/media`, { params });
   }

@@ -9,16 +9,16 @@
   </div>
 }@else{
   <div class="page-editor">
-    <!-- Header with page metadata and Save/Publish buttons -->
-    <div class="page-header">
-      <div class="page-info" (click)="openPageSettings()">
-        <h1 class="page-title">{{ pageTitle() }}</h1>
-        @if (pageIsDeleted()) {
+     @if (pageIsDeleted()) {
           <div class="soft-delete-warning">
             <p>⚠️ Esta página está marcada para eliminación</p>
             <app-button variant="secondary" (onClick)="$event.stopPropagation(); undoDelete()">Deshacer / Recrear</app-button>
           </div>
         }
+    <!-- Header with page metadata and Save/Publish buttons -->
+    <div class="page-header">
+      <div class="page-info" (click)="openPageSettings()">
+      <h1 class="page-title">{{ pageTitle() }}</h1>
     </div>
       <div class="action-buttons">
         <app-button variant="primary" (onClick)="$event.stopPropagation(); createNewPage()" [disabled]="hasChanges()">

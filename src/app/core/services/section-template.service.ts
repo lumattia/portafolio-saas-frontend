@@ -18,7 +18,7 @@ export class SectionTemplateService {
     filter?: SectionTemplateFilterRequest,
     parameters?: PagedParameters
   ): Observable<PagedList<SectionTemplateDto>> {
-    let params = new HttpParams();
+    let params = parameters?.toHttpParams() ?? new HttpParams();
 
     if (filter?.name) {
       params = params.set('name', filter.name);
@@ -26,14 +26,6 @@ export class SectionTemplateService {
     if (filter?.categoryTags !== undefined) {
       params = params.set('categoryTags', filter.categoryTags.toString());
     }
-
-    if (parameters) {
-      params = params.set('pageIndex', parameters.pageIndex.toString());
-      params = params.set('pageSize', parameters.pageSize.toString());
-      if (parameters.sortBy)  params = params.set('sortBy', parameters.sortBy);
-      if (parameters.isDescending) params.set('isDescending', parameters.isDescending.toString());
-    }
-
     return this.http.get<PagedList<SectionTemplateDto>>(this.apiUrl, { params });
   }
 

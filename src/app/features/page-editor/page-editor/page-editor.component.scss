@@ -32,6 +32,8 @@
 
 
 .soft-delete-warning {
+  display: flex;
+  justify-content: space-between;
   margin-top: var(--spacing-sm);
   padding: var(--spacing-sm);
   background: var(--warning-bg);

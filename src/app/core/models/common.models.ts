@@ -1,3 +1,4 @@
+import { HttpParams } from "@angular/common/http";
 
 export interface IdName {
   id: string | number;
@@ -34,7 +35,16 @@ export class PagedParameters {
     this.pageIndex = pagedList.pageIndex;
     this.totalPages = pagedList.totalPages;
   }
+  toHttpParams(): HttpParams{
+    let params = new HttpParams();
+      params = params.set('pageIndex', this.pageIndex.toString());
+      params = params.set('pageSize', this.pageSize.toString());
+      if (this.sortBy) params = params.set('sortBy', this.sortBy);
+      if (this.isDescending) params = params.set('isDescending', this.isDescending.toString());
+    return params;
+  }
 }
+
 export interface PagedList<T> {
   list: T[];
   pageIndex: number;
