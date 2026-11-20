@@ -5,7 +5,7 @@
   position: relative;
   border: 2px solid transparent;
   border-radius: var(--border-radius-md);
-  background-color: var(--background-primary);
+  background-color: var(--bg);
   transition: all var(--transition-base) ease;
   cursor: pointer;
   max-width: var(--width-full);
@@ -13,7 +13,7 @@
   box-sizing: border-box;
 
   &:hover {
-    border-color: var(--border-secondary);
+    border-color: var(--border-strong);
   }
 
   &:not(.unSelected *).selected {
@@ -21,7 +21,7 @@
   }
 
   &.deleted {
-    background-color: var(--warning-bg);
+    background-color: var(--warning-soft);
     border-color: var(--warning);
     opacity: var(--opacity-hover);
 

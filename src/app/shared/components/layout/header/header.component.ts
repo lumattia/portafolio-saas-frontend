@@ -57,14 +57,16 @@ export class HeaderComponent implements OnInit {
 
   private applyTheme(theme: ThemeConfig): void {
     const root = document.documentElement;
-    root.style.setProperty('--primary', theme.light.primaryColor);
-    root.style.setProperty('--secondary', theme.light.secondaryColor);
-    root.style.setProperty('--background-color', theme.light.backgroundColor);
-    root.style.setProperty('--background-secondary', theme.light.surfaceColor);
-    root.style.setProperty('--text-primary', theme.light.textColor);
-    root.style.setProperty('--text-secondary-color', theme.light.textSecondaryColor);
-    root.style.setProperty('--font-family', theme.light.fontFamily);
-    root.style.setProperty('--border-radius', theme.light.borderRadius);
+    const colors = theme.light;
+
+    root.style.setProperty('--primary', colors.primaryColor);
+    root.style.setProperty('--secondary', colors.secondaryColor);
+    root.style.setProperty('--bg', colors.backgroundColor);
+    root.style.setProperty('--surface', colors.surfaceColor);
+    root.style.setProperty('--text', colors.textColor);
+    root.style.setProperty('--text-secondary', colors.textSecondaryColor);
+    root.style.setProperty('--font-family', colors.fontFamily);
+    root.style.setProperty('--border-radius', colors.borderRadius);
   }
 
   onToolbarClose(): void {

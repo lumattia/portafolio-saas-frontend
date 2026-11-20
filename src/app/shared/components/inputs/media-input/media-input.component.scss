@@ -21,10 +21,10 @@
 }
 
 .media-preview {
-  border: 1px solid var(--border-primary);
+  border: 1px solid var(--border);
   border-radius: var(--border-radius-md);
   overflow: hidden;
-  background-color: var(--background-secondary);
+  background-color: var(--surface);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -33,7 +33,7 @@
 
   &:not(.readonly) {
     &:hover {
-      border-color: var(--border-secondary);
+      border-color: var(--border-strong);
     }
   }
 
@@ -68,14 +68,14 @@
 
     input {
       padding: var(--spacing-xs) var(--spacing-sm);
-      border: 1px solid var(--border-primary);
+      border: 1px solid var(--border);
       border-radius: var(--border-radius-sm);
-      background-color: var(--background-primary);
-      color: var(--text-primary);
+      background-color: var(--bg);
+      color: var(--text);
       font-size: var(--font-size-sm);
 
       &:disabled {
-        background-color: var(--background-disabled);
+        background-color: var(--surface);
         cursor: not-allowed;
       }
     }
@@ -88,17 +88,17 @@
 
   button {
     padding: var(--spacing-xs) var(--spacing-sm);
-    border: 1px solid var(--border-primary);
+    border: 1px solid var(--border);
     border-radius: var(--border-radius-sm);
-    background-color: var(--background-primary);
-    color: var(--text-primary);
+    background-color: var(--bg);
+    color: var(--text);
     font-size: var(--font-size-sm);
     cursor: pointer;
     transition: all var(--transition-fast) ease-in-out;
 
     &:hover {
-      background-color: var(--background-secondary);
-      border-color: var(--border-secondary);
+      background-color: var(--surface);
+      border-color: var(--border-strong);
     }
 
     &.btn-change {
@@ -119,15 +119,15 @@
 }
 
 .empty-state {
-  border: 2px dashed var(--border-primary);
+  border: 2px dashed var(--border);
   border-radius: var(--border-radius-md);
-  background-color: var(--background-secondary);
+  background-color: var(--surface);
   cursor: pointer;
   transition: all var(--transition-fast) ease-in-out;
 
   &:hover {
-    border-color: var(--border-secondary);
-    background-color: var(--background-tertiary);
+    border-color: var(--border-strong);
+    background-color: var(--bg-alt);
   }
 
   &.readonly {

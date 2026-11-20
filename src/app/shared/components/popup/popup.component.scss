@@ -1,7 +1,7 @@
 :host {
-  --popup-bg: var(--background-secondary, #ffffff);
+  --popup-bg: var(--surface, #ffffff);
   --popup-border-color: rgba(0, 0, 0, 0.1);
-  --popup-text-color: var(--text-primary, #333333);
+  --popup-text-color: var(--text, #333333);
   --popup-primary-color: var(--primary, #007bff);
 
   --popup-radius: 8px;

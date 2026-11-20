@@ -48,8 +48,8 @@
   left: 0;
   width: 280px;
   height: 100%;
-  background: var(--background-primary);
-  border-right: 1px solid var(--border-primary);
+  background: var(--bg);
+  border-right: 1px solid var(--border);
   z-index: 1001;
   overflow-y: auto;
 }
@@ -58,16 +58,7 @@
   display: flex;
   justify-content: flex-end;
   padding: var(--spacing-md);
-  border-bottom: 1px solid var(--border-primary);
-}
-
-.close-button {
-  background: none;
-  border: none;
-  font-size: var(--font-size-xl);
-  cursor: pointer;
-  padding: var(--spacing-sm);
-  color: var(--text-primary);
+  border-bottom: 1px solid var(--border);
 }
 
 @media (min-width: 769px) {

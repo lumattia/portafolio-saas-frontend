@@ -1,1 +1,6 @@
-<img [src]="'/assets/icons/' + name() + '.svg'" [alt]="name()" [class]="size()" />
+ <span
+      [class]="'icon ' + size()"
+      [style.--icon-mask]="mask()"
+      role="img"
+      [attr.aria-label]="name()">
+    </span>

@@ -92,7 +92,7 @@ button {
 
   &.ghost,&.icon {
     background: transparent;
-    color: var(--text-primary);
+    color: var(--text);
     border-radius: var(--border-radius-sm);
     &.sm {
       padding: var(--spacing-xs);
@@ -106,15 +106,10 @@ button {
       padding: var(--spacing-sm);
     }
     &:not(:disabled):hover {
-      background: var(--background-hover);
+      background: var(--bg-hover);
     }
     &.ghost{
-      border: 1px solid var(--border-primary);
+      border: 1px solid var(--border);
     }
-  }
-
-  &.primary, &.secondary,
-  &.danger, &.success, &.active{
-    &::ng-deep app-icon img { filter: var(--icon-inverse, none); }
   }
 }

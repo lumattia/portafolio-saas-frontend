@@ -3,8 +3,8 @@
 }
 .footer {
   position: relative;
-  background: var(--background-secondary);
-  border-top: 1px solid var(--border-primary);
+  background: var(--surface);
+  border-top: 1px solid var(--border);
   padding: var(--spacing-xl);
 }
 
@@ -15,7 +15,7 @@
   top: 0;
   transform: translateY(-100%);
   background: inherit;
-  border: 1px solid var(--border-primary);
+  border: 1px solid var(--border);
   border-bottom: none;
   border-radius: var(--radius-md, 8px) var(--radius-md, 8px) 0 0;
 }

@@ -28,7 +28,7 @@
 }
 .edit-btn {
   margin-left: var(--spacing-md);
-  border-left: 1px solid var(--border-primary);
+  border-left: 1px solid var(--border);
   padding-left: var(--spacing-xs);
 }
 
@@ -54,15 +54,15 @@
   transition: background-color var(--transition-base);
 
   &:hover {
-    background-color: var(--background-hover);
+    background-color: var(--bg-hover);
   }
 }
 
 .dropdown-menu {
   position: fixed;
   min-width: var(--width-sm);
-  background-color: var(--background-primary);
-  border: 1px solid var(--border-primary);
+  background-color: var(--bg);
+  border: 1px solid var(--border);
   border-radius: var(--border-radius-sm);
   z-index: var(--z-index-dropdown);
   box-shadow: var(--shadow-md);
@@ -77,6 +77,6 @@
   transition: background-color var(--transition-base);
 
   &:hover {
-    background-color: var(--background-hover);
+    background-color: var(--bg-hover);
   }
 }

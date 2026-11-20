@@ -34,7 +34,7 @@
   .search-input {
     flex: 1;
     padding: var(--spacing-sm) var(--spacing-md);
-    border: 1px solid var(--border-primary);
+    border: 1px solid var(--border);
     border-radius: var(--border-radius-md);
     font-size: var(--font-size-base);
   }
@@ -48,7 +48,7 @@
 }
 
 .media-item {
-  border: 1px solid var(--border-primary);
+  border: 1px solid var(--border);
   border-radius: var(--border-radius-md);
   overflow: hidden;
   cursor: pointer;
@@ -87,7 +87,7 @@
   width: 100%;
   height: 150px;
   object-fit: cover;
-  background: var(--background-tertiary);
+  background: var(--bg-alt);
 }
 
 .file-preview {
@@ -96,7 +96,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background: var(--background-tertiary);
+  background: var(--bg-alt);
   padding: var(--spacing-md);
   gap: var(--spacing-sm);
 

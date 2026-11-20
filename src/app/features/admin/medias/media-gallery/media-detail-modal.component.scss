@@ -21,14 +21,14 @@
   justify-content: space-between;
   align-items: center;
   padding: var(--spacing-sm);
-  background: var(--background-secondary);
+  background: var(--surface);
   border-radius: var(--border-radius-sm);
   text-decoration: none;
-  color: var(--text-primary);
+  color: var(--text);
   transition: background var(--transition-base);
 
   &:hover {
-    background: var(--background-tertiary);
+    background: var(--bg-alt);
   }
 }
 

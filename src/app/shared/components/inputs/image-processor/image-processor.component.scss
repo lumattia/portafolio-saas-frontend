@@ -2,7 +2,7 @@
 
 .cropper-container {
   flex-shrink: 0;
-  background-color: var(--text-primary);
+  background-color: var(--text);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -23,9 +23,9 @@ image-cropper {
   font-size: var(--font-size-sm);
 
   &.error {
-    background-color: var(--background-alt);
+    background-color: color-mix(in srgb, var(--error) 8%, transparent);
     color: var(--error);
-    border: 1px solid var(--error-disabled);
+    border: 1px solid color-mix(in srgb, var(--error) 40%, transparent);
   }
 }
 
@@ -47,7 +47,7 @@ image-cropper {
     font-weight: var(--font-weight-semibold);
     color: var(--text-secondary);
     text-transform: uppercase;
-    letter-spacing: var(--letter-spacing-wider);
+    letter-spacing: 0.05em;
   }
 }
 

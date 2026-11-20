@@ -3,8 +3,8 @@
   align-items: center;
   gap: var(--spacing-md);
   padding: var(--spacing-md) var(--spacing-lg);
-  background: var(--background-secondary);
-  border-bottom: 1px solid var(--border-primary);
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
 
   .header-left {
     display: flex;
@@ -17,7 +17,7 @@
     .brand {
       font-size: var(--font-size-lg);
       font-weight: var(--font-weight-bold);
-      color: var(--text-primary);
+      color: var(--text);
       text-decoration: none;
     }
   }
@@ -41,8 +41,8 @@
   justify-content: center;
   gap: var(--spacing-sm);
   padding: var(--spacing-sm) var(--spacing-md);
-  background: var(--background-secondary);
-  border: 1px solid var(--border-primary);
+  background: var(--surface);
+  border: 1px solid var(--border);
   border-radius: var(--border-radius-lg);
   cursor: pointer;
   transition: background var(--transition-base);
@@ -50,7 +50,7 @@
   width: var(--width-sm); /* Ancho fijo exacto */
 
   &:hover {
-    background: var(--background-hover);
+    background: var(--bg-hover);
   }
 
   &.highlighting {
@@ -61,24 +61,24 @@
 @keyframes pulse-glow {
   0% {
     background: var(--primary);
-    color: var(--text-primary);
+    color: var(--text);
     box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
   }
   50% {
     background: var(--primary);
-    color: var(--text-primary);
+    color: var(--text);
     box-shadow: var(--shadow-sm);
   }
   100% {
-    background: var(--background-secondary);
-    color: var(--text-primary);
+    background: var(--surface);
+    color: var(--text);
     box-shadow: 0 0 0 0 transparent;
   }
 }
 
 .user-card.highlighting {
   .user-email {
-    color: var(--text-primary);
+    color: var(--text);
   }
 }
 
@@ -90,7 +90,7 @@
 
   .user-email {
     font-weight: var(--font-weight-medium);
-    color: var(--text-primary);
+    color: var(--text);
     font-size: var(--font-size-sm);
     white-space: nowrap;
     /* Efecto mask para texto largo */
@@ -118,7 +118,7 @@
   width: 100%;
 
   &:hover {
-    background: var(--background-hover);
+    background: var(--bg-hover);
   }
 }
 
@@ -130,5 +130,5 @@
 .toolbar-view-selector {
   display: flex;
   align-items: center;
-  background: var(--background-secondary);
+  background: var(--surface);
 }

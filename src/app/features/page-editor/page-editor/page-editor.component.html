@@ -21,10 +21,10 @@
       <h1 class="page-title">{{ pageTitle() }}</h1>
     </div>
       <div class="action-buttons">
-        <app-button variant="primary" (onClick)="$event.stopPropagation(); createNewPage()" [disabled]="hasChanges()">
+        <app-button variant="secondary" (onClick)="$event.stopPropagation(); createNewPage()" [disabled]="hasChanges()">
           New Page
         </app-button>
-        <app-button variant="secondary" (onClick)="$event.stopPropagation(); savePage()" [disabled]="!hasChanges()">
+        <app-button variant="primary" (onClick)="$event.stopPropagation(); savePage()" [disabled]="!hasChanges()">
           Save
         </app-button>
       </div>

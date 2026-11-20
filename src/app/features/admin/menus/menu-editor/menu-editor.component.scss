@@ -1,5 +1,5 @@
 .menu-editor {
-  background: var(--background-secondary);
+  background: var(--surface);
   padding: var(--spacing-xl);
   min-height: 100vh;
 
@@ -9,7 +9,7 @@
     align-items: center;
     margin-bottom: var(--spacing-md);
     padding-bottom: var(--spacing-md);
-    border-bottom: 1px solid var(--border-primary);
+    border-bottom: 1px solid var(--border);
 
     h2 {
       margin: 0;
@@ -41,8 +41,8 @@
     align-items: center;
     gap: var(--spacing-sm);
     padding: var(--spacing-sm);
-    background: var(--background-secondary);
-    border: 1px solid var(--border-primary);
+    background: var(--surface);
+    border: 1px solid var(--border);
     border-radius: var(--border-radius-sm);
   }
 
@@ -64,7 +64,6 @@
 
     &.disabled {
       opacity: var(--opacity-disabled);
-      color: var(--text-disabled);
     }
   }
 
@@ -91,6 +90,6 @@
 }
 
 .modal-content {
-  background: var(--background-secondary);
+  background: var(--surface);
   min-width: var(--width-lg);
 }
