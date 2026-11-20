@@ -103,32 +103,25 @@
   display: flex;
   flex-direction: column;
   align-items: start;
-  gap: var(--spacing-xs);
+
+  app-button {
+    width: 100%;
+
+    ::ng-deep button {
+      width: 100%;
+      justify-content: flex-start;
+    }
+  }
 }
 
 .view-mode-trigger {
   display: flex;
-  align-items: center;
   gap: var(--spacing-sm);
-  padding: var(--spacing-sm);
-  cursor: pointer;
-  border-radius: var(--border-radius-sm);
-  transition: background var(--transition-base);
-  position: relative;
-  width: 100%;
-
-  &:hover {
-    background: var(--bg-hover);
-  }
-}
-
-.view-mode-options {
-  display: flex;
-  flex-direction: column;
 }
 
 .toolbar-view-selector {
   display: flex;
   align-items: center;
-  background: var(--surface);
+  background: var(--bg-alt);
+  border-radius: var(--spacing-sm);
 }

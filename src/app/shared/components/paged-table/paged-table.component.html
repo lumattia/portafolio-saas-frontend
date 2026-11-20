@@ -19,12 +19,14 @@
   </div>
 
   @if (filtersOpen()) {
-    <ng-content select="[tableFilters]"></ng-content>
-    <app-button (onClick)="page().pageIndex=1; pageChanged.emit()">Apply</app-button>
+    <div class="filters-row">
+      <ng-content select="[tableFilters]"></ng-content>
+      <app-button (onClick)="page().pageIndex=1; pageChanged.emit()">Apply</app-button>
+    </div>
   }
 
   @if (error(); as errorMessage) {
-    <div class="error-message">{{ errorMessage }}</div>
+    <div class="error-block">{{ errorMessage }}</div>
   }
 
   @if (loading()) {

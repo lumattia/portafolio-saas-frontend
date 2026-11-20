@@ -2,7 +2,8 @@
   <label class="checkbox-input-label">
     <input
       type="checkbox"
-      [checked]="control.value"
+      [checked]="control.value === true"
+      [indeterminate]="triState() && control.value !== true && control.value !== false"
       [disabled]="disabled() || readonly()"
       [attr.readonly]="readonly()"
       class="checkbox-input-field"

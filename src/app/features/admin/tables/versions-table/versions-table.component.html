@@ -8,22 +8,20 @@
   [itemCount]="items().length"
   (pageChanged)="load()">
 
-  <app-button
-    tableControls
-    variant="secondary"
-    [active]="showLatest()"
-    (onClick)="toggleLatest()">
-    Published
-  </app-button>
-  <app-select-input
-    tableControls
-    class="version-select"
-    [options]="versionOptions()"
-    [value]="selectedVersion()"
-    [showSearch]="false"
-    (valueChange)="onVersionChange($event)">
-  </app-select-input>
   <div tableFilters class="filter-bar">
+    <app-button
+      variant="secondary"
+      [active]="showLatest()"
+      (onClick)="toggleLatest()">
+      Published
+    </app-button>
+    <app-select-input
+      class="version-select"
+      [options]="versionOptions()"
+      [value]="selectedVersion()"
+      [showSearch]="false"
+      (valueChange)="onVersionChange($event)">
+    </app-select-input>
     <app-text-input
       class="filter-input"
       placeholderKey="tables.filters.slug"
@@ -35,10 +33,12 @@
       [(value)]="filters.title">
     </app-text-input>
     <app-checkbox-input
+      [triState]="true"
       labelKey="tables.filters.deleted"
       [(value)]="filters.isDeleted">
     </app-checkbox-input>
     <app-checkbox-input
+      [triState]="true"
       labelKey="tables.filters.disabled"
       [(value)]="filters.disabled">
     </app-checkbox-input>

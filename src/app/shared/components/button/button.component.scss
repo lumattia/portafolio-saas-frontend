@@ -93,7 +93,7 @@ button {
   &.ghost,&.icon {
     background: transparent;
     color: var(--text);
-    border-radius: var(--border-radius-sm);
+    border-radius: var(--border-radius-md);
     &.sm {
       padding: var(--spacing-xs);
     }

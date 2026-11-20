@@ -83,7 +83,7 @@ export class VersionsTableComponent implements OnInit {
     this.loading.set(true);
     this.error.set(null);
 
-    this.fetch(this.pagedParameters()).subscribe({
+    this.versionService.getPages(this.selectedVersion(), this.showLatest(), this.pagedParameters(), this.filters).subscribe({
       next: (response: PagedList<PageTableItem>) => {
         this.items.set(response.list);
         this.pagedParameters().fromPagedList(response);
@@ -99,13 +99,6 @@ export class VersionsTableComponent implements OnInit {
   reload(): void {
     this.pagedParameters().pageIndex = 1;
     this.load();
-  }
-
-  private fetch(parameters: PagedParameters): Observable<PagedList<PageTableItem>> {
-    if (!this.showLatest() && !this.selectedVersion()) {
-      return of({ list: [], pageIndex: parameters.pageIndex, pageSize: parameters.pageSize, totalPages: 0 });
-    }
-    return this.versionService.getPages(this.selectedVersion(), this.showLatest(), parameters, this.filters);
   }
 
   openPage(page: PageTableItem): void {

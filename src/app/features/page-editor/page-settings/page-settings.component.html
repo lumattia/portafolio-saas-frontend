@@ -9,9 +9,11 @@
     />
   </div>
   <div class="form-group">
-    <div class="info-block">
-      <p>Changing slugs will break links.</p>
-    </div>
+    @if (pageId()) {
+      <div class="info-block">
+        <p>Changing slugs will break links.</p>
+      </div>
+    }
     <app-text-input
       labelKey="Slug"
       placeholderKey="page-slug"
