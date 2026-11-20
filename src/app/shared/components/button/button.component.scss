@@ -90,25 +90,31 @@ button {
     }
   }
 
-  &.ghost {
+  &.ghost,&.icon {
     background: transparent;
     color: var(--text-primary);
-    border: 1px solid var(--border-primary);
+    border-radius: var(--border-radius-sm);
+    &.sm {
+      padding: var(--spacing-xs);
+    }
 
+    &.md {
+      padding: var(--spacing-sm);
+    }
+
+    &.lg {
+      padding: var(--spacing-sm);
+    }
     &:not(:disabled):hover {
       background: var(--background-hover);
+    }
+    &.ghost{
+      border: 1px solid var(--border-primary);
     }
   }
 
-  &.icon {
-    width: 100% !important;
-    background: transparent;
-    color: var(--text-primary);
-    padding: var(--spacing-sm);
-    border-radius: var(--border-radius-sm);
-
-    &:not(:disabled):hover {
-      background: var(--background-hover);
-    }
+  &.primary, &.secondary,
+  &.danger, &.success, &.active{
+    &::ng-deep app-icon img { filter: var(--icon-inverse, none); }
   }
 }

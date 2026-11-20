@@ -1,0 +1,77 @@
+<app-paged-table
+  title="Pages"
+  emptyMessage="No pages found"
+  [page]="pagedParameters()"
+  [sortOptions]="sortOptions()"
+  [loading]="loading()"
+  [error]="error()"
+  [itemCount]="items().length"
+  (pageChanged)="load()">
+
+  <div tableFilters class="filter-bar">
+    <app-text-input
+      class="filter-input"
+      placeholderKey="tables.filters.slug"
+      [(value)]="filters.slug">
+    </app-text-input>
+    <app-text-input
+      class="filter-input"
+      placeholderKey="tables.filters.title"
+      [(value)]="filters.title">
+    </app-text-input>
+    <app-checkbox-input
+      labelKey="tables.filters.toPublish"
+      [(value)]="filters.toPublish">
+    </app-checkbox-input>
+    <app-checkbox-input
+      labelKey="tables.filters.published"
+      [(value)]="filters.isPublished">
+    </app-checkbox-input>
+    <app-checkbox-input
+      labelKey="tables.filters.deleted"
+      [(value)]="filters.isDeleted">
+    </app-checkbox-input>
+    <app-checkbox-input
+      labelKey="tables.filters.disabled"
+      [(value)]="filters.disabled">
+    </app-checkbox-input>
+  </div>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>Slug</th>
+        <th>Status</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (page of items(); track page.id) {
+        <tr (click)="openPage(page)">
+          <td class="page-title">{{ page.title }}</td>
+          <td class="page-slug">{{ page.slug }}</td>
+          <td>
+            <div class="status-badges">
+              @if (page.isDeleted) {
+                <span class="badge deleted">Deleted</span>
+              }
+              @if (!page.isEnabled) {
+                <span class="badge disabled">Disabled</span>
+              }
+              @if (page.toPublish) {
+                <span class="badge pending">To publish</span>
+              }
+              @if (page.isPublished) {
+                <span class="badge published">Published</span>
+              }
+            </div>
+          </td>
+          <td class="actions">
+            <app-button variant="danger" icon="delete" size="sm" (onClick)="onDelete(page)" />
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</app-paged-table>

@@ -43,3 +43,27 @@ export interface SectionRenderer {
   media?: Media;
   imageUrl?: string;
 }
+
+export interface PageFilters {
+  slug?: string;
+  title?: string;
+  toPublish?: boolean;
+  isPublished?: boolean;
+  isDeleted?: boolean;
+  disabled?: boolean;
+}
+
+export interface PageTableItem {
+  id: string;
+  title: string;
+  slug: string;
+  metaDescription: string;
+  isEnabled: boolean;
+  isDeleted: boolean;
+  isPublished?: boolean;
+  toPublish?: boolean;
+  originalPageId?: string;
+  publishedVersionId?: string;
+  versionNumber?: number;
+  publishedAt?: string;
+}

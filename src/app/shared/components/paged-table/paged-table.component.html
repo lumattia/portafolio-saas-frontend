@@ -1,0 +1,45 @@
+<div class="paged-table">
+  <div class="table-header">
+    <h1>{{ title() }}</h1>
+    <div class="table-controls">
+      @if (sortOptions().length) {
+      <app-button
+        variant="secondary"
+        [active]="filtersOpen()"
+        (onClick)="toggleFilters()">
+        Filters
+      </app-button>
+        <app-sort
+          [options]="sortOptions()"
+          [value]="page()"
+          (onChange)="pageChanged.emit()">
+        </app-sort>
+      }
+    </div>
+  </div>
+
+  @if (filtersOpen()) {
+    <ng-content select="[tableFilters]"></ng-content>
+    <app-button (onClick)="page().pageIndex=1; pageChanged.emit()">Apply</app-button>
+  }
+
+  @if (error(); as errorMessage) {
+    <div class="error-message">{{ errorMessage }}</div>
+  }
+
+  @if (loading()) {
+    <div class="loading">Loading...</div>
+  }
+
+  @if (!loading() && itemCount() === 0) {
+    <div class="empty-state">{{ emptyMessage() }}</div>
+  }
+
+  @if (!loading() && itemCount() > 0) {
+    <ng-content></ng-content>
+    <app-pagination
+      [page]="page()"
+      (pageChanged)="pageChanged.emit()"
+    />
+  }
+</div>

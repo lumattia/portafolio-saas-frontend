@@ -1,0 +1,82 @@
+<app-paged-table
+  title="Versions"
+  emptyMessage="No pages found"
+  [page]="pagedParameters()"
+  [sortOptions]="sortOptions()"
+  [loading]="loading()"
+  [error]="error()"
+  [itemCount]="items().length"
+  (pageChanged)="load()">
+
+  <app-button
+    tableControls
+    variant="secondary"
+    [active]="showLatest()"
+    (onClick)="toggleLatest()">
+    Published
+  </app-button>
+  <app-select-input
+    tableControls
+    class="version-select"
+    [options]="versionOptions()"
+    [value]="selectedVersion()"
+    [showSearch]="false"
+    (valueChange)="onVersionChange($event)">
+  </app-select-input>
+  <div tableFilters class="filter-bar">
+    <app-text-input
+      class="filter-input"
+      placeholderKey="tables.filters.slug"
+      [(value)]="filters.slug">
+    </app-text-input>
+    <app-text-input
+      class="filter-input"
+      placeholderKey="tables.filters.title"
+      [(value)]="filters.title">
+    </app-text-input>
+    <app-checkbox-input
+      labelKey="tables.filters.deleted"
+      [(value)]="filters.isDeleted">
+    </app-checkbox-input>
+    <app-checkbox-input
+      labelKey="tables.filters.disabled"
+      [(value)]="filters.disabled">
+    </app-checkbox-input>
+  </div>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>Slug</th>
+        <th>Status</th>
+        <th>Version</th>
+        <th>Published At</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (page of items(); track page.id) {
+        <tr (click)="openPage(page)">
+          <td class="page-title">{{ page.title }}</td>
+          <td class="page-slug">{{ page.slug }}</td>
+          <td>
+            <div class="status-badges">
+              @if (page.isDeleted) {
+                <span class="badge deleted">Deleted</span>
+              }
+              @if (!page.isEnabled) {
+                <span class="badge disabled">Disabled</span>
+              }
+            </div>
+          </td>
+          <td>{{ page.versionNumber ?? '' }}</td>
+          <td>{{ formatDate(page.publishedAt) }}</td>
+          <td class="actions">
+            <app-button variant="danger" icon="delete" size="sm" (onClick)="onDelete(page)" />
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</app-paged-table>
