@@ -18,7 +18,7 @@ export abstract class BaseInputComponent implements OnInit {
   protected defaultValue: any = null;
 
   constructor() {
-    if(this.controlInput()) {
+    if(!this.controlInput()) {
       effect(() => {
         if (this.control) {
           this.control.setValidators(this.validators());

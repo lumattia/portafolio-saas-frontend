@@ -2,13 +2,9 @@
   <div class="section-content">
     <div class="text-container">
         @if (section().media) {
-          <div
-            class="section-image"
+          <img [src]="section().media!.url" class="section-image"
             [style.width]="content.inputs.media.width | formatDimension"
-            [style.height]="content.inputs.media.height | formatDimension"
-          >
-            <img [src]="section().media!.url" [alt]="section().media!.fileName" />
-          </div>
+            [style.height]="content.inputs.media.height | formatDimension" [alt]="section().media!.fileName" />
         }
       @if (content.inputs.text) {
         <div class="rich-text-content" [innerHTML]="safeHtml"></div>

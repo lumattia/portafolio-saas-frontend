@@ -51,8 +51,8 @@
       </div>
       <div class="input-group">
         <label>{{'shared.imageInput.finalQuality' | translate:{quality: (quality())} }}</label>
-          <input type="range" [value]="quality()" (input)="quality.set($any($event.target).value)" min="1" max="100" step="1">
-        </div>
+        <input type="range" [value]="quality()" (input)="quality.set($any($event.target).value)" min="1" max="100" step="1">
+      </div>
     </div>
 
     <div class="result-preview-box">

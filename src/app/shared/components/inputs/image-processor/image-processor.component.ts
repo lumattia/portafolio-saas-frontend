@@ -24,7 +24,7 @@ export class ImageProcessorComponent implements OnChanges {
   // Inputs asignados dinámicamente por tu ModalService
   @Input() imageFile!: File;
   @Input() originalFormat: 'png' | 'jpeg' | 'bmp' | 'webp' | 'ico' = 'webp';
-  @Input({ transform: (v: number | null | undefined) => v ?? 1920 }) maxWidth = 0;
+  @Input({ transform: (v: number | null | undefined) => v ?? 1920 }) maxWidth = 1920;
   @Input({ transform: (v: number | null | undefined) => v ?? 1080 }) maxHeight = 1080;
   @Input({ transform: (v: number | null | undefined) => v ?? 0.25 }) minAspectRatio = 0.25; // Alto 4, Ancho 1
   @Input({ transform: (v: number | null | undefined) => v ?? 4.0 }) maxAspectRatio = 4.0; // Alto 1, Ancho 4
@@ -34,7 +34,7 @@ export class ImageProcessorComponent implements OnChanges {
   private cdr = inject(ChangeDetectorRef);
   cropCoords = signal<CropperPosition | null>(null);
   // Crop field
-  quality = signal<number>(80);
+  quality = signal<number>(100);
   cropWidth = signal<number>(this.maxWidth);
   cropHeight = signal<number>(this.maxHeight);
   fileName = linkedSignal(()=>this.imageFile.name)
