@@ -43,6 +43,24 @@ export class DraggableToolbarComponent implements AfterViewInit {
   // LocalStorage
   ngAfterViewInit(): void {
     this.setInitialToolbarPosition();
+    this.ngZone.runOutsideAngular(() => {
+      window.addEventListener('resize', this.onWindowResize.bind(this));
+    });
+  }
+
+  private onWindowResize(): void {
+    this.ngZone.run(() => this.clampToViewport());
+  }
+
+  private clampToViewport(): void {
+    const toolbar = this.elementRef.nativeElement.querySelector('.draggable-toolbar');
+    if (!toolbar) return;
+
+    const maxLeft = Math.max(0, window.innerWidth - toolbar.offsetWidth);
+    const maxTop = Math.max(0, window.innerHeight - toolbar.offsetHeight);
+
+    this.toolbarLeft.set(Math.min(Math.max(0, this.toolbarLeft()), maxLeft));
+    this.toolbarTop.set(Math.min(Math.max(0, this.toolbarTop()), maxTop));
   }
 
   private setInitialToolbarPosition(): void {
@@ -59,6 +77,7 @@ export class DraggableToolbarComponent implements AfterViewInit {
       this.toolbarLeft.set(windowWidth / 2 - 150);
       this.toolbarTop.set(windowHeight - 80);
     }
+    setTimeout(() => this.clampToViewport());
   }
 
   private loadToolbarState(): void {
@@ -127,6 +146,7 @@ export class DraggableToolbarComponent implements AfterViewInit {
       this.ngZone.run(() => {
         this.toolbarLeft.set(this.initialLeft + dx);
         this.toolbarTop.set(this.initialTop + dy);
+        this.clampToViewport();
       });
     });
   }
