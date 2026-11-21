@@ -31,14 +31,6 @@ export class AuthService {
     return localStorage.getItem('access_token');
   }
 
-  registerTenant(email: string, password: string, configuredDomain: string) {
-    return this.http.post<LoginResponse>(`${environment.apiUrl}/auth/register-tenant`, {
-      email,
-      password,
-      configuredDomain,
-    });
-  }
-
   getMe(): void {
     if (!this.getToken()) {
       this.logout();

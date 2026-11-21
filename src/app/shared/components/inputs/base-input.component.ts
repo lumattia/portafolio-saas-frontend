@@ -18,19 +18,21 @@ export abstract class BaseInputComponent implements OnInit {
   protected defaultValue: any = null;
 
   constructor() {
-    if(!this.controlInput()) {
-      effect(() => {
-        if (this.control) {
-          this.control.setValidators(this.validators());
-          this.control.updateValueAndValidity({ emitEvent: false });
-        }
-      });
-      effect(() => {
+    effect(() => {
+      if (this.controlInput()) return;
+      if (this.control) {
+        this.control.setValidators(this.validators());
+        this.control.updateValueAndValidity({ emitEvent: false });
+      }
+    });
+    effect(() => {
+      if (this.controlInput()) return;
+      if (this.control) {
         this.control.setValue(this.value() ?? this.defaultValue);
         this.control.markAsDirty();
         this.control.markAsTouched();
-      });
-    }
+      }
+    });
 
 
     effect(() => {

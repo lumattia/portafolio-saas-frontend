@@ -1,0 +1,43 @@
+<app-paged-table
+  title="Tenants"
+  emptyMessage="No tenants found"
+  [page]="pagedParameters()"
+  [sortOptions]="sortOptions()"
+  [loading]="loading()"
+  [error]="error()"
+  [itemCount]="items().length"
+  (pageChanged)="load()">
+
+  <app-button
+    tableControls
+    variant="primary"
+    icon="add"
+    (onClick)="openCreateTenant()">
+    New Tenant
+  </app-button>
+
+  <div tableFilters class="filter-bar">
+    <app-text-input
+      class="filter-input"
+      placeholderKey="tables.filters.domain"
+      [(value)]="filters.domain">
+    </app-text-input>
+  </div>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Domain</th>
+        <th>Id</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (tenant of items(); track tenant.id) {
+        <tr>
+          <td class="page-title">{{ tenant.configuredDomain }}</td>
+          <td class="page-slug">{{ tenant.id }}</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</app-paged-table>

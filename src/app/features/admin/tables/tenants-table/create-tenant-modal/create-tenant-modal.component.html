@@ -1,0 +1,36 @@
+<div class="modal-content" (click)="$event.stopPropagation()">
+  <div class="modal-header">
+    <h3>Crear tenant</h3>
+    <app-button variant="icon" icon="close" size="md" (onClick)="onCancel()"></app-button>
+  </div>
+  <form [formGroup]="form" (ngSubmit)="submit()">
+    <div class="modal-body">
+      <div class="form-fields">
+        <app-email-input
+          labelKey="Email del propietario"
+          placeholderKey="nombre@ejemplo.com"
+          [control]="form.controls.email"
+        />
+        <app-password-input
+          labelKey="Contraseña inicial"
+          [control]="form.controls.password"
+        />
+        <app-text-input
+          labelKey="Dominio web"
+          placeholderKey="ejemplo.domain"
+          type="text"
+          [control]="form.controls.configuredDomain"
+        />
+      </div>
+      @if (error()) {
+        <p class="error">{{ error() }}</p>
+      }
+    </div>
+    <div class="modal-footer">
+      <app-button (onClick)="onCancel()">Cancelar</app-button>
+      <app-button type="submit" variant="primary" [disabled]="loading() || form.invalid">
+        {{ loading() ? 'Creando…' : 'Crear cuenta' }}
+      </app-button>
+    </div>
+  </form>
+</div>

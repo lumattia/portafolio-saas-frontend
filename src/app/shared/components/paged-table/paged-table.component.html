@@ -2,6 +2,7 @@
   <div class="table-header">
     <h1>{{ title() }}</h1>
     <div class="table-controls">
+      <ng-content select="[tableControls]"></ng-content>
       @if (sortOptions().length) {
       <app-button
         variant="secondary"

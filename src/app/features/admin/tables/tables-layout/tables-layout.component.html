@@ -1,6 +1,6 @@
 <div class="tables-layout">
   <nav class="tables-nav">
-    @for (table of tables; track table.path) {
+    @for (table of tables(); track table.path) {
       <a
         [routerLink]="table.path"
         routerLinkActive="active"
