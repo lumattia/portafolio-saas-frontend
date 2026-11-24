@@ -31,9 +31,18 @@ export class PageSettingsComponent {
   private readonly modalService = inject(ModalService);
 
   save(): void {
+    const slug = (this.slug() || '').trim().replace(/^\/+|\/+$/g, '');
+    if (this.isReservedSlug(slug)) {
+      const modalRef = this.modalService.open(MessageModalComponent);
+      modalRef.componentInstance.title = 'Slug no válido';
+      modalRef.componentInstance.message = `El slug "${slug.split('/')[0]}" está reservado por una ruta del sistema.`;
+      modalRef.componentInstance.type = 'error';
+      return;
+    }
+
     const request: PageRequest = {
       title: this.title() || '',
-      slug: this.slug() || '',
+      slug,
       metaDescription: this.metaDescription() || '',
       sections: undefined
     };
@@ -71,5 +80,13 @@ export class PageSettingsComponent {
 
   cancel(): void {
     this.dismiss();
+  }
+
+  private isReservedSlug(slug: string): boolean {
+    const firstSegment = slug.split('/')[0]?.toLowerCase();
+    if (!firstSegment) return false;
+    const root = this.router.config.find(r => r.path === '');
+    return !!root?.children?.some(c =>
+      c.path && c.path !== '**' && c.path.split('/')[0].toLowerCase() === firstSegment);
   }
 }

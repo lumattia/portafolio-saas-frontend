@@ -44,7 +44,6 @@ export class PageEditorComponent implements OnInit, CanDeactivateComponent {
   readonly hasChanges = this.changeTrackingService.hasChanges;
 
   ngOnInit(): void {
-    this.loadPage();
     this.route.url.subscribe(() => {
       this.loadPage();
     });

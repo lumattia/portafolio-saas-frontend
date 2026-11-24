@@ -21,7 +21,6 @@ export class PortfolioPageComponent implements OnInit {
   readonly pageContent = signal<PageRenderer | null>(null);
 
   ngOnInit(): void {
-    this.loadPublishedContent();
     this.route.url.subscribe(() => {
       this.loadPublishedContent();
     });
