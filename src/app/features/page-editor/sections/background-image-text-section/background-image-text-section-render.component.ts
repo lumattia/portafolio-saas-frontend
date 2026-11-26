@@ -1,8 +1,8 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
-import { DEFAULT_BACKGROUND_IMAGE_TEXT_SECTION_CONTENT, BackgroundImageTextSectionContent } from './background-image-text-section.model';
-import { BaseSectionRendererComponent } from '../base-section-renderer.component';
+import { BackgroundImageTextSectionContent } from './background-image-text-section.model';
+import { BaseSectionComponent } from '../base-section.component';
 
 @Component({
   selector: 'app-background-image-text-section-render',
@@ -11,9 +11,8 @@ import { BaseSectionRendererComponent } from '../base-section-renderer.component
   templateUrl: './background-image-text-section-render.component.html',
   styleUrls: ['./background-image-text-section-render.component.scss'],
 })
-export class BackgroundImageTextSectionRenderComponent extends BaseSectionRendererComponent<BackgroundImageTextSectionContent> {
+export class BackgroundImageTextSectionRenderComponent extends BaseSectionComponent<BackgroundImageTextSectionContent> {
   private readonly sanitizer = inject(DomSanitizer);
-  override readonly defaultContent = DEFAULT_BACKGROUND_IMAGE_TEXT_SECTION_CONTENT;
 
   get safeHtml(): SafeHtml {
     return this.sanitizer.bypassSecurityTrustHtml(this.content.inputs?.text || '');

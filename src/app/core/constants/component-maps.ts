@@ -13,6 +13,13 @@ import { CarouselSectionEditorComponent } from '../../features/page-editor/secti
 import { FlexLayoutSectionEditorComponent } from '../../features/page-editor/sections/flex-layout-section/flex-layout-section-editor.component';
 import { BlankSectionEditorComponent } from '../../features/page-editor/sections/blank-section/blank-section-editor.component';
 import { BlankSectionRenderComponent } from '../../features/page-editor/sections/blank-section/blank-section-render.component';
+import { DEFAULT_BLANK_SECTION_CONTENT } from '../../features/page-editor/sections/blank-section/blank-section.model';
+import { DEFAULT_BACKGROUND_IMAGE_TEXT_SECTION_CONTENT } from '../../features/page-editor/sections/background-image-text-section/background-image-text-section.model';
+import { DEFAULT_CAROUSEL_SECTION_CONTENT } from '../../features/page-editor/sections/carousel-section/carousel-section.model';
+import { DEFAULT_FLEX_LAYOUT_SECTION_CONTENT } from '../../features/page-editor/sections/flex-layout-section/flex-layout-section.model';
+import { DEFAULT_IMAGE_SECTION_CONTENT } from '../../features/page-editor/sections/image-section/image-section.model';
+import { DEFAULT_IMAGE_TEXT_SECTION_CONTENT } from '../../features/page-editor/sections/image-text-section/image-text-section.model';
+import { DEFAULT_RICH_TEXT_SECTION_CONTENT } from '../../features/page-editor/sections/rich-text-section/rich-text-section.model';
 
 export const RENDER_COMPONENT_MAP: Record<string, Type<any>> = {
   'image': ImageSectionRenderComponent,
@@ -32,4 +39,14 @@ export const EDITOR_COMPONENT_MAP: Record<string, Type<any>> = {
   'carousel': CarouselSectionEditorComponent,
   'flex': FlexLayoutSectionEditorComponent,
   'blank': BlankSectionEditorComponent,
+};
+
+export const SECTION_CONTENT_DEFAULTS: Record<string, any> = {
+  'blank': DEFAULT_BLANK_SECTION_CONTENT,
+  'background-image-text': DEFAULT_BACKGROUND_IMAGE_TEXT_SECTION_CONTENT,
+  'carousel': DEFAULT_CAROUSEL_SECTION_CONTENT,
+  'flex': DEFAULT_FLEX_LAYOUT_SECTION_CONTENT,
+  'image': DEFAULT_IMAGE_SECTION_CONTENT,
+  'image-text': DEFAULT_IMAGE_TEXT_SECTION_CONTENT,
+  'rich-text': DEFAULT_RICH_TEXT_SECTION_CONTENT,
 };

@@ -1,7 +1,8 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import { environment } from '../../../environments/environment';
+import { normalizePageContent } from '../utils/content-normalizer';
 import { PageFilters, PageRenderer, PageRequest, PageTableItem } from '../models/page.model';
 import { PagedList, PagedParameters } from '../models/common.models';
 
@@ -24,7 +25,7 @@ export class PageService {
   }
 
   getDraftPage(identifier?: string): Observable<PageRenderer> {
-    return this.http.get<PageRenderer>(`${this.apiUrl}/${identifier}`);
+    return this.http.get<PageRenderer>(`${this.apiUrl}/${identifier}`).pipe(map(normalizePageContent));
   }
 
   create(request: PageRequest): Observable<PageRenderer> {

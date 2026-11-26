@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { DEFAULT_IMAGE_SECTION_CONTENT, ImageSectionContent } from './image-section.model';
-import { BaseSectionRendererComponent } from '../base-section-renderer.component';
+import { ImageSectionContent } from './image-section.model';
+import { BaseSectionComponent } from '../base-section.component';
 import { FormatDimensionPipe } from '../../../../core/utils/format-dimension.pipe';
 
 @Component({
@@ -11,6 +11,5 @@ import { FormatDimensionPipe } from '../../../../core/utils/format-dimension.pip
   templateUrl: './image-section-render.component.html',
   styleUrls: ['./image-section-render.component.scss'],
 })
-export class ImageSectionRenderComponent extends BaseSectionRendererComponent<ImageSectionContent> {
-  override readonly defaultContent = DEFAULT_IMAGE_SECTION_CONTENT;
+export class ImageSectionRenderComponent extends BaseSectionComponent<ImageSectionContent> {
 }

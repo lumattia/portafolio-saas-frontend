@@ -1,7 +1,8 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import { environment } from '../../../environments/environment';
+import { normalizePageContent } from '../utils/content-normalizer';
 import { PageRenderer } from '../models/page.model';
 import { MenuRenderer, MenuType } from '../models/menu.model';
 import { ThemeConfig } from '../models/theme-config.model';
@@ -13,7 +14,7 @@ export class PublishedContentService {
   private readonly apiUrl = `${environment.apiUrl}/public/published`;
 
   getPage(slug?: string): Observable<PageRenderer> {
-    return this.http.get<PageRenderer>(`${this.apiUrl}/${slug}`);
+    return this.http.get<PageRenderer>(`${this.apiUrl}/${slug}`).pipe(map(normalizePageContent));
   }
 
   getMenu(type: MenuType): Observable<MenuRenderer | null> {

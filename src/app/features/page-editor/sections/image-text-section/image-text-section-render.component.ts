@@ -1,8 +1,8 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
-import { DEFAULT_IMAGE_TEXT_SECTION_CONTENT, ImageTextSectionContent } from './image-text-section.model';
-import { BaseSectionRendererComponent } from '../base-section-renderer.component';
+import { ImageTextSectionContent } from './image-text-section.model';
+import { BaseSectionComponent } from '../base-section.component';
 import { FormatDimensionPipe } from '../../../../core/utils/format-dimension.pipe';
 
 @Component({
@@ -12,9 +12,8 @@ import { FormatDimensionPipe } from '../../../../core/utils/format-dimension.pip
   templateUrl: './image-text-section-render.component.html',
   styleUrls: ['./image-text-section-render.component.scss'],
 })
-export class ImageTextSectionRenderComponent extends BaseSectionRendererComponent<ImageTextSectionContent>{
+export class ImageTextSectionRenderComponent extends BaseSectionComponent<ImageTextSectionContent>{
   private readonly sanitizer = inject(DomSanitizer);
-  override readonly defaultContent = DEFAULT_IMAGE_TEXT_SECTION_CONTENT;
 
   get safeHtml(): SafeHtml {
     return this.sanitizer.bypassSecurityTrustHtml(this.content.inputs.text || '');

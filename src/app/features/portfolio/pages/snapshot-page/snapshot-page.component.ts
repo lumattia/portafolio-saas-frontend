@@ -2,7 +2,7 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { toObservable } from '@angular/core/rxjs-interop';
-import { merge } from 'rxjs';
+import { catchError, merge, of, switchMap, tap } from 'rxjs';
 import { SectionRendererComponent } from '../../../page-editor/section-renderer/section-renderer.component';
 import { PageRenderer } from '../../../../core/models/page.model';
 import { SnapshotContentService } from '../../../../core/services/snapshot-content.service';
@@ -29,23 +29,20 @@ export class SnapshotPageComponent implements OnInit {
     merge(
       this.route.url,
       this.versionChanges$
-    ).subscribe(() => {
-      this.loadVersionedContent();
-    });
-  }
-
-  private loadVersionedContent(): void {
-    const slug = this.route.snapshot.url.join('/');
-    this.contentService.getPage(slug, this.viewMode.snapshotVersion()).subscribe({
-      next: (snapshot) => {
-        this.pageContent.set(snapshot);
-        this.location.replaceState(`${snapshot.slug}`);
-        this.loading.set(false);
-      },
-      error: (err) => {
-        this.error.set('Failed to load snapshot content');
-        this.loading.set(false);
-      },
-    });
+    ).pipe(
+      switchMap(() => {
+        const slug = this.route.snapshot.url.join('/');
+        return this.contentService.getPage(slug, this.viewMode.snapshotVersion()).pipe(
+          tap((snapshot) => {
+            this.pageContent.set(snapshot);
+            this.location.replaceState(`${snapshot.slug}`);
+          }),
+          catchError(() => {
+            this.error.set('Failed to load snapshot content');
+            return of(null);
+          })
+        );
+      })
+    ).subscribe(() => this.loading.set(false));
   }
 }
