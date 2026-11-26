@@ -40,9 +40,17 @@ export class LoginPageComponent {
         this.viewMode.setViewMode('draft');
         this.router.navigate(['/']);
       },
-      error: () => {
+      error: (err) => {
         this.loading.set(false);
-        this.error.set('Credenciales inválidas.');
+        if (err?.status === 429) {
+          const retryAfter = Number(err.headers?.get('Retry-After'));
+          const minutes = Number.isFinite(retryAfter) && retryAfter > 0
+            ? Math.ceil(retryAfter / 60)
+            : 1;
+          this.error.set(`Demasiados intentos. Espera ${minutes} min y vuelve a probar.`);
+        } else {
+          this.error.set('Credenciales inválidas.');
+        }
       },
     });
   }

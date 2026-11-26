@@ -1,6 +1,6 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { tap, catchError, of } from 'rxjs';
+import { catchError, of, tap } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { LoginResponse, User } from '../models/user.model';
 
@@ -52,7 +52,6 @@ export class AuthService {
   private persistSession(response: LoginResponse): void {
     localStorage.setItem('access_token', response.token);
     const user: User = {
-      tenantId: response.tenantId,
       email: response.email,
       role: response.role,
     };
