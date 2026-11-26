@@ -1,8 +1,8 @@
-import { Component, input, model, output } from '@angular/core';
+import { Component, inject, input, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { EDITOR_COMPONENT_MAP } from '../../../core/constants/component-maps';
 import { ButtonComponent } from "../../../shared/components/button/button.component";
 import { SectionRenderer } from '../../../core/models/page.model';
+import { SectionComponentLoader } from '../../../core/services/section-component-loader.service';
 
 @Component({
   selector: 'app-section-editor',
@@ -12,12 +12,15 @@ import { SectionRenderer } from '../../../core/models/page.model';
   styleUrls: ['./section-editor.component.scss'],
 })
 export class SectionEditorComponent {
+  private readonly componentLoader = inject(SectionComponentLoader);
   close!: () => void;
   dismiss!: (reason?: any) => void;
   section = input.required<SectionRenderer>();
   onSetDeleteState = output<void>();
-  readonly editorMap = EDITOR_COMPONENT_MAP;
 
+  get componentType() {
+    return this.componentLoader.componentFor(this.componentSelector, 'editor');
+  }
   get componentSelector(): string {
     return this.section().componentSelector;
   }

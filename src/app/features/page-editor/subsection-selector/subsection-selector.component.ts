@@ -4,7 +4,7 @@ import { ButtonComponent } from "../../../shared/components/button/button.compon
 import { SectionRenderer } from '../../../core/models/page.model';
 import { SidenavService } from '../../../core/services/sidenav.service';
 import { TemplateSelectorComponent } from '../template-selector/template-selector.component';
-import { EDITOR_COMPONENT_MAP } from '../../../core/constants/component-maps';
+import { SectionComponentLoader } from '../../../core/services/section-component-loader.service';
 
 @Component({
   selector: 'app-subsection-selector',
@@ -15,8 +15,12 @@ import { EDITOR_COMPONENT_MAP } from '../../../core/constants/component-maps';
 })
 export class SubsectionSelectorComponent {
   protected readonly sidenavService = inject(SidenavService);
+  private readonly componentLoader = inject(SectionComponentLoader);
   section = input.required<SectionRenderer>();
-  readonly componentMap = EDITOR_COMPONENT_MAP;
+
+  componentTypeFor(selector: string) {
+    return this.componentLoader.componentFor(selector, 'editor');
+  }
   addingSection = false;
   get subSections() {
     return this.section().subSections || [];

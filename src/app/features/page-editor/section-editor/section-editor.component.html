@@ -11,7 +11,7 @@
     </div>
     }
     <ng-container
-      *ngComponentOutlet="editorMap[componentSelector]; inputs: {
+      *ngComponentOutlet="componentType; inputs: {
           section: section(),
           onDelete: triggerDelete.bind(this)
       }"

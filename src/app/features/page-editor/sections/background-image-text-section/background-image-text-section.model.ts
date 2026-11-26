@@ -1,4 +1,5 @@
 import { BaseSectionContent } from '../base-section.component';
+import type { SectionDefinition } from '../../../../core/constants/component-maps';
 import { BoxDimensions, DimensionValue, WidthUnit } from '../../../../core/models/dimension.model';
 
 export interface BackgroundImageTextSectionContent extends BaseSectionContent {
@@ -11,7 +12,7 @@ export interface BackgroundImageTextSectionContent extends BaseSectionContent {
   };
 }
 
-export const DEFAULT_BACKGROUND_IMAGE_TEXT_SECTION_CONTENT: BackgroundImageTextSectionContent = {
+const DEFAULT_BACKGROUND_IMAGE_TEXT_SECTION_CONTENT: BackgroundImageTextSectionContent = {
   inputs: {
     text: '',
     media:{
@@ -20,4 +21,10 @@ export const DEFAULT_BACKGROUND_IMAGE_TEXT_SECTION_CONTENT: BackgroundImageTextS
     } 
   },
   styles: { width: { value: 100, unit: '%' } }
+};
+
+export const backgroundImageTextSectionDefinition: SectionDefinition = {
+  render: () => import('./background-image-text-section-render.component').then(m => m.BackgroundImageTextSectionRenderComponent),
+  editor: () => import('./background-image-text-section-editor.component').then(m => m.BackgroundImageTextSectionEditorComponent),
+  defaultContent: DEFAULT_BACKGROUND_IMAGE_TEXT_SECTION_CONTENT,
 };

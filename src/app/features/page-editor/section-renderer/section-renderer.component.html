@@ -9,6 +9,6 @@
   [style.height]="section().contentJson?.styles?.height | formatDimension"
 >
   <ng-container
-    *ngComponentOutlet="componentMap[componentSelector]; inputs: { section: section() }"
+    *ngComponentOutlet="componentType; inputs: { section: section() }"
   ></ng-container>
 </div>

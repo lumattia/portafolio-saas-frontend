@@ -1,5 +1,5 @@
 import { PageRenderer, SectionRenderer } from '../models/page.model';
-import { SECTION_CONTENT_DEFAULTS } from '../constants/component-maps';
+import { getSectionDefinition } from '../constants/component-maps';
 
 function syncWithDefaults(current: any, defaults: any): any {
   const result: any = {};
@@ -14,7 +14,7 @@ function syncWithDefaults(current: any, defaults: any): any {
 }
 
 function normalizeSection(section: SectionRenderer): void {
-  const defaults = SECTION_CONTENT_DEFAULTS[section.componentSelector];
+  const defaults = getSectionDefinition(section.componentSelector)?.defaultContent;
   if (defaults) {
     section.contentJson = syncWithDefaults(section.contentJson, defaults);
   }

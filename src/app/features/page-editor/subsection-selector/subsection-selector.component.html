@@ -18,7 +18,7 @@
  @if (currentSubSection) {
   <div class="subsection-editor">
     <ng-container
-      *ngComponentOutlet="componentMap[currentSubSection.componentSelector]; inputs: { section: currentSubSection, onDelete: removeSubSection.bind(this, currentSubSection)}"
+      *ngComponentOutlet="componentTypeFor(currentSubSection.componentSelector); inputs: { section: currentSubSection, onDelete: removeSubSection.bind(this, currentSubSection)}"
     ></ng-container>
   </div>
 }
