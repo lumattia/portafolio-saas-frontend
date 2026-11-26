@@ -1,6 +1,6 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { catchError, of, tap } from 'rxjs';
+import { Observable, catchError, finalize, map, of, shareReplay, tap } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { LoginResponse, User } from '../models/user.model';
 
@@ -8,6 +8,7 @@ import { LoginResponse, User } from '../models/user.model';
 export class AuthService {
   private readonly http = inject(HttpClient);
   private readonly userSignal = signal<User | null>(this.loadStoredUser());
+  private refreshRequest$?: Observable<boolean>;
 
   readonly user = this.userSignal.asReadonly();
   readonly isAuthenticated = computed(() => !!this.userSignal());
@@ -20,9 +21,40 @@ export class AuthService {
       .pipe(tap((res) => this.persistSession(res)));
   }
 
+  // Single-flight: llamadas concurrentes comparten la misma petición de refresh
+  refreshSession(): Observable<boolean> {
+    this.refreshRequest$ ??= this.http
+      .post<LoginResponse>(`${environment.apiUrl}/auth/refresh`, {
+        refreshToken: localStorage.getItem('refresh_token'),
+      })
+      .pipe(
+        tap((res) => {
+          localStorage.setItem('access_token', res.token);
+          localStorage.setItem('refresh_token', res.refreshToken);
+        }),
+        map(() => true),
+        catchError(() => {
+          this.logout();
+          return of(false);
+        }),
+        finalize(() => {
+          this.refreshRequest$ = undefined;
+        }),
+        shareReplay(1)
+      );
+    return this.refreshRequest$;
+  }
+
   logout(): void {
-    this.userSignal.set(null)
+    const refreshToken = localStorage.getItem('refresh_token');
+    if (refreshToken) {
+      this.http
+        .post(`${environment.apiUrl}/auth/logout`, { refreshToken })
+        .subscribe({ error: () => {} });
+    }
+    this.userSignal.set(null);
     localStorage.removeItem('access_token');
+    localStorage.removeItem('refresh_token');
     localStorage.removeItem('user');
     localStorage.removeItem('viewMode');
   }
@@ -51,6 +83,7 @@ export class AuthService {
 
   private persistSession(response: LoginResponse): void {
     localStorage.setItem('access_token', response.token);
+    localStorage.setItem('refresh_token', response.refreshToken);
     const user: User = {
       email: response.email,
       role: response.role,

@@ -7,6 +7,7 @@ export interface User {
 
 export interface LoginResponse {
   token: string;
+  refreshToken: string;
   email: string;
   role: UserRole;
 }
