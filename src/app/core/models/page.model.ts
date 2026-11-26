@@ -24,7 +24,7 @@ export interface PageRenderer {
   title: string;
   slug: string;
   metaDescription: string;
-  isEnabled: boolean;
+  disabled: boolean;
   isDeleted: boolean;
   sections: SectionRenderer[];
 }

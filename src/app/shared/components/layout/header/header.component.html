@@ -4,6 +4,16 @@
     <app-header-menu-renderer/>
   </div>
   <div class="header-right">
+    @if (viewModeService.isSnapshotMode() && auth.isAuthenticated()) {
+      <app-select-input
+        class="version-select"
+        [options]="versions()"
+        [value]="viewModeService.snapshotVersion()"
+        [showSearch]="false"
+        placeholderKey="shared.selectInput.placeholder"
+        (valueChange)="onSnapshotVersionChange($event)">
+      </app-select-input>
+    }
     <app-theme-toggle />
     <div class="user-card-container">
       @if (auth.isAuthenticated()) {
@@ -87,14 +97,14 @@
         [active]="viewModeService.isPublishedMode()"
         (onClick)="setViewMode('published')"
         icon="globe" size="sm"
-        title="Vista Previa">
+        title="Vista Publicada">
       </app-button>
       <app-button
         variant="icon"
         [active]="viewModeService.isSnapshotMode()"
         (onClick)="setViewMode('snapshot')"
         icon="eye" size="sm"
-        title="Vista Publicada">
+        title="Vista Previa">
       </app-button>
     </div>
     <app-button

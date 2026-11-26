@@ -1,28 +1,48 @@
 import { Injectable, effect, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, tap } from 'rxjs';
+import { Observable, Subscription, tap } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { Color, ThemeConfig } from '../models/theme-config.model';
+import { ViewModeService } from './view-mode.service';
+import { PublishedContentService } from './published-content.service';
+import { SnapshotContentService } from './snapshot-content.service';
 
 @Injectable({ providedIn: 'root' })
 export class ThemeService {
   private readonly http = inject(HttpClient);
-  private readonly apiUrl = `${environment.apiUrl}/public/theme`;
+  private readonly viewMode = inject(ViewModeService);
+  private readonly publishedContent = inject(PublishedContentService);
+  private readonly snapshotContent = inject(SnapshotContentService);
 
   readonly mode = signal<'light' | 'dark'>(this.loadStoredMode());
   private readonly config = signal<ThemeConfig | null>(null);
+  private themeSub?: Subscription;
+  private skipInitialThemeLoad = true;
 
   constructor() {
     effect(() => {
       const cfg = this.config();
       if (cfg) this.apply(cfg[this.mode()]);
     });
+    effect(() => {
+      this.viewMode.viewMode();
+      this.viewMode.snapshotVersion();
+      if (this.skipInitialThemeLoad) {
+        this.skipInitialThemeLoad = false;
+        return;
+      }
+      this.themeSub?.unsubscribe();
+      this.themeSub = this.loadTheme().subscribe();
+    });
   }
 
   loadTheme(): Observable<ThemeConfig> {
-    return this.http.get<ThemeConfig>(this.apiUrl).pipe(
-      tap((theme) => this.config.set(theme))
-    );
+    const request = this.viewMode.isDraftMode()
+      ? this.http.get<ThemeConfig>(`${environment.apiUrl}/public/theme`)
+      : this.viewMode.isSnapshotMode()
+        ? this.snapshotContent.getTheme(this.viewMode.snapshotVersion())
+        : this.publishedContent.getTheme();
+    return request.pipe(tap((theme) => this.config.set(theme)));
   }
 
   toggle(): void {

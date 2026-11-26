@@ -2,13 +2,11 @@ import { PageFilters } from './../../../../core/models/page.model';
 import { Component, inject, signal, computed, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { Observable, of } from 'rxjs';
 import { VersionService } from '../../../../core/services/version.service';
 import { PageService } from '../../../../core/services/page.service';
 import { ViewModeService } from '../../../../core/services/view-mode.service';
 import { ModalService } from '../../../../core/services/modal.service';
 import { PageTableItem } from '../../../../core/models/page.model';
-import { VersionList } from '../../../../core/models/version.model';
 import { PagedList, PagedParameters, IdName } from '../../../../core/models/common.models';
 import { PagedTableComponent } from '../../../../shared/components/paged-table/paged-table.component';
 import { ButtonComponent } from '../../../../shared/components/button/button.component';
@@ -16,8 +14,6 @@ import { SelectInputComponent } from '../../../../shared/components/inputs/selec
 import { TextInputComponent } from '../../../../shared/components/inputs/text-input/text-input.component';
 import { CheckboxInputComponent } from '../../../../shared/components/inputs/checkbox-input/checkbox-input.component';
 import { ConfirmModalComponent } from '../../../../shared/components/modals/confirm-modal/confirm-modal.component';
-
-type SnapshotFlag = 'isDeleted' | 'disabled';
 
 @Component({
   selector: 'app-versions-table',
@@ -40,29 +36,26 @@ export class VersionsTableComponent implements OnInit {
     { id: 'title', name: 'Title' },
     { id: 'slug', name: 'Slug' }
   ]);
-  readonly versions = signal<IdName[]>([]);
-  readonly currentVersionId = signal<string | null>(null);
-  readonly selectedVersion = signal<string | null>(null);
+  readonly versions = this.versionService.versions;
+  readonly currentVersionNumber = this.versionService.currentVersionNumber;
+  readonly selectedVersion = signal<number | null>(null);
   readonly showLatest = signal(false);
   readonly filters: PageFilters = {};
 
-  private readonly effectiveCurrentVersionId = computed(() =>
-    this.currentVersionId() ?? this.versions()[0]?.id ?? null
+  private readonly effectiveCurrentVersionNumber = computed(() =>
+    this.currentVersionNumber() ?? this.versions()[0]?.id ?? null
   );
   readonly versionOptions = computed<IdName[]>(() =>
     this.versions().map(v => ({
       id: v.id,
-      name: `${v.name}${String(v.id) === String(this.effectiveCurrentVersionId()) ? ' (current)' : ''}`
+      name: `${v.id} — ${v.name}${v.id === this.effectiveCurrentVersionNumber() ? ' (current)' : ''}`
     }))
   );
 
   ngOnInit(): void {
-    this.versionService.getVersions().subscribe({
-      next: (result: VersionList) => {
-        this.versions.set(result.versions);
-        this.currentVersionId.set(result.currentVersionId);
-        const defaultVersionId = result.currentVersionId ?? result.versions[0]?.id;
-        this.selectedVersion.set(defaultVersionId != null ? String(defaultVersionId) : null);
+    this.versionService.loadVersions().subscribe({
+      next: () => {
+        this.selectedVersion.set(this.currentVersionNumber() ?? this.versions()[0]?.id ?? null);
         this.load();
       },
       error: () => this.error.set('Failed to load versions')
@@ -70,7 +63,7 @@ export class VersionsTableComponent implements OnInit {
   }
 
   onVersionChange(value: any): void {
-    this.selectedVersion.set(value || null);
+    this.selectedVersion.set(value !== null && value !== '' ? Number(value) : null);
     this.reload();
   }
 
@@ -102,6 +95,7 @@ export class VersionsTableComponent implements OnInit {
   }
 
   openPage(page: PageTableItem): void {
+    this.viewModeService.setSnapshotVersion(this.selectedVersion() ?? page.versionNumber ?? null);
     this.viewModeService.setViewMode('snapshot');
     this.router.navigateByUrl(page.slug);
   }

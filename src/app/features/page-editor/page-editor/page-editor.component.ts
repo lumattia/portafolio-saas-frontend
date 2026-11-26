@@ -51,7 +51,7 @@ export class PageEditorComponent implements OnInit, CanDeactivateComponent {
 
   private loadPage(): void {
     const slug = this.route.snapshot.url.join('/');
-    this.pageService.getByIdentifier(slug).subscribe({
+    this.pageService.getDraftPage(slug).subscribe({
       next: (detail: PageRenderer) => {
         this.changeTrackingService.reset();
         if (detail === null) {

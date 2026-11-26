@@ -1,4 +1,4 @@
-import { Component, inject, signal, ElementRef, NgZone, Injector, ViewChild } from '@angular/core';
+import { Component, inject, signal, ElementRef, NgZone, Injector, ViewChild, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, Router, RouterOutlet } from '@angular/router';
 import { ThemeToggleComponent } from '../../theme-toggle/theme-toggle.component';
@@ -12,15 +12,17 @@ import { SiteService } from '../../../../core/services/site.service';
 import { ModalService } from '../../../../core/services/modal.service';
 import { MessageModalComponent } from '../../modals/message-modal/message-modal.component';
 import { DraggableToolbarComponent } from '../../draggable-toolbar/draggable-toolbar.component';
+import { SelectInputComponent } from '../../inputs/select-input/select-input.component';
+import { VersionService } from '../../../../core/services/version.service';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [CommonModule, RouterLink, ThemeToggleComponent, HeaderMenuRendererComponent, IconComponent, ButtonComponent, PopupComponent, DraggableToolbarComponent, RouterOutlet],
+  imports: [CommonModule, RouterLink, ThemeToggleComponent, HeaderMenuRendererComponent, IconComponent, ButtonComponent, PopupComponent, DraggableToolbarComponent, SelectInputComponent, RouterOutlet],
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss']
 })
-export class HeaderComponent {
+export class HeaderComponent implements OnInit {
   readonly auth = inject(AuthService);
   readonly viewModeService = inject(ViewModeService);
   readonly modalService = inject(ModalService);
@@ -29,11 +31,24 @@ export class HeaderComponent {
   readonly elementRef = inject(ElementRef);
   readonly ngZone = inject(NgZone);
   readonly injector = inject(Injector);
+  readonly versionService = inject(VersionService);
+  readonly versions = this.versionService.versions;
 
   @ViewChild(DraggableToolbarComponent) draggableToolbar!: DraggableToolbarComponent;
 
   readonly isPublishing = signal(false);
   readonly isUserCardHighlighting = signal(false);
+
+  ngOnInit(): void {
+    if (this.auth.isAuthenticated()) {
+      this.versionService.loadVersions().subscribe();
+    }
+  }
+
+  onSnapshotVersionChange(value: any): void {
+    const version = value !== null && value !== '' ? Number(value) : null;
+    this.viewModeService.setSnapshotVersion(version);
+  }
 
   onToolbarClose(): void {
     this.draggableToolbar.closeToolbar();

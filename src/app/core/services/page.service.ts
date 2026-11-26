@@ -4,14 +4,11 @@ import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { PageFilters, PageRenderer, PageRequest, PageTableItem } from '../models/page.model';
 import { PagedList, PagedParameters } from '../models/common.models';
-import { ViewModeService } from './view-mode.service';
 
 @Injectable({ providedIn: 'root' })
 export class PageService {
-  private readonly viewMode = inject(ViewModeService);
   private readonly http = inject(HttpClient);
   private readonly apiUrl = `${environment.apiUrl}/admin/pages`;
-  private readonly publishedApiUrl = `${environment.apiUrl}/public/published`;
 
   getPages(parameters?: PagedParameters, filters?: PageFilters): Observable<PagedList<PageTableItem>> {
     let params = parameters?.toHttpParams() ?? new HttpParams();
@@ -26,9 +23,8 @@ export class PageService {
     return this.http.get<PagedList<PageTableItem>>(`${this.apiUrl}/table`, { params });
   }
 
-  getByIdentifier(identifier?: string): Observable<PageRenderer> {
-    const url = `${this.viewMode.isDraftMode() ? this.apiUrl : this.publishedApiUrl}/${identifier}`;
-    return this.http.get<PageRenderer>(url);
+  getDraftPage(identifier?: string): Observable<PageRenderer> {
+    return this.http.get<PageRenderer>(`${this.apiUrl}/${identifier}`);
   }
 
   create(request: PageRequest): Observable<PageRenderer> {

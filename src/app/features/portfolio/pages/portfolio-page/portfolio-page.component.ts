@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { SectionRendererComponent } from '../../../page-editor/section-renderer/section-renderer.component';
 import { PageRenderer } from '../../../../core/models/page.model';
-import { PageService } from '../../../../core/services/page.service';
+import { PublishedContentService } from '../../../../core/services/published-content.service';
 
 @Component({
   selector: 'app-portfolio-page',
@@ -13,7 +13,7 @@ import { PageService } from '../../../../core/services/page.service';
   styleUrl: './portfolio-page.component.scss',
 })
 export class PortfolioPageComponent implements OnInit {
-  private readonly pageService = inject(PageService);
+  private readonly contentService = inject(PublishedContentService);
   private readonly route = inject(ActivatedRoute);
   private readonly location = inject(Location);
   readonly loading = signal(true);
@@ -28,7 +28,7 @@ export class PortfolioPageComponent implements OnInit {
 
   private loadPublishedContent(): void {
     const slug = this.route.snapshot.url.join('/');
-    this.pageService.getByIdentifier(slug).subscribe({
+    this.contentService.getPage(slug).subscribe({
       next: (snapshot) => {
         this.pageContent.set(snapshot);
         this.location.replaceState(`${snapshot.slug}`);

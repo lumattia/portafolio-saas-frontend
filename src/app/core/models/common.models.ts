@@ -1,7 +1,7 @@
 import { HttpParams } from "@angular/common/http";
 
-export interface IdName {
-  id: string | number;
+export interface IdName<TId = string | number> {
+  id: TId;
   name: string;
   flag?: string;
 }

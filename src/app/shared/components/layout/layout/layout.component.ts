@@ -9,12 +9,13 @@ import { PageEditorComponent } from '../../../../features/page-editor/page-edito
 import { SidebarMenuRendererComponent } from "../../../../features/admin/menus/sidebar-menu/sidebar-menu-renderer.component";
 import { FooterMenuRendererComponent } from "../../../../features/admin/menus/footer-menu/footer-menu-renderer.component";
 import { PortfolioPageComponent } from "../../../../features/portfolio/pages/portfolio-page/portfolio-page.component";
+import { SnapshotPageComponent } from "../../../../features/portfolio/pages/snapshot-page/snapshot-page.component";
 import { CanDeactivateComponent } from '../../../../core/guards/unsaved-changes.guard';
 
 @Component({
   selector: 'app-layout',
   standalone: true,
-  imports: [CommonModule, PageEditorComponent, SidebarMenuRendererComponent, FooterMenuRendererComponent, PortfolioPageComponent, RouterOutlet],
+  imports: [CommonModule, PageEditorComponent, SidebarMenuRendererComponent, FooterMenuRendererComponent, PortfolioPageComponent, SnapshotPageComponent, RouterOutlet],
   templateUrl: './layout.component.html',
   styleUrls: ['./layout.component.scss']
 })

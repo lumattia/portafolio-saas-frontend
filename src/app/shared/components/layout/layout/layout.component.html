@@ -6,8 +6,13 @@
     <div class="content-wrapper">
       <main class="content">
         <router-outlet />
-        @if (viewModeService.isDraftMode()) {
+        @if (viewModeService.isPublishedMode()){
+          <app-portfolio-page />
+        }
+        @else if (viewModeService.isDraftMode()) {
           <app-page-editor />
+        }@else if (viewModeService.isSnapshotMode()) {
+          <app-snapshot-page />
         }@else {
           <app-portfolio-page />
         }

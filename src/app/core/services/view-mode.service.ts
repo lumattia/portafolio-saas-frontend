@@ -10,22 +10,27 @@ export class ViewModeService {
   private readonly changeTrackingService = inject(ChangeTrackingService);
 
   readonly viewMode = signal<ViewMode>(this.loadStoredViewMode());
+  readonly snapshotVersion = signal<number | null>(null);
 
  constructor() {
     effect(() => {
       if (!this.auth.user()) {
-        this.setViewMode('snapshot');
+        this.setViewMode('published');
       }
     });
   }
 
   private loadStoredViewMode(): ViewMode {
-    if (!this.auth.user()) return null;
+    if (!this.auth.user()) return 'published';
     const stored = localStorage.getItem('viewMode');
     if (VIEW_MODES.includes(stored as any)) {
       return stored as ViewMode;
     }
     return 'snapshot';
+  }
+
+  setSnapshotVersion(version: number | null): void {
+    this.snapshotVersion.set(version);
   }
 
   private saveViewMode(mode: ViewMode): void {
@@ -44,7 +49,7 @@ export class ViewModeService {
       if (this.auth.isAuthenticated()) {
         this.viewMode.set('draft');
       } else {
-        this.viewMode.set('snapshot');
+        this.viewMode.set('published');
       }
     }
   }
@@ -70,6 +75,7 @@ export class ViewModeService {
   isDraftMode(): boolean {
     return this.viewMode() === 'draft';
   }
+
   isPublishedMode(): boolean {
     return this.viewMode() === 'published';
   }

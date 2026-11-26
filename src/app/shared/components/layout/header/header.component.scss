@@ -28,6 +28,10 @@
     gap: var(--spacing-md);
     flex-shrink: 0;
   }
+
+  .version-select {
+    width: var(--width-sm);
+  }
 }
 
 .user-card-container {

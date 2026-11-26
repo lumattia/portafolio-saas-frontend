@@ -3,18 +3,14 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { MenuRenderer, MenuRequest, MenuType } from '../models/menu.model';
-import { ViewModeService } from './view-mode.service';
 
 @Injectable({ providedIn: 'root' })
 export class MenuService {
-  private readonly viewMode = inject(ViewModeService);
   private readonly http = inject(HttpClient);
   private readonly adminApiUrl = `${environment.apiUrl}/admin/menu`;
-  private readonly publishedApiUrl = `${environment.apiUrl}/public/published/menu`;
 
-  getMenu(type: MenuType): Observable<MenuRenderer | null> {
-    const url = `${this.viewMode.isDraftMode() ? this.adminApiUrl : this.publishedApiUrl}/${type}`;
-    return this.http.get<MenuRenderer | null>(url);
+  getDraftMenu(type: MenuType): Observable<MenuRenderer | null> {
+    return this.http.get<MenuRenderer | null>(`${this.adminApiUrl}/${type}`);
   }
 
   create(request: MenuRequest): Observable<MenuRenderer> {

@@ -1,6 +1,6 @@
-import { IdName } from './common.models';
+import { IdName } from "./common.models";
 
 export interface VersionList {
-  currentVersionId: string | null;
-  versions: IdName[];
+  currentVersionNumber: number | null;
+  versions: IdName<number>[];
 }
